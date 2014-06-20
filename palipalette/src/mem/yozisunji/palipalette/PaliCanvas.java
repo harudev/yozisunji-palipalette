@@ -29,6 +29,8 @@ public class PaliCanvas extends View {
 	String movement="";
 	String html="";
 	
+	float downX=0, downY=0, upX=0, upY=0, moveX=0, moveY=0;
+	
 	public PaliCanvas(Context c)
 	{
 		super(c);
@@ -100,7 +102,6 @@ public class PaliCanvas extends View {
 	 public boolean onTouchEvent(MotionEvent e)
 	 {
 		 super.onTouchEvent(e);
-		 float downX=0, downY=0, upX=0, upY=0, moveX=0, moveY=0;
 		 
 		 switch(e.getAction())
 		 {
@@ -119,13 +120,13 @@ public class PaliCanvas extends View {
 			 upY = e.getY();
 			 
 			 switch(selectedTool) {
-			 case 0: //freeDraw
+			 case 0: // FreeDraw
 				 html = "<path fill =\"none\" stroke=\"black\"/>";
 				 break;
-			 case 1:
-				 float r = (float)(upX-downX)/2;
-				 float cx = upX-r;
-				 float cy = upY-r;
+			 case 1: // Circle
+				 float r = (float)Math.sqrt((float)Math.pow(upX-downX, 2) + (float)Math.pow(upY-downY, 2));
+				 float cx = downX;
+				 float cy = downY;
 				 html = "<circle cs="+ cx +" cy=" + cy + " r=" + r + " style=\"fill:yellow;stroke:purple;stroke-width:2\"/> ";
 				 SVGParser.objs.add(new PaliCircle(html,cx,cy,r, true));
 				 this.drawLayer(0);

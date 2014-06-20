@@ -32,10 +32,10 @@ public class MainActivity extends Activity {
         setContentView(R.layout.main);
         
         svg = new SVGParser();        
-        svg.parse(getResources().openRawResource(R.drawable.test));
+        //svg.parse(getResources().openRawResource(R.drawable.test));
         customview = (PaliCanvas) findViewById(R.id.paliCanvas1);
-        customview.setBound(800,600);
-        customview.drawLayer(0);
+        //customview.setBound(800,600);
+        //customview.drawLayer(0);
         //test
     }
 	
