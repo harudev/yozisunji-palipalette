@@ -127,18 +127,23 @@ public class PaliCanvas extends View {
 				 float r = (float)Math.sqrt((float)Math.pow(upX-downX, 2) + (float)Math.pow(upY-downY, 2));
 				 float cx = downX;
 				 float cy = downY;
+				 
 				 html = "<circle cs="+ cx +" cy=" + cy + " r=" + r + " style=\"fill:yellow;stroke:purple;stroke-width:2\"/> ";
 				 SVGParser.objs.add(new PaliCircle(html,cx,cy,r, true));
 				 this.drawLayer(0);
 				 break;
 			 case 2: // Rectangle
+				 float x = Math.min(downX, upX);
+				 float y = Math.min(downY, upY);
 				 float width = (float)Math.sqrt((float)Math.pow(upX-downX, 2));
 				 float height = (float)Math.sqrt((float)Math.pow(upY-downY, 2));
+				 
 				 float left = downX;
 				 float top = downY;
 				 float right = upX;
 				 float bottom = upY;
-				 html = "<rect x="+downX+" y="+downY+" width="+width+" height="+height+" style=\"fill:rgb(0,0,255);stroke-width:3;stroke:rgb(0,0,0)\" /> ";
+				 
+				 html = "<rect x="+x+" y="+y+" width="+width+" height="+height+" style=\"fill:rgb(0,0,255);stroke-width:3;stroke:rgb(0,0,0)\" /> ";
 				 SVGParser.objs.add(new PailRectangle(html,left,top,right,bottom,true));
 				 this.drawLayer(0);
 				 break;
