@@ -1,4 +1,4 @@
-package mem.yozisunji.palipalette;
+package com.yozisunji.palipalette;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;

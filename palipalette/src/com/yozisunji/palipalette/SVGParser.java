@@ -1,4 +1,4 @@
-package mem.yozisunji.palipalette;
+package com.yozisunji.palipalette;
 
 import java.io.IOException;
 import java.io.InputStream;

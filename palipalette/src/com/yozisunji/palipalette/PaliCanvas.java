@@ -1,5 +1,4 @@
-package mem.yozisunji.palipalette;
-
+package com.yozisunji.palipalette;
 import java.util.ArrayList;
 
 import android.content.Context;
@@ -25,7 +24,7 @@ public class PaliCanvas extends View {
 	private Picture prepicture;
 	int width, height;
 	PictureDrawable pd;
-	public static int selectedTool=2;
+	public static int selectedTool=1;
 	String movement="";
 	String html="";
 	
@@ -118,6 +117,8 @@ public class PaliCanvas extends View {
 		 case MotionEvent.ACTION_UP:
 			 upX = e.getX();
 			 upY = e.getY();
+			 
+			 Log.i("debug",""+selectedTool);
 			 
 			 switch(selectedTool) {
 			 case 0: // FreeDraw
