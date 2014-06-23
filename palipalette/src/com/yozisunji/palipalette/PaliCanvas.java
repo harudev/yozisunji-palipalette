@@ -1,20 +1,16 @@
 package com.yozisunji.palipalette;
-import java.util.ArrayList;
-
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Path;
+import android.graphics.Path.FillType;
 import android.graphics.Picture;
-import android.graphics.Rect;
-import android.graphics.RectF;
-import android.graphics.drawable.Drawable;
 import android.graphics.drawable.PictureDrawable;
 import android.provider.SyncStateContract.Constants;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.ImageView;
 
 public class PaliCanvas extends View {
 	private Canvas canvas;
@@ -24,10 +20,11 @@ public class PaliCanvas extends View {
 	private Picture prepicture;
 	int width, height;
 	PictureDrawable pd;
-	public static int selectedTool=1;
+	public static int selectedTool=0;
 	String movement="";
 	String html="";
 	
+	Path path = new Path();
 	float downX=0, downY=0, upX=0, upY=0, moveX=0, moveY=0;
 	
 	public PaliCanvas(Context c)
@@ -108,21 +105,30 @@ public class PaliCanvas extends View {
 		 case MotionEvent.ACTION_DOWN:
 			 downX = e.getX();
 			 downY = e.getY();
+			 
+			 if(selectedTool==0) {
+				 path.moveTo(downX, downY);
+			 }		
+			 
 			 return true;
 		 case MotionEvent.ACTION_MOVE:
 			 moveX = e.getX();
 			 moveY = e.getY();
-			 movement = movement + " " + moveX + " " + moveY;
+			 
+			 if(selectedTool==0) {
+				 movement = movement + " " + moveX + " " + moveY;
+				 path.lineTo(moveX, moveY);
+			 }
+			 
 			 return true;
 		 case MotionEvent.ACTION_UP:
 			 upX = e.getX();
-			 upY = e.getY();
-			 
-			 Log.i("debug",""+selectedTool);
-			 
+			 upY = e.getY();			 			 
 			 switch(selectedTool) {
 			 case 0: // FreeDraw
-				 html = "<path fill =\"none\" stroke=\"black\"/>";
+				 html = "<path fill=\"none\" stroke=\"black\" d=\"M "+downX+" "+downY+""+movement+"\" />";
+				 SVGParser.objs.add(new PaliFreeDraw(html, path, true));
+				 this.drawLayer(0);
 				 break;
 			 case 1: // Circle
 				 float r = (float)Math.sqrt((float)Math.pow(upX-downX, 2) + (float)Math.pow(upY-downY, 2));

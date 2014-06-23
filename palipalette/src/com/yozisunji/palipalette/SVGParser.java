@@ -13,17 +13,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
- 
 
-
-
-
-
-import android.content.res.Resources;
-import android.graphics.Canvas;
-import android.graphics.Matrix;
-import android.graphics.Paint;
-import android.graphics.Picture;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.Log;

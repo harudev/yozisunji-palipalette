@@ -1,11 +1,7 @@
 package com.yozisunji.palipalette;
 
 import android.graphics.Canvas;
-import android.graphics.Matrix;
 import android.graphics.Paint;
-import android.graphics.Picture;
-import android.graphics.RectF;
-import android.util.Log;
 
 public abstract class PaliObject {
 	Paint paint;
