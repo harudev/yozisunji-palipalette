@@ -10,7 +10,7 @@ public class PailRectangle extends PaliObject {
 	{
 		super(tag,scolor,fcolor);
 	}
-	PailRectangle(String tag, float left, float top, float right, float bottom, boolean v)
+	PailRectangle(String tag, float left, float top, float right, float bottom)
 	{
 		paint = new Paint();
 		paint.setAntiAlias(true);
@@ -19,7 +19,6 @@ public class PailRectangle extends PaliObject {
 		this.top = top;
 		this.right = right;
 		this.bottom = bottom;
-		validation = v;
 	}
 	PailRectangle(String tag, float left, float top, float right, float bottom, int scolor, int fcolor)
 	{

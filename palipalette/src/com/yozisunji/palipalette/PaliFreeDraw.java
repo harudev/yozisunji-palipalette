@@ -11,13 +11,12 @@ public class PaliFreeDraw extends PaliObject {
 	{
 		super(tag,scolor,fcolor);
 	}
-	PaliFreeDraw(String tag, Path path, boolean v)
+	PaliFreeDraw(String tag, Path path)
 	{
 		paint = new Paint();
 		paint.setAntiAlias(true);
 		svgtag = tag;
 		this.path = path;
-		validation = v;
 	}
 	PaliFreeDraw(String tag, Path path, int scolor, int fcolor)
 	{

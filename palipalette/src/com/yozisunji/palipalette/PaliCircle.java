@@ -15,7 +15,7 @@ public class PaliCircle extends PaliObject {
 	{
 		super(tag,scolor,fcolor);
 	}
-	PaliCircle(String tag, float x, float y, float r, boolean v)
+	PaliCircle(String tag, float x, float y, float r)
 	{
 		paint = new Paint();
         paint.setAntiAlias(true);
@@ -23,7 +23,6 @@ public class PaliCircle extends PaliObject {
 		this.x = x;
 		this.y = y;
 		this.r = r;
-		validation = v;
 	}
 	PaliCircle(String tag, float x, float y, float r, int scolor, int fcolor)
 	{

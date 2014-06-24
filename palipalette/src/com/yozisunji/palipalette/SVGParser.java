@@ -21,11 +21,11 @@ import android.util.Log;
 
 public class SVGParser
 {
-	static ArrayList<PaliObject> objs;
-
+	static ArrayList<PaliLayer> Layers;
+	static int Layersize = 1;
 	SVGParser()
 	{
-		objs = new ArrayList<PaliObject>();
+		Layers = new ArrayList<PaliLayer>();
 	}
 	
 	public void parse(InputStream in) {
@@ -39,7 +39,7 @@ public class SVGParser
           SAXParser sp = spf.newSAXParser();
           XMLReader xr = sp.getXMLReader();
           SVGHandler handler = new SVGHandler();
-          objs.clear();
+          Layers.clear();
           xr.setContentHandler(handler);
           xr.parse(new InputSource(in));
     	}
@@ -129,14 +129,16 @@ class SVGHandler extends DefaultHandler {
         if (localName.equals("svg")) {
             int width = (int) Math.ceil(getFloatAttr("width", atts));
             int height = (int) Math.ceil(getFloatAttr("height", atts));
-        } else if (localName.equals("defs")) {
-            // Ignore
+            SVGParser.Layers.add(new PaliLayer());
+        } else if (localName.equals("g") && SVGParser.Layers.size()>1) {
+        	SVGParser.Layers.add(new PaliLayer());
+        	SVGParser.Layersize+=1;
         } else if ( localName.equals("circle")) {
             Float centerX = getFloatAttr("cx", atts);
             Float centerY = getFloatAttr("cy", atts);
             Float radius = getFloatAttr("r", atts);
             if (centerX != null && centerY != null && radius != null) {
-            	SVGParser.objs.add(new PaliCircle(localName,centerX,centerY,radius, true));
+            	SVGParser.Layers.get(SVGParser.Layers.size()-1).objs.add(new PaliCircle(localName,centerX,centerY,radius));
             }
         } 
     }   

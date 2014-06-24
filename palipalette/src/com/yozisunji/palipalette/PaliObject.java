@@ -6,7 +6,6 @@ import android.graphics.Paint;
 public abstract class PaliObject {
 	Paint paint;
 	String svgtag;
-	boolean validation=false;
 	
 	PaliObject(){
 		paint = new Paint();
@@ -22,14 +21,6 @@ public abstract class PaliObject {
 		paint.setStyle(Paint.Style.STROKE);
 		paint.setColor(fcolor);
 		paint.setStyle(Paint.Style.FILL);
-	}
-	public void setValidation(boolean n)
-	{
-		validation=n;
-	}
-	public boolean getValidation()
-	{
-		return validation;
 	}
 	public void SetTag(String tag)
 	{
