@@ -133,14 +133,22 @@ class SVGHandler extends DefaultHandler {
         } else if (localName.equals("g") && SVGParser.Layers.size()>1) {
         	SVGParser.Layers.add(new PaliLayer());
         	SVGParser.Layersize+=1;
-        } else if ( localName.equals("circle")) {
+        } else if (localName.equals("circle")) {
             Float centerX = getFloatAttr("cx", atts);
             Float centerY = getFloatAttr("cy", atts);
             Float radius = getFloatAttr("r", atts);
             if (centerX != null && centerY != null && radius != null) {
             	SVGParser.Layers.get(SVGParser.Layers.size()-1).objs.add(new PaliCircle(localName,centerX,centerY,radius));
             }
-        } 
+        } else if (localName.equals("rect")) {
+        	Float centerX = getFloatAttr("x", atts);
+        	Float centerY = getFloatAttr("y", atts);
+        	Float width = getFloatAttr("width", atts);
+        	Float height = getFloatAttr("height", atts);
+        	if (centerX != null && centerY != null && width!= null && height != null) {
+        		SVGParser.Layers.get(SVGParser.Layers.size()-1).objs.add(new PaliRectangle(localName,centerX,centerY,width,height));
+        	}
+        }
     }   
   
     /**

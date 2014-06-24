@@ -160,7 +160,7 @@ public class PaliCanvas extends SurfaceView implements SurfaceHolder.Callback {
 				 float bottom = upY;
 				 
 				 html = "<rect x="+x+" y="+y+" width="+width+" height="+height+" style=\"fill:rgb(0,0,255);stroke-width:3;stroke:rgb(0,0,0)\" /> ";
-				 SVGParser.Layers.get(currentLayer).objs.add(new PailRectangle(html,left,top,right,bottom));
+				 SVGParser.Layers.get(currentLayer).objs.add(new PaliRectangle(html,left,top,right,bottom));
 				 this.DrawScreen();
 				 break;
 			 }

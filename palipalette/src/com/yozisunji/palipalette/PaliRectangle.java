@@ -3,14 +3,14 @@ package com.yozisunji.palipalette;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 
-public class PailRectangle extends PaliObject {
+public class PaliRectangle extends PaliObject {
 	float left, top, right, bottom;
 
-	PailRectangle(String tag, int scolor, int fcolor)
+	PaliRectangle(String tag, int scolor, int fcolor)
 	{
 		super(tag,scolor,fcolor);
 	}
-	PailRectangle(String tag, float left, float top, float right, float bottom)
+	PaliRectangle(String tag, float left, float top, float right, float bottom)
 	{
 		paint = new Paint();
 		paint.setAntiAlias(true);
@@ -20,7 +20,7 @@ public class PailRectangle extends PaliObject {
 		this.right = right;
 		this.bottom = bottom;
 	}
-	PailRectangle(String tag, float left, float top, float right, float bottom, int scolor, int fcolor)
+	PaliRectangle(String tag, float left, float top, float right, float bottom, int scolor, int fcolor)
 	{
 		svgtag = tag;
 		this.left = left;
