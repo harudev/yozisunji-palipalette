@@ -32,27 +32,11 @@ public class PaliCanvas extends SurfaceView implements SurfaceHolder.Callback {
 	int 			currentLayer;
 	int 			currentObject;
 	static int 		drawCase;
-	public static int selectedTool=0;
+	public static int selectedTool=1;
 	
 	
 	Path path = new Path();
 	float downX=0, downY=0, upX=0, upY=0, moveX=0, moveY=0;
-	
-	public PaliCanvas(Context c)
-	{
-		super(c);
-		canvas = new Canvas();
-		canvas.drawColor(Color.WHITE);
-		picture = new Picture();
-		pd = new PictureDrawable(picture);
-		strokeColor = Color.BLACK;
-		fillColor = Color.RED;
-		
-		SurfaceHolder holder = getHolder();
-		holder.addCallback(this);
-		sHolder = holder;
-		sContext = c;
-	}
 	
 	public PaliCanvas(Context c, AttributeSet attrs)
 	{
@@ -65,25 +49,7 @@ public class PaliCanvas extends SurfaceView implements SurfaceHolder.Callback {
 		strokeColor = Color.BLACK;
 		fillColor = Color.RED;
 		currentLayer=SVGParser.Layersize-1;
-		if(this.isHardwareAccelerated())
-			Log.w("Catch","View Accelerated");
-		else
-			Log.w("Catch","View Not Accelerated");
 		this.drawCase = 0;
-		SurfaceHolder holder = getHolder();
-		holder.addCallback(this);
-		sHolder = holder;
-		sContext = c;
-	}
-	public PaliCanvas(Context c, AttributeSet attrs,int defStyle)
-	{
-		super(c, attrs, defStyle);
-		canvas = new Canvas();
-		canvas.drawColor(Color.WHITE);
-		pd = new PictureDrawable(picture);
-		picture = new Picture();
-		strokeColor = Color.BLACK;
-		fillColor = Color.RED;
 		SurfaceHolder holder = getHolder();
 		holder.addCallback(this);
 		sHolder = holder;
@@ -111,13 +77,9 @@ public class PaliCanvas extends SurfaceView implements SurfaceHolder.Callback {
 			
 			synchronized(getHolder())
 			{
-				if(drawCase == 0)
-				 {
 					Paint p = new Paint();
 					p.setColor(Color.WHITE);
 					cnvs.drawPaint(p);
-					 
-					 Log.w("drawCase","0");
 					 for(int i = 0; i<SVGParser.Layers.size();i++)
 					 {
 						 if(SVGParser.Layers.get(i).visibility==100)
@@ -131,17 +93,6 @@ public class PaliCanvas extends SurfaceView implements SurfaceHolder.Callback {
 							 }
 						 }
 					 }
-				 }
-				 else if(drawCase == 2)
-				 {
-					 Log.w("drawCase","2");
-					 cnvs = canvas;
-					 temp = SVGParser.Layers.get(currentLayer).objs.get(SVGParser.Layers.get(currentLayer).objs.size()-1);
-					 temp.setStrokeColor(strokeColor);
-					 temp.setFillColor(fillColor);
-					 temp.drawObject(cnvs);
-					 canvas = cnvs;
-				 }
 			}
 		}
 		finally
@@ -186,7 +137,6 @@ public class PaliCanvas extends SurfaceView implements SurfaceHolder.Callback {
 			 case 0: // FreeDraw
 				 html = "<path fill=\"none\" stroke=\"black\" d=\"M "+downX+" "+downY+""+movement+"\" />";
 				 SVGParser.Layers.get(currentLayer).objs.add(new PaliFreeDraw(html, path));
-				 PaliCanvas.drawCase = 2;
 				 this.DrawScreen();
 				 break;
 			 case 1: // Circle
@@ -196,7 +146,6 @@ public class PaliCanvas extends SurfaceView implements SurfaceHolder.Callback {
 				 
 				 html = "<circle cs="+ cx +" cy=" + cy + " r=" + r + " style=\"fill:yellow;stroke:purple;stroke-width:2\"/> ";
 				 SVGParser.Layers.get(currentLayer).objs.add(new PaliCircle(html,cx,cy,r));
-				 PaliCanvas.drawCase = 2;
 				 this.DrawScreen();
 				 break;
 			 case 2: // Rectangle
@@ -212,7 +161,6 @@ public class PaliCanvas extends SurfaceView implements SurfaceHolder.Callback {
 				 
 				 html = "<rect x="+x+" y="+y+" width="+width+" height="+height+" style=\"fill:rgb(0,0,255);stroke-width:3;stroke:rgb(0,0,0)\" /> ";
 				 SVGParser.Layers.get(currentLayer).objs.add(new PailRectangle(html,left,top,right,bottom));
-				 PaliCanvas.drawCase = 2;
 				 this.DrawScreen();
 				 break;
 			 }
