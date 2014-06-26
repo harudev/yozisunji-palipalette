@@ -2,6 +2,8 @@
 package com.yozisunji.palipalette;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Picture;
@@ -26,6 +28,9 @@ public class PaliCanvas extends SurfaceView implements SurfaceHolder.Callback {
 	public static int currentLayer;
 	public static int currentObject;
 	public static int selectedTool=0;
+	
+	public static boolean drawMode = true;
+	private Bitmap presaveBuffer, saveBuffer;
 
 		
 	public PaliCanvas(Context c, AttributeSet attrs)
@@ -34,6 +39,7 @@ public class PaliCanvas extends SurfaceView implements SurfaceHolder.Callback {
 		strokeColor = Color.BLACK;
 		fillColor = Color.RED;
 		currentLayer=SVGParser.Layersize-1;
+		currentObject=-1;
 		SurfaceHolder holder = getHolder();
 		holder.addCallback(this);
 	}
@@ -41,11 +47,12 @@ public class PaliCanvas extends SurfaceView implements SurfaceHolder.Callback {
 	{
 		width = w;
 		height = h;
+		
+		saveBuffer = Bitmap.createBitmap(width,height,Config.ARGB_8888);
 	}
 	
 	 protected void onFinishInflate() {
 	        setClickable(true);
-	        Log.w(Constants.DATA,"onFinishInflate()");
 	 }
 	  
 
@@ -53,28 +60,62 @@ public class PaliCanvas extends SurfaceView implements SurfaceHolder.Callback {
 	 {
 		Canvas cnvs = null;
 		PaliObject temp;	
+		
+		
+		
 		try
 		{
+			
+			cnvs = new Canvas(saveBuffer);
+			
 			cnvs = getHolder().lockCanvas(null);
 			
-			synchronized(getHolder())
-			{
-				 Paint p = new Paint();
-                 p.setColor(Color.WHITE);
-                 cnvs.drawPaint(p);
-				for(int i = 0; i<SVGParser.Layers.size();i++)
-				 {
-					 if(SVGParser.Layers.get(i).visibility==100)
+			
+			
+			if(drawMode)
+			{		
+				synchronized(getHolder())
+				{
+					Paint p = new Paint();
+					p.setColor(Color.WHITE);
+					cnvs.drawPaint(p);
+					for(int i = 0; i<SVGParser.Layers.size();i++)
 					 {
-						 for(int j=0;j<SVGParser.Layers.get(i).objs.size();j++)
+						 if(SVGParser.Layers.get(i).visibility==100)
 						 {
-							 temp = SVGParser.Layers.get(i).objs.get(j);
-							 temp.setStrokeColor(strokeColor);
-							 temp.setFillColor(fillColor);
-							 temp.drawObject(cnvs);
+							 for(int j=0;j<SVGParser.Layers.get(i).objs.size();j++)
+							 {
+								 temp = SVGParser.Layers.get(i).objs.get(j);
+								 temp.setStrokeColor(strokeColor);
+								 temp.setFillColor(fillColor);
+								 temp.drawObject(cnvs);
+							 }
 						 }
 					 }
-				 }
+					
+				}
+				//presaveBuffer = saveBuffer.copy(Bitmap.Config.ARGB_8888, false);
+				//saveBuffer.recycle();
+			}
+			else
+			{
+				
+				synchronized(getHolder())
+				{
+					
+					cnvs.drawBitmap(saveBuffer,0,0,new Paint());
+					Log.w("presave Width,height", Integer.toString(saveBuffer.getWidth())+" : "+Integer.toString(saveBuffer.getHeight()));
+					temp = SVGParser.Layers.get(this.currentLayer).objs.get(this.currentObject);
+					temp.setStrokeColor(strokeColor);
+					temp.setFillColor(fillColor);
+					temp.drawObject(cnvs);
+					
+				}
+				
+				//presaveBuffer.recycle();
+				//presaveBuffer = saveBuffer.copy(Bitmap.Config.ARGB_8888, false);
+				//saveBuffer.recycle();
+				drawMode = true;
 			}
 		}
 		finally

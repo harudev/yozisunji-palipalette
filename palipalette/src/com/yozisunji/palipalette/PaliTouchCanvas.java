@@ -116,9 +116,12 @@ public class PaliTouchCanvas extends View{
 				 
 				 html = "<rect x="+x+" y="+y+" width="+width+" height="+height+" style=\"fill:rgb(0,0,255);stroke-width:3;stroke:rgb(0,0,0)\" /> ";
 				 SVGParser.Layers.get(canvas.currentLayer).objs.add(new PaliRectangle(html,left,top,right,bottom));
+				 
 				 break;
 			 }
 			 tempObj=null;
+			 PaliCanvas.currentObject++;
+			 PaliCanvas.drawMode = false;
 			 //this.DrawScreen();
 			 this.invalidate();
 			 canvas.DrawScreen();

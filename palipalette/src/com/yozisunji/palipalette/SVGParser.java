@@ -319,15 +319,18 @@ class SVGHandler extends DefaultHandler {
             int width = (int) Math.ceil(getFloatAttr("width", atts));
             int height = (int) Math.ceil(getFloatAttr("height", atts));
             SVGParser.Layers.add(new PaliLayer());
+            PaliCanvas.currentObject = -1;
         } else if (localName.equals("g") && SVGParser.Layers.size()>1) {
         	SVGParser.Layers.add(new PaliLayer());
         	SVGParser.Layersize+=1;
+        	PaliCanvas.currentObject = -1;
         } else if (localName.equals("circle")) {
             Float centerX = getFloatAttr("cx", atts);
             Float centerY = getFloatAttr("cy", atts);
             Float radius = getFloatAttr("r", atts);
             if (centerX != null && centerY != null && radius != null) {
             	SVGParser.Layers.get(SVGParser.Layers.size()-1).objs.add(new PaliCircle(localName,centerX,centerY,radius));
+            	PaliCanvas.currentObject++;
             }
         } else if (localName.equals("rect")) {
         	Float centerX = getFloatAttr("x", atts);
@@ -336,11 +339,13 @@ class SVGHandler extends DefaultHandler {
         	Float height = getFloatAttr("height", atts);
         	if (centerX != null && centerY != null && width!= null && height != null) {
         		SVGParser.Layers.get(SVGParser.Layers.size()-1).objs.add(new PaliRectangle(localName,centerX,centerY,width,height));
+        		PaliCanvas.currentObject++;
         	}
         } else if (localName.equals("path")) {
         	Path path = doPath(getStringAttr("d", atts));
         	if (path != null) {
         		SVGParser.Layers.get(SVGParser.Layers.size()-1).objs.add(new PaliFreeDraw(localName,path));
+        		PaliCanvas.currentObject++;
         	}
         }
     }   
