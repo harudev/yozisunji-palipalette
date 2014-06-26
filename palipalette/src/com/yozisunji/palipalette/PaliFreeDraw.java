@@ -29,6 +29,16 @@ public class PaliFreeDraw extends PaliObject {
 		paint.setColor(fcolor);
 		paint.setStyle(Paint.Style.FILL);
 	}
+
+	PaliFreeDraw()
+	{	
+		this.path = new Path();
+	}
+	
+	public Path getPath()
+	{
+		return path;
+	}
 	
 	public void drawObject(Canvas c) {
 		paint.setStyle(Paint.Style.STROKE);

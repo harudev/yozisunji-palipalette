@@ -20,6 +20,15 @@ public class PaliRectangle extends PaliObject {
 		this.right = right;
 		this.bottom = bottom;
 	}
+	PaliRectangle(float left, float top, float right, float bottom)
+	{
+		paint = new Paint();
+		paint.setAntiAlias(true);
+		this.left = left;
+		this.top = top;
+		this.right = right;
+		this.bottom = bottom;
+	}
 	PaliRectangle(String tag, float left, float top, float right, float bottom, int scolor, int fcolor)
 	{
 		svgtag = tag;
