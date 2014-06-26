@@ -29,11 +29,8 @@ public class MainActivity extends Activity {
         svg.parse(getResources().openRawResource(R.drawable.test));
         customview = (PaliCanvas) findViewById(R.id.paliCanvas);
         customview.setBound(800,600);
-        //touchview = (PaliTouchCanvas) findViewById(R.id.paliTouch);
-        
-        		
-        //customview.DrawScreen();
-        //test
+        touchview = (PaliTouchCanvas) findViewById(R.id.paliTouch);
+        touchview.setCanvasAddr(customview);
         
         //HelloAccessoryProviderService hs;
 

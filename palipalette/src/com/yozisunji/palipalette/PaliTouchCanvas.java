@@ -57,9 +57,9 @@ public class PaliTouchCanvas extends View{
 			 downX = e.getX();
 			 downY = e.getY();
 			 			 
-			 switch(canvas.selectedTool)
+			 switch(PaliCanvas.selectedTool)
 			 {
-			 case 0:
+			 case PaliCanvas.TOOL_PENCIL:
 				 path.moveTo(downX, downY);
 				 tempObj = new PaliFreeDraw();
 				 ((PaliFreeDraw)tempObj).getPath().moveTo(downX, downY);
@@ -70,17 +70,17 @@ public class PaliTouchCanvas extends View{
 			 moveX = e.getX();
 			 moveY = e.getY();
 			 
-			 switch(canvas.selectedTool)
+			 switch(PaliCanvas.selectedTool)
 			 {
-			 case 0:
+			 case PaliCanvas.TOOL_PENCIL:
 				 movement = movement + " " + moveX + " " + moveY;
 				 path.lineTo(moveX, moveY);
 				 ((PaliFreeDraw)tempObj).getPath().lineTo(moveX,moveY);
 				 break;
-			 case 1:
+			 case PaliCanvas.TOOL_CIRCLE:
 				 tempObj = new PaliCircle(downX, downY, (float)Math.sqrt((float)Math.pow(moveX-downX, 2) + (float)Math.pow(moveY-downY, 2)));
 				 break;
-			 case 2:
+			 case PaliCanvas.TOOL_RECTANGLE:
 				 tempObj = new PaliRectangle(downX, downY, moveX, moveY);
 				 
 			 }
@@ -90,20 +90,20 @@ public class PaliTouchCanvas extends View{
 		 case MotionEvent.ACTION_UP:
 			 upX = e.getX();
 			 upY = e.getY();	
-			 switch(canvas.selectedTool) {
-			 case 0: // FreeDraw
+			 switch(PaliCanvas.selectedTool) {
+			 case PaliCanvas.TOOL_PENCIL: // FreeDraw
 				 html = "<path fill=\"none\" stroke=\"black\" d=\"M "+downX+" "+downY+""+movement+"\" />";
 				 SVGParser.Layers.get(canvas.currentLayer).objs.add(new PaliFreeDraw(html, path));
 				 break;
-			 case 1: // Circle
+			 case PaliCanvas.TOOL_CIRCLE: // Circle
 				 float r = (float)Math.sqrt((float)Math.pow(upX-downX, 2) + (float)Math.pow(upY-downY, 2));
 				 float cx = downX;
 				 float cy = downY;
 				 
 				 html = "<circle cs="+ cx +" cy=" + cy + " r=" + r + " style=\"fill:yellow;stroke:purple;stroke-width:2\"/> ";
-				 SVGParser.Layers.get(canvas.currentLayer).objs.add(new PaliCircle(html,cx,cy,r));
+				 SVGParser.Layers.get(PaliCanvas.currentLayer).objs.add(new PaliCircle(html,cx,cy,r));
 				 break;
-			 case 2: // Rectangle
+			 case PaliCanvas.TOOL_RECTANGLE: // Rectangle
 				 float x = Math.min(downX, upX);
 				 float y = Math.min(downY, upY);
 				 float width = (float)Math.sqrt((float)Math.pow(upX-downX, 2));
