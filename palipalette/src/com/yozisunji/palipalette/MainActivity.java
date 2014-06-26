@@ -6,12 +6,13 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import com.samsung.android.example.helloaccessoryprovider.R;
-import com.samsung.android.example.helloaccessoryprovider.service.HelloAccessoryProviderService;
+//import com.samsung.android.example.helloaccessoryprovider.service.HelloAccessoryProviderService;
 
 public class MainActivity extends Activity {
 	
 	static SVGParser svg;
 	PaliCanvas customview;
+	PaliTouchCanvas touchview;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -26,12 +27,15 @@ public class MainActivity extends Activity {
 		
 		svg = new SVGParser();        
         svg.parse(getResources().openRawResource(R.drawable.test));
-        customview = (PaliCanvas) findViewById(R.id.paliCanvas1);
+        customview = (PaliCanvas) findViewById(R.id.paliCanvas);
         customview.setBound(800,600);
+        //touchview = (PaliTouchCanvas) findViewById(R.id.paliTouch);
+        
+        		
         //customview.DrawScreen();
         //test
         
-        HelloAccessoryProviderService hs;
+        //HelloAccessoryProviderService hs;
 
 	}
 }

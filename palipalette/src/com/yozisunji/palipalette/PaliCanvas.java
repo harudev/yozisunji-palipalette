@@ -41,6 +41,7 @@ public class PaliCanvas extends SurfaceView implements SurfaceHolder.Callback {
 		currentLayer=SVGParser.Layersize-1;
 		SurfaceHolder holder = getHolder();
 		holder.addCallback(this);
+		tempObj=null;
 		
 	}
 	public void setBound(int w, int h)
@@ -81,7 +82,7 @@ public class PaliCanvas extends SurfaceView implements SurfaceHolder.Callback {
 						 }
 					 }
 				 }
-				
+				/*
 				if(tempObj!=null)
 				{
 					p.setColor(Color.BLUE);
@@ -91,7 +92,7 @@ public class PaliCanvas extends SurfaceView implements SurfaceHolder.Callback {
 					tempObj.drawObject(cnvs);
 					
 				}
-					
+				*/	
 			}
 		}
 		finally
@@ -102,7 +103,7 @@ public class PaliCanvas extends SurfaceView implements SurfaceHolder.Callback {
 		 
 		 
 	 }
-	
+	/*
 	 public boolean onTouchEvent(MotionEvent e)
 	 {
 		 super.onTouchEvent(e);
@@ -184,6 +185,7 @@ public class PaliCanvas extends SurfaceView implements SurfaceHolder.Callback {
 		 return false;
 	 
 	 }
+	 */
 	@Override
 	public void surfaceCreated(SurfaceHolder holder) {
 			DrawScreen();
