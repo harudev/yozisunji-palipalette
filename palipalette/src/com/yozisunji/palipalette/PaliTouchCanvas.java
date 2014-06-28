@@ -7,6 +7,7 @@ import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.graphics.Path;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -15,6 +16,9 @@ public class PaliTouchCanvas extends View{
 	float downX=0, downY=0, upX=0, upY=0, moveX=0, moveY=0, premoveX=0, premoveY=0;
 	String 			movement="";
 	String 			html="";
+	String fillColor;
+	String strokeColor;
+	
 	
 	PaliObject tempObj;
 	Paint p;
@@ -49,6 +53,8 @@ public class PaliTouchCanvas extends View{
 	public boolean onTouchEvent(MotionEvent e)
 	 {
 		 super.onTouchEvent(e);
+		 
+		 
 		 
 		 switch(e.getAction())
 		 {
@@ -88,11 +94,15 @@ public class PaliTouchCanvas extends View{
 			 this.invalidate();
 			 return true;
 		 case MotionEvent.ACTION_UP:
+			 
+			 fillColor = Integer.toHexString(PaliCanvas.fillColor).substring(2);
+			 strokeColor = Integer.toHexString(PaliCanvas.strokeColor).substring(2);
+			 
 			 upX = e.getX();
-			 upY = e.getY();	
+			 upY = e.getY();
 			 switch(PaliCanvas.selectedTool) {
 			 case PaliCanvas.TOOL_PENCIL: // FreeDraw
-				 html = "<path fill=\"none\" stroke=\"black\" d=\"M "+downX+" "+downY+""+movement+"\" />";
+				 html = "<path fill=\"none\" stroke="+strokeColor+" d=\"M "+downX+" "+downY+""+movement+"\" />";
 				 SVGParser.Layers.get(canvas.currentLayer).objs.add(new PaliFreeDraw(html, path));
 				 break;
 			 case PaliCanvas.TOOL_CIRCLE: // Circle
@@ -100,7 +110,7 @@ public class PaliTouchCanvas extends View{
 				 float cx = downX;
 				 float cy = downY;
 				 
-				 html = "<circle cs="+ cx +" cy=" + cy + " r=" + r + " style=\"fill:yellow;stroke:purple;stroke-width:2\"/> ";
+				 html = "<circle cx="+ cx +" cy=" + cy + " r=" + r + " style=\"fill:"+fillColor+";stroke:"+strokeColor+";stroke-width:2\"/> ";
 				 SVGParser.Layers.get(PaliCanvas.currentLayer).objs.add(new PaliCircle(html,cx,cy,r));
 				 break;
 			 case PaliCanvas.TOOL_RECTANGLE: // Rectangle
@@ -114,11 +124,11 @@ public class PaliTouchCanvas extends View{
 				 float right = upX;
 				 float bottom = upY;
 				 
-				 html = "<rect x="+x+" y="+y+" width="+width+" height="+height+" style=\"fill:rgb(0,0,255);stroke-width:3;stroke:rgb(0,0,0)\" /> ";
-				 SVGParser.Layers.get(canvas.currentLayer).objs.add(new PaliRectangle(html,left,top,right,bottom));
-				 
+				 html = "<rect x="+x+" y="+y+" width="+width+" height="+height+" style=\"fill:"+fillColor+";stroke:"+strokeColor+";stroke-width:3\" /> ";
+				 SVGParser.Layers.get(canvas.currentLayer).objs.add(new PaliRectangle(html,left,top,right,bottom));				 
 				 break;
 			 }
+			 Log.i("debug",""+html);
 			 tempObj=null;
 			 PaliCanvas.currentObject++;
 			 PaliCanvas.drawMode = false;
