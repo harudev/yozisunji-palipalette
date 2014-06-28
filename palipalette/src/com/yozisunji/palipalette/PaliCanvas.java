@@ -27,7 +27,7 @@ public class PaliCanvas extends SurfaceView implements SurfaceHolder.Callback {
 	public static int width, height;
 	public static int currentLayer;
 	public static int currentObject;
-	public static int selectedTool=1;
+	public static int selectedTool=0;
 	
 	public static boolean drawMode = true;
 	private Bitmap presaveBuffer, saveBuffer;

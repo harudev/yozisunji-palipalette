@@ -102,7 +102,7 @@ public class PaliTouchCanvas extends View{
 			 upY = e.getY();
 			 switch(PaliCanvas.selectedTool) {
 			 case PaliCanvas.TOOL_PENCIL: // FreeDraw
-				 html = "<path fill=\"none\" stroke="+strokeColor+" d=\"M "+downX+" "+downY+""+movement+"\" />";
+				 html = "<path fill=\"none\" stroke=\"#"+strokeColor+"\" d=\"M"+downX+" "+downY+""+movement+"\" />";
 				 SVGParser.Layers.get(canvas.currentLayer).objs.add(new PaliFreeDraw(html, path));
 				 break;
 			 case PaliCanvas.TOOL_CIRCLE: // Circle
@@ -110,7 +110,7 @@ public class PaliTouchCanvas extends View{
 				 float cx = downX;
 				 float cy = downY;
 				 
-				 html = "<circle cx="+ cx +" cy=" + cy + " r=" + r + " style=\"fill:"+fillColor+";stroke:"+strokeColor+";stroke-width:2\"/> ";
+				 html = "<circle cx=\""+cx+"\" cy=\""+cy+"\" r=\""+r+"\" stroke=\"#"+strokeColor+"\" stroke-width=\""+4+"\" fill=\"#"+fillColor+"\" />";
 				 SVGParser.Layers.get(PaliCanvas.currentLayer).objs.add(new PaliCircle(html,cx,cy,r));
 				 break;
 			 case PaliCanvas.TOOL_RECTANGLE: // Rectangle
@@ -124,7 +124,7 @@ public class PaliTouchCanvas extends View{
 				 float right = upX;
 				 float bottom = upY;
 				 
-				 html = "<rect x="+x+" y="+y+" width="+width+" height="+height+" style=\"fill:"+fillColor+";stroke:"+strokeColor+";stroke-width:3\" /> ";
+				 html = "<rect x=\""+x+"\" y=\""+y+"\" width=\""+width+"\" height=\""+height+"\" stroke=\"#"+strokeColor+"\" stroke-width=\""+4+"\" fill=\"#"+fillColor+"\" />";
 				 SVGParser.Layers.get(canvas.currentLayer).objs.add(new PaliRectangle(html,left,top,right,bottom));				 
 				 break;
 			 }
