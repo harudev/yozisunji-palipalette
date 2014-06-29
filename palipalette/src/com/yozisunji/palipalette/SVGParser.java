@@ -338,7 +338,7 @@ class SVGHandler extends DefaultHandler {
         	Float width = getFloatAttr("width", atts);
         	Float height = getFloatAttr("height", atts);
         	if (centerX != null && centerY != null && width!= null && height != null) {
-        		SVGParser.Layers.get(SVGParser.Layers.size()-1).objs.add(new PaliRectangle(localName,centerX,centerY,width,height));
+        		SVGParser.Layers.get(SVGParser.Layers.size()-1).objs.add(new PaliRectangle(localName,centerX,centerY,centerX + width,centerY + height));
         		PaliCanvas.currentObject++;
         	}
         } else if (localName.equals("path")) {
