@@ -114,7 +114,7 @@ public class PaliTouchCanvas extends View{
 			 switch(PaliCanvas.selectedTool) {
 			 case PaliCanvas.TOOL_PICKOBJECT:
 				 PaliObject temp;
-				 float left=999999, right=999999, top=0, bottom=0;
+				 float left=999999, right=0, top=999999, bottom=0;
 				 this.selected=false;
 				 
 				 if(upX==downX && upY==downY)
