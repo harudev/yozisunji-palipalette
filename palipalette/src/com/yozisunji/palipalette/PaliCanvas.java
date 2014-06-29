@@ -6,14 +6,9 @@ import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Picture;
-import android.graphics.Paint.Style;
-import android.provider.SyncStateContract.Constants;
 import android.graphics.Paint;
-import android.graphics.Path;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
@@ -21,13 +16,13 @@ public class PaliCanvas extends SurfaceView implements SurfaceHolder.Callback {
 	public static final int TOOL_PENCIL=0;
 	public static final int TOOL_CIRCLE=1;
 	public static final int TOOL_RECTANGLE=2;
-	
+	public static final int TOOL_PICKOBJECT=3;
 	public static int strokeColor;
 	public static int fillColor;
 	public static int width, height;
 	public static int currentLayer;
 	public static int currentObject;
-	public static int selectedTool=0;
+	public static int selectedTool=3;
 	
 	public static boolean drawMode = true;
 	private Bitmap presaveBuffer, saveBuffer;
@@ -36,8 +31,8 @@ public class PaliCanvas extends SurfaceView implements SurfaceHolder.Callback {
 	public PaliCanvas(Context c, AttributeSet attrs)
 	{
 		super(c, attrs);
-		strokeColor = Color.BLACK;
-		fillColor = Color.RED;
+		strokeColor = Color.BLUE;
+		fillColor = Color.YELLOW;
 		currentLayer=SVGParser.Layersize-1;
 		currentObject=-1;
 		SurfaceHolder holder = getHolder();
@@ -60,8 +55,7 @@ public class PaliCanvas extends SurfaceView implements SurfaceHolder.Callback {
 	 {
 		Canvas cnvs = null;
 		PaliObject temp;	
-		
-		
+		drawMode = true;
 		
 		try
 		{
@@ -88,6 +82,7 @@ public class PaliCanvas extends SurfaceView implements SurfaceHolder.Callback {
 								 temp = SVGParser.Layers.get(i).objs.get(j);
 								 temp.setStrokeColor(strokeColor);
 								 temp.setFillColor(fillColor);
+								 temp.setWidth(3);
 								 temp.drawObject(cnvs);
 							 }
 						 }

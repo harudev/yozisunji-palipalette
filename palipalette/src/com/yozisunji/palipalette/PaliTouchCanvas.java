@@ -1,3 +1,4 @@
+
 package com.yozisunji.palipalette;
 
 import android.content.Context;
@@ -10,6 +11,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.graphics.RectF;
 
 public class PaliTouchCanvas extends View{
 	Path path = new Path();
@@ -24,6 +26,10 @@ public class PaliTouchCanvas extends View{
 	Paint p;
 	
 	PaliCanvas canvas;
+	
+	RectF rect;
+	
+	boolean selected=false;
 
 	public PaliTouchCanvas(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -41,11 +47,16 @@ public class PaliTouchCanvas extends View{
 	{
 		if(tempObj!=null)
 		{
-			p.setColor(Color.BLUE);
-			p.setStyle(Style.STROKE);
-			p.setColor(Color.GREEN);
-			p.setStyle(Style.FILL);
+			tempObj.setStrokeColor(Color.BLUE);
+			tempObj.setStyle(Style.STROKE);
+			tempObj.setWidth(2);
+			if(canvas.selectedTool!=3)
+			{
+				tempObj.setFillColor(Color.GREEN);
+				tempObj.setStyle(Style.FILL);
+			}
 			tempObj.drawObject(cnvs);
+			
 		}
 		
 	}
@@ -101,9 +112,83 @@ public class PaliTouchCanvas extends View{
 			 upX = e.getX();
 			 upY = e.getY();
 			 switch(PaliCanvas.selectedTool) {
+			 case PaliCanvas.TOOL_PICKOBJECT:
+				 PaliObject temp;
+				 float left=999999, right=999999, top=0, bottom=0;
+				 this.selected=false;
+				 
+				 if(upX==downX && upY==downY)
+				 {
+					 for(int i = SVGParser.Layers.size()-1; i>=0;i--)
+					 {
+						 if(SVGParser.Layers.get(i).visibility==100)
+						 {
+							 for(int j=SVGParser.Layers.get(i).objs.size()-1;j>=0;j--)
+							 {
+								 temp = SVGParser.Layers.get(i).objs.get(j);
+								 if(temp.rect.contains(upX,upY))
+								 {
+									 tempObj=new PaliRectangle(temp.rect);
+									 temp.selected = true;
+									 this.selected = true;
+									 break;
+								 }
+							 }
+						 }
+					 }
+					 if(this.selected)
+					 {
+						 this.invalidate();
+					 }
+					 else
+					 {
+						 this.tempObj=null;
+						 this.invalidate();
+					 }
+				 }
+				 else
+				 {
+					 this.rect = new RectF(min(downX,upX), min(downY,upY), max(downX,upX), max(downY,upY));
+
+					 for(int i = SVGParser.Layers.size()-1; i>=0;i--)
+					 {
+						 if(SVGParser.Layers.get(i).visibility==100)
+						 {
+							 for(int j=SVGParser.Layers.get(i).objs.size()-1;j>=0;j--)
+							 {
+								 temp = SVGParser.Layers.get(i).objs.get(j);
+								 if(this.rect.contains(temp.rect))
+								 {
+									 temp.selected=true;
+									 left = min(left, temp.rect.left);
+									 top = min(top, temp.rect.top);
+									 right = max(right, temp.rect.right);
+									 bottom = max(bottom, temp.rect.bottom);
+									 this.selected = true;
+								 }
+							 }
+						 }
+					 }
+					 
+					 if(selected)
+					 {
+						 tempObj = new PaliRectangle(left, top, right, bottom);
+						 this.invalidate();
+					 }
+					 else
+					 {
+						 this.tempObj=null;
+						 this.invalidate();
+					 }
+				 }
+				 return true;
 			 case PaliCanvas.TOOL_PENCIL: // FreeDraw
 				 html = "<path fill=\"none\" stroke=\"#"+strokeColor+"\" d=\"M"+downX+" "+downY+""+movement+"\" />";
 				 SVGParser.Layers.get(canvas.currentLayer).objs.add(new PaliFreeDraw(html, path));
+				 tempObj=null;
+				 PaliCanvas.currentObject++;
+				 PaliCanvas.drawMode = false;
+				 canvas.DrawScreen();
 				 break;
 			 case PaliCanvas.TOOL_CIRCLE: // Circle
 				 float r = (float)Math.sqrt((float)Math.pow(upX-downX, 2) + (float)Math.pow(upY-downY, 2));
@@ -112,6 +197,10 @@ public class PaliTouchCanvas extends View{
 				 
 				 html = "<circle cx=\""+cx+"\" cy=\""+cy+"\" r=\""+r+"\" stroke=\"#"+strokeColor+"\" stroke-width=\""+4+"\" fill=\"#"+fillColor+"\" />";
 				 SVGParser.Layers.get(PaliCanvas.currentLayer).objs.add(new PaliCircle(html,cx,cy,r));
+				 tempObj=null;
+				 PaliCanvas.currentObject++;
+				 PaliCanvas.drawMode = false;
+				 canvas.DrawScreen();
 				 break;
 			 case PaliCanvas.TOOL_RECTANGLE: // Rectangle
 				 float x = Math.min(downX, upX);
@@ -119,26 +208,35 @@ public class PaliTouchCanvas extends View{
 				 float width = (float)Math.sqrt((float)Math.pow(upX-downX, 2));
 				 float height = (float)Math.sqrt((float)Math.pow(upY-downY, 2));
 				 
-				 float left = downX;
-				 float top = downY;
-				 float right = upX;
-				 float bottom = upY;
+				 left = downX;
+				 top = downY;
+				 right = upX;
+				 bottom = upY;
 				 
 				 html = "<rect x=\""+x+"\" y=\""+y+"\" width=\""+width+"\" height=\""+height+"\" stroke=\"#"+strokeColor+"\" stroke-width=\""+4+"\" fill=\"#"+fillColor+"\" />";
-				 SVGParser.Layers.get(canvas.currentLayer).objs.add(new PaliRectangle(html,left,top,right,bottom));				 
+				 SVGParser.Layers.get(canvas.currentLayer).objs.add(new PaliRectangle(html,left,top,right,bottom));	
+				 tempObj=null;
+				 PaliCanvas.currentObject++;
+				 PaliCanvas.drawMode = false;
+				 canvas.DrawScreen();
+				 			 
 				 break;
 			 }
-			 Log.i("debug",""+html);
-			 tempObj=null;
-			 PaliCanvas.currentObject++;
-			 PaliCanvas.drawMode = false;
-			 //this.DrawScreen();
 			 this.invalidate();
-			 canvas.DrawScreen();
+			 
 			 return true;
 		 }
 		 return false;
 	 
 	 }
+	
+	float min(float a, float b)
+	{
+		return (a<b)?a:b;
+	}
 
+	float max(float a, float b)
+	{
+		return (a>b)?a:b;
+	}
 }
