@@ -8,8 +8,6 @@ public abstract class PaliObject {
 	Paint paint;
 	String svgtag;
 	
-	public boolean selected;
-	
 	RectF rect;
 	PaliObject(){
 		paint = new Paint();

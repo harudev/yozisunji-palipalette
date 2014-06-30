@@ -7,7 +7,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.graphics.Path;
-import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -17,7 +16,6 @@ import android.graphics.RectF;
 public class PaliTouchCanvas extends View{
 	Path path = new Path();
 	float downX=0, downY=0, upX=0, upY=0, moveX=0, moveY=0, premoveX=0, premoveY=0;
-	float minX=0, minY=0, maxX=0, maxY=0;
 	String 			movement="";
 	String 			html="";
 	String fillColor;
@@ -65,7 +63,9 @@ public class PaliTouchCanvas extends View{
 	
 	public boolean onTouchEvent(MotionEvent e)
 	 {
-		 super.onTouchEvent(e);		 
+		 super.onTouchEvent(e);
+		 
+		 
 		 
 		 switch(e.getAction())
 		 {
@@ -77,8 +77,6 @@ public class PaliTouchCanvas extends View{
 			 switch(PaliCanvas.selectedTool)
 			 {
 			 case PaliCanvas.TOOL_PENCIL:
-				 minX=downX; minY=downY;
-				 maxX=downX; maxY=downY;
 				 path.moveTo(downX, downY);
 				 tempObj = new PaliFreeDraw();
 				 ((PaliFreeDraw)tempObj).getPath().moveTo(downX, downY);
@@ -92,10 +90,6 @@ public class PaliTouchCanvas extends View{
 			 switch(PaliCanvas.selectedTool)
 			 {
 			 case PaliCanvas.TOOL_PENCIL:
-				 minX=min(minX,moveX);
-				 minY=min(minY,moveY);
-				 maxX=max(maxX,moveX);
-				 maxY=max(maxY,moveY);
 				 movement = movement + " " + moveX + " " + moveY;
 				 path.lineTo(moveX, moveY);
 				 ((PaliFreeDraw)tempObj).getPath().lineTo(moveX,moveY);
@@ -110,6 +104,7 @@ public class PaliTouchCanvas extends View{
 			 //this.DrawScreen();
 			 this.invalidate();
 			 return true;
+		 
 		 case MotionEvent.ACTION_UP:
 			 
 			 fillColor = Integer.toHexString(PaliCanvas.fillColor).substring(2);
@@ -135,7 +130,7 @@ public class PaliTouchCanvas extends View{
 								 if(temp.rect.contains(upX,upY))
 								 {
 									 tempObj=new PaliRectangle(temp.rect);
-									 temp.selected = true;
+									 PaliCanvas.selObjArr.add(new PaliPoint(i,j));
 									 this.selected = true;
 									 break;
 								 }
@@ -148,6 +143,7 @@ public class PaliTouchCanvas extends View{
 					 }
 					 else
 					 {
+						 PaliCanvas.selObjArr.clear();
 						 this.tempObj=null;
 						 this.invalidate();
 					 }
@@ -165,7 +161,7 @@ public class PaliTouchCanvas extends View{
 								 temp = SVGParser.Layers.get(i).objs.get(j);
 								 if(this.rect.contains(temp.rect))
 								 {
-									 temp.selected=true;
+									 PaliCanvas.selObjArr.add(new PaliPoint(i,j));
 									 left = min(left, temp.rect.left);
 									 top = min(top, temp.rect.top);
 									 right = max(right, temp.rect.right);
@@ -183,20 +179,15 @@ public class PaliTouchCanvas extends View{
 					 }
 					 else
 					 {
+						 PaliCanvas.selObjArr.clear();
 						 this.tempObj=null;
 						 this.invalidate();
 					 }
 				 }
 				 return true;
 			 case PaliCanvas.TOOL_PENCIL: // FreeDraw
-				 minX=min(minX,upX);
-				 minY=min(minY,upY);
-				 maxX=max(maxX,upX);
-				 maxY=max(maxY,upY);
-				 rect = new RectF(minX, minY, maxX, maxY);
-				 
 				 html = "<path fill=\"none\" stroke=\"#"+strokeColor+"\" d=\"M"+downX+" "+downY+""+movement+"\" />";
-				 SVGParser.Layers.get(canvas.currentLayer).objs.add(new PaliFreeDraw(html, path, rect));
+				 SVGParser.Layers.get(canvas.currentLayer).objs.add(new PaliFreeDraw(html, path));
 				 tempObj=null;
 				 PaliCanvas.currentObject++;
 				 PaliCanvas.drawMode = false;

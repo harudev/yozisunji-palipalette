@@ -1,6 +1,8 @@
 
 package com.yozisunji.palipalette;
 
+import java.util.ArrayList;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
@@ -22,10 +24,12 @@ public class PaliCanvas extends SurfaceView implements SurfaceHolder.Callback {
 	public static int width, height;
 	public static int currentLayer;
 	public static int currentObject;
-	public static int selectedTool=0;
+	public static int selectedTool=3;
 	
 	public static boolean drawMode = true;
 	private Bitmap presaveBuffer, saveBuffer;
+	
+	public static ArrayList<PaliPoint> selObjArr;
 
 		
 	public PaliCanvas(Context c, AttributeSet attrs)
@@ -37,6 +41,7 @@ public class PaliCanvas extends SurfaceView implements SurfaceHolder.Callback {
 		currentObject=-1;
 		SurfaceHolder holder = getHolder();
 		holder.addCallback(this);
+		selObjArr = new ArrayList<PaliPoint>();
 	}
 	public void setBound(int w, int h)
 	{
@@ -138,5 +143,16 @@ public class PaliCanvas extends SurfaceView implements SurfaceHolder.Callback {
 	public void surfaceDestroyed(SurfaceHolder holder) {
 		// TODO Auto-generated method stub
 		
+	}
+}
+
+class PaliPoint
+{
+	public int x, y;
+	
+	public PaliPoint(int x, int y)
+	{
+		this.x = x;
+		this.y = y;
 	}
 }
