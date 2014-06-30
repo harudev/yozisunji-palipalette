@@ -13,7 +13,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.graphics.RectF;
 
-public class PaliTouchCanvas extends View{
+public class PaliTouchCanvas extends View {
 	Path path = new Path();
 	float downX=0, downY=0, upX=0, upY=0, moveX=0, moveY=0, premoveX=0, premoveY=0;
 	String 			movement="";
@@ -30,6 +30,8 @@ public class PaliTouchCanvas extends View{
 	RectF rect;
 	
 	boolean selected=false;
+	long time;
+	
 
 	public PaliTouchCanvas(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -73,6 +75,7 @@ public class PaliTouchCanvas extends View{
 		 case MotionEvent.ACTION_DOWN:
 			 downX = e.getX();
 			 downY = e.getY();
+			 time = e.getDownTime();
 			 			 
 			 switch(PaliCanvas.selectedTool)
 			 {
@@ -112,76 +115,93 @@ public class PaliTouchCanvas extends View{
 			 
 			 upX = e.getX();
 			 upY = e.getY();
+			 time = e.getEventTime() - time;
+			 
 			 switch(PaliCanvas.selectedTool) {
 			 case PaliCanvas.TOOL_PICKOBJECT:
-				 PaliObject temp;
 				 float left=999999, right=0, top=999999, bottom=0;
-				 this.selected=false;
-				 
-				 if(upX==downX && upY==downY)
+				 PaliObject temp;
+				 if(time>1500 && this.selected)
 				 {
-					 for(int i = SVGParser.Layers.size()-1; i>=0;i--)
+					 for(int i=0;i<PaliCanvas.selObjArr.size();i++)
 					 {
-						 if(SVGParser.Layers.get(i).visibility==100)
-						 {
-							 for(int j=SVGParser.Layers.get(i).objs.size()-1;j>=0;j--)
-							 {
-								 temp = SVGParser.Layers.get(i).objs.get(j);
-								 if(temp.rect.contains(upX,upY))
-								 {
-									 tempObj=new PaliRectangle(temp.rect);
-									 PaliCanvas.selObjArr.add(new PaliPoint(i,j));
-									 this.selected = true;
-									 break;
-								 }
-							 }
-						 }
+						 SVGParser.Layers.get(PaliCanvas.selObjArr.get(i).x).objs.remove(PaliCanvas.selObjArr.get(i).y);
 					 }
-					 if(this.selected)
-					 {
-						 this.invalidate();
-					 }
-					 else
-					 {
-						 PaliCanvas.selObjArr.clear();
-						 this.tempObj=null;
-						 this.invalidate();
-					 }
+					 PaliCanvas.selObjArr.clear();
+					 this.tempObj = null;
+					 this.selected = false;
+					 this.invalidate();
+					 canvas.DrawScreen();
 				 }
 				 else
 				 {
-					 this.rect = new RectF(min(downX,upX), min(downY,upY), max(downX,upX), max(downY,upY));
-
-					 for(int i = SVGParser.Layers.size()-1; i>=0;i--)
+					 this.selected=false;
+					 
+					 if(upX==downX && upY==downY)
 					 {
-						 if(SVGParser.Layers.get(i).visibility==100)
+						 for(int i = SVGParser.Layers.size()-1; i>=0;i--)
 						 {
-							 for(int j=SVGParser.Layers.get(i).objs.size()-1;j>=0;j--)
+							 if(SVGParser.Layers.get(i).visibility==100)
 							 {
-								 temp = SVGParser.Layers.get(i).objs.get(j);
-								 if(this.rect.contains(temp.rect))
+								 for(int j=SVGParser.Layers.get(i).objs.size()-1;j>=0;j--)
 								 {
-									 PaliCanvas.selObjArr.add(new PaliPoint(i,j));
-									 left = min(left, temp.rect.left);
-									 top = min(top, temp.rect.top);
-									 right = max(right, temp.rect.right);
-									 bottom = max(bottom, temp.rect.bottom);
-									 this.selected = true;
+									 temp = SVGParser.Layers.get(i).objs.get(j);
+									 if(temp.rect.contains(upX,upY))
+									 {
+										 tempObj=new PaliRectangle(temp.rect);
+										 PaliCanvas.selObjArr.add(new PaliPoint(i,j));
+										 this.selected = true;
+										 break;
+									 }
 								 }
 							 }
 						 }
-					 }
-					 
-					 if(selected)
-					 {
-						 tempObj = new PaliRectangle(left, top, right, bottom);
-						 this.invalidate();
+						 if(this.selected)
+						 {
+							 this.invalidate();
+						 }
+						 else
+						 {
+							 PaliCanvas.selObjArr.clear();
+							 this.tempObj=null;
+							 this.invalidate();
+						 }
 					 }
 					 else
 					 {
-						 PaliCanvas.selObjArr.clear();
-						 this.tempObj=null;
-						 this.invalidate();
+						 this.rect = new RectF(min(downX,upX), min(downY,upY), max(downX,upX), max(downY,upY));
+	
+						 for(int i = SVGParser.Layers.size()-1; i>=0;i--)
+						 {
+							 if(SVGParser.Layers.get(i).visibility==100)
+							 {
+								 for(int j=SVGParser.Layers.get(i).objs.size()-1;j>=0;j--)
+								 {
+									 temp = SVGParser.Layers.get(i).objs.get(j);
+									 if(this.rect.contains(temp.rect))
+									 {
+										 PaliCanvas.selObjArr.add(new PaliPoint(i,j));
+										 left = min(left, temp.rect.left);
+										 top = min(top, temp.rect.top);
+										 right = max(right, temp.rect.right);
+										 bottom = max(bottom, temp.rect.bottom);
+										 this.selected = true;
+									 }
+								 }
+							 }
+						 }
+						 
+						 if(selected)
+						 {
+							 tempObj = new PaliRectangle(left, top, right, bottom);
+							 this.invalidate();
+						 }
+						 else
+						 {
+							 PaliCanvas.selObjArr.clear();
+							 this.tempObj=null;
+							 this.invalidate();
+						 }
 					 }
 				 }
 				 return true;
