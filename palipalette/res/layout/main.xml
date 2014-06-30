@@ -25,6 +25,7 @@ android:orientation="vertical" >
         android:layout_width="match_parent"
     	android:layout_height="match_parent"
     >
+
  <com.yozisunji.palipalette.PaliTouchCanvas
         android:id="@+id/paliTouch"
         android:layout_width="match_parent"

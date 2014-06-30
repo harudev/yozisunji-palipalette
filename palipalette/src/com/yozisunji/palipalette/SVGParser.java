@@ -308,8 +308,7 @@ class SVGHandler extends DefaultHandler {
     
     private static void drawArc(Path p, float lastX, float lastY, float x, float y, float rx, float ry, float theta, int largeArc, int sweepArc) {
         // todo - not implemented yet, may be very hard to do using Android drawing facilities.
-    }
-    
+    }    
      
     public void startElement(String uri, String localName, String qName,
             Attributes atts) throws SAXException {

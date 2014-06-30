@@ -20,6 +20,14 @@ public class PaliFreeDraw extends PaliObject {
 		this.path = path;
 		this.rect = new RectF(100, 100, 500, 500);
 	}
+	PaliFreeDraw(String tag, Path path, RectF rect)
+	{
+		paint = new Paint();
+		paint.setAntiAlias(true);
+		svgtag = tag;
+		this.path = path;
+		this.rect = rect;
+	}
 	PaliFreeDraw(String tag, Path path, int scolor, int fcolor)
 	{
 		svgtag = tag;		

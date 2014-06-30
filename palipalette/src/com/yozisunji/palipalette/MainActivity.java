@@ -1,7 +1,9 @@
 package com.yozisunji.palipalette;
 
 import android.app.Activity;
+import android.app.Application;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -32,7 +34,22 @@ public class MainActivity extends Activity {
         touchview = (PaliTouchCanvas) findViewById(R.id.paliTouch);
         touchview.setCanvasAddr(customview);
         
-        //HelloAccessoryProviderService hs;
-
+        //HelloAccessoryProviderService hs;  
 	}
+	
+	@Override
+	public boolean dispatchKeyEvent(KeyEvent event) {
+		if(event.getAction() == KeyEvent.ACTION_DOWN) {
+			switch(event.getKeyCode()) {
+			case KeyEvent.KEYCODE_BACK:
+				android.os.Process.killProcess(android.os.Process.myPid()); 
+				return true;
+			case KeyEvent.KEYCODE_MENU:
+				PaliCanvas.selectedTool++;
+				if(PaliCanvas.selectedTool > 3)	PaliCanvas.selectedTool = 0;
+				return true;
+			}
+		}
+		return super.dispatchKeyEvent(event);
+    }
 }
