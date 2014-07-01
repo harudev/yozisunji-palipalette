@@ -28,7 +28,7 @@ public class PaliFreeDraw extends PaliObject {
 		this.path = path;
 		this.rect = rect;
 	}
-	PaliFreeDraw(String tag, Path path, int scolor, int fcolor)
+	PaliFreeDraw(String tag, Path path, RectF rect, int scolor, int fcolor)
 	{
 		svgtag = tag;		
 		this.path = path;		
@@ -38,7 +38,7 @@ public class PaliFreeDraw extends PaliObject {
 		paint.setStyle(Paint.Style.STROKE);
 		paint.setColor(fcolor);
 		paint.setStyle(Paint.Style.FILL);
-		this.rect = new RectF(100, 100, 500, 500);
+		this.rect = rect;
 	}
 
 	PaliFreeDraw()

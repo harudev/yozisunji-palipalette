@@ -67,9 +67,7 @@ public class PaliCanvas extends SurfaceView implements SurfaceHolder.Callback {
 			
 			cnvs = new Canvas(saveBuffer);
 			
-			cnvs = getHolder().lockCanvas(null);
-			
-			
+			cnvs = getHolder().lockCanvas(null);			
 			
 			if(drawMode)
 			{		

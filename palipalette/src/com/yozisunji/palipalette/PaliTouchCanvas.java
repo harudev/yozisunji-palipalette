@@ -16,6 +16,7 @@ import android.graphics.RectF;
 public class PaliTouchCanvas extends View {
 	Path path = new Path();
 	float downX=0, downY=0, upX=0, upY=0, moveX=0, moveY=0, premoveX=0, premoveY=0;
+	float minX=0, minY=0, maxX=0, maxY=0;
 	String 			movement="";
 	String 			html="";
 	String fillColor;
@@ -80,6 +81,8 @@ public class PaliTouchCanvas extends View {
 			 switch(PaliCanvas.selectedTool)
 			 {
 			 case PaliCanvas.TOOL_PENCIL:
+				 minX=downX; minY=downY;
+                 maxX=downX; maxY=downY;
 				 path.moveTo(downX, downY);
 				 tempObj = new PaliFreeDraw();
 				 ((PaliFreeDraw)tempObj).getPath().moveTo(downX, downY);
@@ -93,6 +96,10 @@ public class PaliTouchCanvas extends View {
 			 switch(PaliCanvas.selectedTool)
 			 {
 			 case PaliCanvas.TOOL_PENCIL:
+				 minX=min(minX,moveX);
+                 minY=min(minY,moveY);
+                 maxX=max(maxX,moveX);
+                 maxY=max(maxY,moveY);
 				 movement = movement + " " + moveX + " " + moveY;
 				 path.lineTo(moveX, moveY);
 				 ((PaliFreeDraw)tempObj).getPath().lineTo(moveX,moveY);
@@ -206,13 +213,19 @@ public class PaliTouchCanvas extends View {
 				 }
 				 return true;
 			 case PaliCanvas.TOOL_PENCIL: // FreeDraw
-				 html = "<path fill=\"none\" stroke=\"#"+strokeColor+"\" d=\"M"+downX+" "+downY+""+movement+"\" />";
-				 SVGParser.Layers.get(canvas.currentLayer).objs.add(new PaliFreeDraw(html, path));
-				 tempObj=null;
-				 PaliCanvas.currentObject++;
-				 PaliCanvas.drawMode = false;
-				 canvas.DrawScreen();
-				 break;
+                 minX=min(minX,upX);
+                 minY=min(minY,upY);
+                 maxX=max(maxX,upX);
+                 maxY=max(maxY,upY);
+                 rect = new RectF(minX, minY, maxX, maxY);
+                 
+                 html = "<path fill=\"none\" stroke=\"#"+strokeColor+"\" d=\"M"+downX+" "+downY+""+movement+"\" />";
+                 SVGParser.Layers.get(canvas.currentLayer).objs.add(new PaliFreeDraw(html, path, rect));
+                 tempObj=null;
+                 PaliCanvas.currentObject++;
+                 PaliCanvas.drawMode = false;
+                 canvas.DrawScreen();
+                 break;
 			 case PaliCanvas.TOOL_CIRCLE: // Circle
 				 float r = (float)Math.sqrt((float)Math.pow(upX-downX, 2) + (float)Math.pow(upY-downY, 2));
 				 float cx = downX;
