@@ -7,11 +7,10 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.graphics.Path;
+import android.graphics.RectF;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.graphics.RectF;
 
 public class PaliTouchCanvas extends View {
 	Path path = new Path();
@@ -33,9 +32,12 @@ public class PaliTouchCanvas extends View {
 	boolean selected=false;
 	long time;
 	
+	private Context mContext;
+	
 
 	public PaliTouchCanvas(Context context, AttributeSet attrs) {
 		super(context, attrs);
+		this.mContext = context; 
 		// TODO Auto-generated constructor stub
 		tempObj = null;
 		p = new Paint();
@@ -60,8 +62,7 @@ public class PaliTouchCanvas extends View {
 			}
 			tempObj.drawObject(cnvs);
 			
-		}
-		
+		}		
 	}
 	
 	public boolean onTouchEvent(MotionEvent e)
@@ -73,7 +74,7 @@ public class PaliTouchCanvas extends View {
 		 switch(e.getAction())
 		 {
 		 
-		 case MotionEvent.ACTION_DOWN:
+		 case MotionEvent.ACTION_DOWN:	
 			 downX = e.getX();
 			 downY = e.getY();
 			 time = e.getDownTime();
@@ -130,6 +131,8 @@ public class PaliTouchCanvas extends View {
 				 PaliObject temp;
 				 if(time>1500 && this.selected)
 				 {
+					 ((MainActivity) mContext).popUpSubMenu();
+					 /*
 					 for(int i=0;i<PaliCanvas.selObjArr.size();i++)
 					 {
 						 SVGParser.Layers.get(PaliCanvas.selObjArr.get(i).x).objs.remove(PaliCanvas.selObjArr.get(i).y);
@@ -139,6 +142,7 @@ public class PaliTouchCanvas extends View {
 					 this.selected = false;
 					 this.invalidate();
 					 canvas.DrawScreen();
+					 */
 				 }
 				 else
 				 {
@@ -263,6 +267,8 @@ public class PaliTouchCanvas extends View {
 			 return true;
 		 }
 		 return false;
+		 
+		 
 	 
 	 }
 	
