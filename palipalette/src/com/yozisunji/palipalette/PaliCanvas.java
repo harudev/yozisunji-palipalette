@@ -17,14 +17,16 @@ import android.view.SurfaceView;
 public class PaliCanvas extends SurfaceView implements SurfaceHolder.Callback {
 	public static final int TOOL_PENCIL=0;
 	public static final int TOOL_CIRCLE=1;
-	public static final int TOOL_RECTANGLE=2;
-	public static final int TOOL_PICKOBJECT=3;
+	public static final int TOOL_ELLIPSE=2;
+	public static final int TOOL_RECTANGLE=3;
+	public static final int TOOL_PICKOBJECT=4;
 	public static int strokeColor;
 	public static int fillColor;
+	public static int strokeWidth;
 	public static int width, height;
 	public static int currentLayer;
 	public static int currentObject;
-	public static int selectedTool=3;
+	public static int selectedTool=0;
 	
 	public static boolean drawMode = true;
 	private Bitmap presaveBuffer, saveBuffer;
@@ -37,6 +39,7 @@ public class PaliCanvas extends SurfaceView implements SurfaceHolder.Callback {
 		super(c, attrs);
 		strokeColor = Color.BLUE;
 		fillColor = Color.YELLOW;
+		strokeWidth = 3;
 		currentLayer=SVGParser.Layersize-1;
 		currentObject=-1;
 		SurfaceHolder holder = getHolder();

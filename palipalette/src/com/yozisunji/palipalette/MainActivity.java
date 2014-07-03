@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,7 +27,7 @@ public class MainActivity extends Activity {
 	static SubMenuDialog dialog;
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState) {		
 		super.onCreate(savedInstanceState);	
 		
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -61,7 +62,7 @@ public class MainActivity extends Activity {
 				return true;
 			case KeyEvent.KEYCODE_MENU:
 				PaliCanvas.selectedTool++;
-				if(PaliCanvas.selectedTool > 3)	PaliCanvas.selectedTool = 0;
+				if(PaliCanvas.selectedTool > 4)	PaliCanvas.selectedTool = 0;
 				return true;
 			}
 		}

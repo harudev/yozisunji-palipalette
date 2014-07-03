@@ -58,6 +58,6 @@ public class PaliCircle extends PaliObject {
 		this.rect = new RectF(x-r, y-r, x+r, y+r);
 	}
 	public void drawObject(Canvas c) {
-		c.drawCircle(x, y, r, paint);	
+		c.drawCircle(x, y, r, paint);
 	}
 }
