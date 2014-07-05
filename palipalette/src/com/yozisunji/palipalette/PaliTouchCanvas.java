@@ -1,6 +1,9 @@
 
 package com.yozisunji.palipalette;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -19,6 +22,9 @@ public class PaliTouchCanvas extends View {
 	float minX=0, minY=0, maxX=0, maxY=0;
 	float x=0, y=0, width=0, height=0;
 	float cx=0, cy=0, r=0;
+	List<Float> brushX = new ArrayList<Float>();
+	List<Float> brushY = new ArrayList<Float>();
+	List<Float> brushR = new ArrayList<Float>();
 	String 			movement="";
 	String 			html="";
 	String fillColor;
@@ -90,6 +96,11 @@ public class PaliTouchCanvas extends View {
 				 tempObj = new PaliFreeDraw();
 				 ((PaliFreeDraw)tempObj).getPath().moveTo(downX, downY);
 				 break;
+			 case PaliCanvas.TOOL_BRUSH:				 
+				 brushX.add(downX);
+				 brushY.add(downY);
+				 brushR.add(30f);
+				 break;
 			 }
 			 return true;
 		 case MotionEvent.ACTION_MOVE:
@@ -106,6 +117,11 @@ public class PaliTouchCanvas extends View {
 				 movement = movement + " " + moveX + " " + moveY;
 				 path.lineTo(moveX, moveY);
 				 ((PaliFreeDraw)tempObj).getPath().lineTo(moveX,moveY);
+				 break;
+			 case PaliCanvas.TOOL_BRUSH:
+				 brushX.add(moveX);
+				 brushY.add(moveY);
+				 brushR.add(30f);
 				 break;
 			 case PaliCanvas.TOOL_CIRCLE:
 				 tempObj = new PaliCircle(downX, downY, (float)Math.sqrt((float)Math.pow(moveX-downX, 2) + (float)Math.pow(moveY-downY, 2)));
@@ -236,6 +252,19 @@ public class PaliTouchCanvas extends View {
                  PaliCanvas.drawMode = false;
                  canvas.DrawScreen();
                  break;
+			 case PaliCanvas.TOOL_BRUSH:
+				 for(int i=0;i<brushX.size();i++) {
+					 SVGParser.Layers.get(PaliCanvas.currentLayer).objs.add(new PaliCircle(brushX.get(i),brushY.get(i),brushR.get(i)));
+				 }
+				 tempObj=null;
+                 PaliCanvas.currentObject++;
+				 PaliCanvas.drawMode = false;
+				 canvas.DrawScreen();
+				 
+				 brushX.clear();
+				 brushY.clear();
+				 brushR.clear();
+				 break;
 			 case PaliCanvas.TOOL_CIRCLE:
 				 r = (float)Math.sqrt((float)Math.pow(upX-downX, 2) + (float)Math.pow(upY-downY, 2));
 				 cx = downX;

@@ -62,7 +62,7 @@ public class MainActivity extends Activity {
 				return true;
 			case KeyEvent.KEYCODE_MENU:
 				PaliCanvas.selectedTool++;
-				if(PaliCanvas.selectedTool > 4)	PaliCanvas.selectedTool = 0;
+				if(PaliCanvas.selectedTool > 5)	PaliCanvas.selectedTool = 0;
 				return true;
 			}
 		}
