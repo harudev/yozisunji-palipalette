@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.graphics.Path;
+import android.graphics.Path.Direction;
 import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -17,20 +18,17 @@ import android.view.MotionEvent;
 import android.view.View;
 
 public class PaliTouchCanvas extends View {
-	Path path = new Path();
+	Path pencilPath = new Path();
+	Path brushPath = new Path();
 	float downX=0, downY=0, upX=0, upY=0, moveX=0, moveY=0, premoveX=0, premoveY=0;
 	float minX=0, minY=0, maxX=0, maxY=0;
 	float x=0, y=0, width=0, height=0;
 	float cx=0, cy=0, r=0;
-	List<Float> brushX = new ArrayList<Float>();
-	List<Float> brushY = new ArrayList<Float>();
-	List<Float> brushR = new ArrayList<Float>();
 	String 			movement="";
 	String 			html="";
 	String fillColor;
 	String strokeColor;
-	int strokeWidth;
-	
+	int strokeWidth;	
 	
 	PaliObject tempObj;
 	Paint p;
@@ -70,19 +68,21 @@ public class PaliTouchCanvas extends View {
 				tempObj.setFillColor(Color.GREEN);
 				tempObj.setStyle(Style.FILL);
 			}
-			tempObj.drawObject(cnvs);
-			
+			tempObj.drawObject(cnvs);			
 		}		
+		super.onDraw(cnvs);
 	}
+	
 	
 	public boolean onTouchEvent(MotionEvent e)
 	 {
+		
 		 super.onTouchEvent(e);		 
-		 
 		 switch(e.getAction())
 		 {
 		 
 		 case MotionEvent.ACTION_DOWN:	
+			 
 			 downX = e.getX();
 			 downY = e.getY();
 			 time = e.getDownTime();
@@ -90,16 +90,21 @@ public class PaliTouchCanvas extends View {
 			 switch(PaliCanvas.selectedTool)
 			 {
 			 case PaliCanvas.TOOL_PENCIL:
+				 pencilPath.reset();
 				 minX=downX; minY=downY;
                  maxX=downX; maxY=downY;
-				 path.moveTo(downX, downY);
+                 pencilPath.moveTo(downX, downY);
 				 tempObj = new PaliFreeDraw();
 				 ((PaliFreeDraw)tempObj).getPath().moveTo(downX, downY);
 				 break;
-			 case PaliCanvas.TOOL_BRUSH:				 
-				 brushX.add(downX);
-				 brushY.add(downY);
-				 brushR.add(30f);
+			 case PaliCanvas.TOOL_BRUSH:
+				 brushPath.reset();
+				 minX=downX; minY=downY;
+                 maxX=downX; maxY=downY;
+                 brushPath.moveTo(downX, downY);
+                 brushPath.addCircle(downX, downY, 30, Direction.CW);
+				 tempObj = new PaliBrush();
+				 ((PaliBrush)tempObj).getPath().moveTo(downX, downY);
 				 break;
 			 }
 			 return true;
@@ -115,13 +120,18 @@ public class PaliTouchCanvas extends View {
                  maxX=max(maxX,moveX);
                  maxY=max(maxY,moveY);
 				 movement = movement + " " + moveX + " " + moveY;
-				 path.lineTo(moveX, moveY);
+				 pencilPath.lineTo(moveX, moveY);
 				 ((PaliFreeDraw)tempObj).getPath().lineTo(moveX,moveY);
 				 break;
 			 case PaliCanvas.TOOL_BRUSH:
-				 brushX.add(moveX);
-				 brushY.add(moveY);
-				 brushR.add(30f);
+				 minX=min(minX,moveX);
+                 minY=min(minY,moveY);
+                 maxX=max(maxX,moveX);
+                 maxY=max(maxY,moveY);
+				 movement = movement + " " + moveX + " " + moveY;
+				 brushPath.lineTo(moveX, moveY);
+				 brushPath.addCircle(moveX, moveY, 30, Direction.CW);
+				 ((PaliBrush)tempObj).getPath().lineTo(moveX,moveY);				
 				 break;
 			 case PaliCanvas.TOOL_CIRCLE:
 				 tempObj = new PaliCircle(downX, downY, (float)Math.sqrt((float)Math.pow(moveX-downX, 2) + (float)Math.pow(moveY-downY, 2)));
@@ -237,7 +247,7 @@ public class PaliTouchCanvas extends View {
 						 }
 					 }
 				 }
-				 return true;
+				 return false;
 			 case PaliCanvas.TOOL_PENCIL:
                  minX=min(minX,upX);
                  minY=min(minY,upY);
@@ -246,24 +256,26 @@ public class PaliTouchCanvas extends View {
                  rect = new RectF(minX, minY, maxX, maxY);
                  
                  html = "<path fill=\"none\" stroke=\"#"+strokeColor+"\" stroke-width=\""+strokeWidth+"\" d=\"M"+downX+" "+downY+""+movement+"\" />";
-                 SVGParser.Layers.get(canvas.currentLayer).objs.add(new PaliFreeDraw(html, path, rect));
+                 SVGParser.Layers.get(canvas.currentLayer).objs.add(new PaliFreeDraw(html, pencilPath, rect));
                  tempObj=null;
                  PaliCanvas.currentObject++;
                  PaliCanvas.drawMode = false;
                  canvas.DrawScreen();
+                 Log.i("debug", ""+html);
                  break;
 			 case PaliCanvas.TOOL_BRUSH:
-				 for(int i=0;i<brushX.size();i++) {
-					 SVGParser.Layers.get(PaliCanvas.currentLayer).objs.add(new PaliCircle(brushX.get(i),brushY.get(i),brushR.get(i)));
-				 }
-				 tempObj=null;
+				 minX=min(minX,upX);
+                 minY=min(minY,upY);
+                 maxX=max(maxX,upX);
+                 maxY=max(maxY,upY);
+                 rect = new RectF(minX, minY, maxX, maxY);
+                 
+                 html = "<path marker-mid=\"url(#marker_circle)\" fill=\"none\" stroke=\"#"+strokeColor+"\" stroke-width=\""+strokeWidth+"\" d=\"M"+downX+" "+downY+""+movement+"\" />";
+                 SVGParser.Layers.get(canvas.currentLayer).objs.add(new PaliBrush(html, brushPath, rect));
+                 tempObj=null;
                  PaliCanvas.currentObject++;
-				 PaliCanvas.drawMode = false;
-				 canvas.DrawScreen();
-				 
-				 brushX.clear();
-				 brushY.clear();
-				 brushR.clear();
+                 PaliCanvas.drawMode = false;
+                 canvas.DrawScreen();
 				 break;
 			 case PaliCanvas.TOOL_CIRCLE:
 				 r = (float)Math.sqrt((float)Math.pow(upX-downX, 2) + (float)Math.pow(upY-downY, 2));
@@ -325,10 +337,7 @@ public class PaliTouchCanvas extends View {
 			 
 			 return true;
 		 }
-		 return false;
-		 
-		 
-	 
+		 return false;	 
 	 }
 	
 	float min(float a, float b)

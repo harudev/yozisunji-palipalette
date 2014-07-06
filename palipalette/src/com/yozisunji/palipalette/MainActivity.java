@@ -6,7 +6,6 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.os.Bundle;
-import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +15,7 @@ import android.widget.Button;
 
 import com.samsung.android.example.helloaccessoryprovider.R;
 //import com.samsung.android.example.helloaccessoryprovider.service.HelloAccessoryProviderService;
+import com.samsung.android.example.helloaccessoryprovider.service.HelloAccessoryProviderService;
 
 public class MainActivity extends Activity {
 	
@@ -44,13 +44,12 @@ public class MainActivity extends Activity {
         touchview = (PaliTouchCanvas) findViewById(R.id.paliTouch);
         touchview.setCanvasAddr(customview);
         
-        //HelloAccessoryProviderService hs;  
+        HelloAccessoryProviderService hs;
         
         dialog = new SubMenuDialog();         
         Button copyBtn = (Button) findViewById(R.id.copyBtn);
         Button pasteBtn = (Button) findViewById(R.id.pasteBtn);
-        Button deletBtn = (Button) findViewById(R.id.deletBtn);
-        
+        Button deletBtn = (Button) findViewById(R.id.deletBtn);        
 	}
 	
 	@Override

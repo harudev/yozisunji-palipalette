@@ -5,14 +5,14 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
 
-public class PaliFreeDraw extends PaliObject {
+public class PaliBrush extends PaliObject {
 	Path path;
 
-	PaliFreeDraw(String tag, int scolor, int fcolor)
+	PaliBrush(String tag, int scolor, int fcolor)
 	{
 		super(tag,scolor,fcolor);
 	}
-	PaliFreeDraw(String tag, Path path)
+	PaliBrush(String tag, Path path)
 	{
 		paint = new Paint();
 		paint.setAntiAlias(true);
@@ -20,7 +20,7 @@ public class PaliFreeDraw extends PaliObject {
 		this.path = path;
 		this.rect = new RectF(100, 100, 500, 500);
 	}
-	PaliFreeDraw(String tag, Path path, RectF rect)
+	PaliBrush(String tag, Path path, RectF rect)
 	{
 		paint = new Paint();
 		paint.setAntiAlias(true);
@@ -28,7 +28,7 @@ public class PaliFreeDraw extends PaliObject {
 		this.path = path;
 		this.rect = rect;
 	}
-	PaliFreeDraw(String tag, Path path, RectF rect, int scolor, int fcolor)
+	PaliBrush(String tag, Path path, RectF rect, int scolor, int fcolor)
 	{
 		svgtag = tag;		
 		this.path = path;		
@@ -41,7 +41,7 @@ public class PaliFreeDraw extends PaliObject {
 		this.rect = rect;
 	}
 
-	PaliFreeDraw()
+	PaliBrush()
 	{	
 		this.path = new Path();
 	}
@@ -52,8 +52,7 @@ public class PaliFreeDraw extends PaliObject {
 	}
 	
 	public void drawObject(Canvas c) {
-		paint.setStrokeWidth(PaliCanvas.strokeWidth);
-		paint.setStyle(Paint.Style.STROKE);
+		paint.setStyle(Paint.Style.FILL);
 		c.drawPath(path, paint);
 	}
 }

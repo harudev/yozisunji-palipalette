@@ -23,7 +23,7 @@ import android.util.Log;
 public class SVGParser
 {
 	static ArrayList<PaliLayer> Layers;
-	static int Layersize = 1;
+	public static int Layersize = 1;
 	SVGParser()
 	{
 		Layers = new ArrayList<PaliLayer>();
