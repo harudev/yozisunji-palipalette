@@ -29,6 +29,33 @@ public class SVGParser
 		Layers = new ArrayList<PaliLayer>();
 	}
 	
+	public void addLayer()
+	{
+		Layers.add(new PaliLayer());
+		PaliCanvas.currentLayer = Layers.size()-1;
+		PaliCanvas.currentObject = -1;
+	}
+	
+	public void deleteLayer(int index)
+	{
+		Layers.remove(index);
+		PaliCanvas.currentLayer = index - 1;
+		PaliCanvas.currentObject = 0;
+	}
+	
+	public void upLayer(int index)
+	{
+		PaliLayer temp = Layers.get(index);
+		Layers.set(index, Layers.get(index-1));
+		Layers.set(index-1, temp);
+	}
+	public void downLayer(int index)
+	{
+		PaliLayer temp = Layers.get(index);
+		Layers.set(index, Layers.get(index+1));
+		Layers.set(index+1, temp);
+	}
+	
 	public void parse(InputStream in) {
 //      Util.debug("Parsing SVG...");
      
@@ -56,6 +83,10 @@ public class SVGParser
 		}
     }
 }
+
+
+
+
 class SVGHandler extends DefaultHandler {
 	private String elementValue = null;
     private Boolean elementOn = false;
