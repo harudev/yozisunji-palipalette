@@ -102,6 +102,11 @@ public class PaliTouchCanvas extends View {
 		 
 		 case MotionEvent.ACTION_DOWN:	
 			 
+			 /*  ÇÊ¾Ð
+			 float pressure = e.getPressure();
+			 Log.i("debug",""+pressure);
+			 */
+			 
 			 downX = e.getX()/PaliCanvas.zoom;
 			 downY = e.getY()/PaliCanvas.zoom;
 			
