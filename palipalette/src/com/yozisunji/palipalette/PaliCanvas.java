@@ -154,13 +154,3 @@ public class PaliCanvas extends SurfaceView implements SurfaceHolder.Callback {
 	}
 }
 
-class PaliPoint
-{
-	public int x, y;
-	
-	public PaliPoint(int x, int y)
-	{
-		this.x = x;
-		this.y = y;
-	}
-}
