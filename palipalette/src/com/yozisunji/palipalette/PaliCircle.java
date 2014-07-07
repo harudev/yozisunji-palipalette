@@ -4,6 +4,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.util.Log;
 
 public class PaliCircle extends PaliObject {
 	float x, y;
@@ -32,6 +33,20 @@ public class PaliCircle extends PaliObject {
 		
 		this.rect = new RectF(x-r, y-r, x+r, y+r);
 	}
+	
+	PaliCircle(float x, float y, float r, int alpha)
+	{
+		paint = new Paint();
+        paint.setAntiAlias(true);        
+		paint.setColor(Color.GREEN);
+		paint.setStyle(Paint.Style.FILL_AND_STROKE);
+		paint.setAlpha(alpha);
+		this.x = x;
+		this.y = y;
+		this.r = r;
+		
+		this.rect = new RectF(x-r, y-r, x+r, y+r);
+	}
 
 	PaliCircle(String tag, float x, float y, float r)
 	{
@@ -43,6 +58,7 @@ public class PaliCircle extends PaliObject {
 		this.r = r;
 		this.rect = new RectF(x-r, y-r, x+r, y+r);
 	}
+	
 	PaliCircle(String tag, float x, float y, float r, int scolor, int fcolor)
 	{
 		svgtag=tag;
@@ -57,7 +73,9 @@ public class PaliCircle extends PaliObject {
 		paint.setStyle(Paint.Style.FILL);
 		this.rect = new RectF(x-r, y-r, x+r, y+r);
 	}
+
 	public void drawObject(Canvas c) {
+		
 		c.drawCircle(x, y, r, paint);
 	}
 }

@@ -4,6 +4,8 @@ package com.yozisunji.palipalette;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.samsung.spensdk.SCanvasView;
+
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -28,6 +30,11 @@ public class PaliTouchCanvas extends View {
 	float minX=0, minY=0, maxX=0, maxY=0;
 	float x=0, y=0, width=0, height=0;
 	float cx=0, cy=0, r=0;
+	float pressure;
+	List<Float> brushX = new ArrayList<Float>();
+    List<Float> brushY = new ArrayList<Float>();
+    List<Float> brushR = new ArrayList<Float>();
+    List<Integer> brushA = new ArrayList<Integer>();
 	String 			movement="";
 	String 			html="";
 	String fillColor;
@@ -66,7 +73,18 @@ public class PaliTouchCanvas extends View {
 		p = new Paint();
 		mLongPressTimeout = ViewConfiguration.getLongPressTimeout();
 		mScaledTouchSlope = ViewConfiguration.get( context ).getScaledTouchSlop();
-		parent = this;
+		parent = this;	
+		
+		/*
+		this.setOnHoverListener(new OnHoverListener() {			
+			@Override
+			public boolean onHover(View v, MotionEvent event) {
+				Log.i("debug","hover"); // 호버기능.
+				return false;
+			}
+		});
+		*/
+		
 	}
 	
 	public void setCanvasAddr(PaliCanvas c)
@@ -92,6 +110,15 @@ public class PaliTouchCanvas extends View {
 		super.onDraw(cnvs);
 	}
 	
+	public interface SPenHoverListener {
+		boolean onHoverEvent(View v, MotionEvent e);
+	}
+	
+	public boolean onHoverEvent(View v, MotionEvent e) {
+		Log.i("debug","hover");
+		return mLongPressed;
+		
+	}
 	
 	public boolean onTouchEvent(MotionEvent e)
 	 {
@@ -101,12 +128,7 @@ public class PaliTouchCanvas extends View {
 		 {
 		 
 		 case MotionEvent.ACTION_DOWN:	
-			 
-			 /*  필압
-			 float pressure = e.getPressure();
-			 Log.i("debug",""+pressure);
-			 */
-			 
+			 			 			 
 			 downX = e.getX()/PaliCanvas.zoom;
 			 downY = e.getY()/PaliCanvas.zoom;
 			
@@ -120,7 +142,7 @@ public class PaliTouchCanvas extends View {
 				 }
 				 break;
 			 case PaliCanvas.TOOL_PENCIL:
-				 pencilPath.reset();
+				 pencilPath = new Path();
 				 minX=downX; minY=downY;
                  maxX=downX; maxY=downY;
                  pencilPath.moveTo(downX, downY);
@@ -128,7 +150,14 @@ public class PaliTouchCanvas extends View {
 				 ((PaliFreeDraw)tempObj).getPath().moveTo(downX, downY);
 				 break;
 			 case PaliCanvas.TOOL_BRUSH:
-				 brushPath.reset();
+				 brushX.add(downX);
+                 brushY.add(downY);
+                 brushR.add(30f);
+                 pressure = e.getPressure();                   
+                 brushA.add((int)(pressure*100));
+                 break;
+				 /*
+				 brushPath = new Path();
 				 minX=downX; minY=downY;
                  maxX=downX; maxY=downY;
                  brushPath.moveTo(downX, downY);
@@ -136,6 +165,7 @@ public class PaliTouchCanvas extends View {
 				 tempObj = new PaliBrush();
 				 ((PaliBrush)tempObj).getPath().moveTo(downX, downY);
 				 break;
+				 */
 			 }
 			 return true;
 		 case MotionEvent.ACTION_POINTER_DOWN:
@@ -184,6 +214,13 @@ public class PaliTouchCanvas extends View {
 					 ((PaliFreeDraw)tempObj).getPath().lineTo(moveX,moveY);
 					 break;
 				 case PaliCanvas.TOOL_BRUSH:
+					 brushX.add(moveX);
+                     brushY.add(moveY);
+                     brushR.add(30f);
+                     pressure = e.getPressure();                   
+                     brushA.add((int)(pressure*100));
+                     break;
+					 /*
 					 minX=min(minX,moveX);
 	                 minY=min(minY,moveY);
 	                 maxX=max(maxX,moveX);
@@ -193,6 +230,7 @@ public class PaliTouchCanvas extends View {
 					 brushPath.addCircle(moveX, moveY, 30, Direction.CW);
 					 ((PaliBrush)tempObj).getPath().lineTo(moveX,moveY);				
 					 break;
+					 */
 				 case PaliCanvas.TOOL_CIRCLE:
 					 tempObj = new PaliCircle(downX, downY, (float)Math.sqrt((float)Math.pow(moveX-downX, 2) + (float)Math.pow(moveY-downY, 2)));
 					 break;
@@ -301,11 +339,27 @@ public class PaliTouchCanvas extends View {
                  html = "<path fill=\"none\" stroke=\"#"+strokeColor+"\" stroke-width=\""+strokeWidth+"\" d=\"M"+downX+" "+downY+""+movement+"\" />";
                  SVGParser.Layers.get(canvas.currentLayer).objs.add(new PaliFreeDraw(html, pencilPath, rect));
                  tempObj=null;
+                 pencilPath = null;
                  PaliCanvas.currentObject++;
                  PaliCanvas.drawMode = false;
                  canvas.DrawScreen();
                  break;
 			 case PaliCanvas.TOOL_BRUSH:
+				 for(int i=0;i<brushX.size();i++) {
+                     SVGParser.Layers.get(PaliCanvas.currentLayer).objs.add(new PaliCircle(brushX.get(i),brushY.get(i),brushR.get(i),brushA.get(i)));
+	             }
+	             tempObj=null;
+	             PaliCanvas.currentObject++;
+	             PaliCanvas.drawMode = false;
+	             canvas.DrawScreen();
+	             
+	             brushX.clear();
+	             brushY.clear();
+	             brushR.clear();
+	             brushA.clear();
+	             break;
+	             
+				 /*
 				 minX=min(minX,upX);
                  minY=min(minY,upY);
                  maxX=max(maxX,upX);
@@ -315,10 +369,12 @@ public class PaliTouchCanvas extends View {
                  html = "<path marker-mid=\"url(#marker_circle)\" fill=\"none\" stroke=\"#"+strokeColor+"\" stroke-width=\""+strokeWidth+"\" d=\"M"+downX+" "+downY+""+movement+"\" />";
                  SVGParser.Layers.get(canvas.currentLayer).objs.add(new PaliBrush(html, brushPath, rect));
                  tempObj=null;
+                 brushPath = null;
                  PaliCanvas.currentObject++;
                  PaliCanvas.drawMode = false;
                  canvas.DrawScreen();
 				 break;
+				 */
 			 case PaliCanvas.TOOL_CIRCLE:
 				 r = (float)Math.sqrt((float)Math.pow(upX-downX, 2) + (float)Math.pow(upY-downY, 2));
 				 cx = downX;
