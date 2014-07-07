@@ -85,7 +85,7 @@ public class PaliCanvas extends SurfaceView implements SurfaceHolder.Callback {
 					cnvs.drawPaint(p);
 					cnvs.scale(zoom, zoom);
 
-                    Log.w("LongPress",Float.toString(zoom));
+                    
 					for(int i = 0; i<SVGParser.Layers.size();i++)
 					 {
 						 if(SVGParser.Layers.get(i).visibility==100)

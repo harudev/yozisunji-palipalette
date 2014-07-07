@@ -97,18 +97,11 @@ public class MainActivity extends Activity {
 		case R.id.pasteBtn:
 			dialog.dismiss();
 			break;
-		case R.id.deletBtn:		
-			for(int i=0;i<PaliCanvas.selObjArr.size();i++)
-			 {
-				 SVGParser.Layers.get(PaliCanvas.selObjArr.get(i).x).objs.remove(PaliCanvas.selObjArr.get(i).y);
-			 }
-			 
-			 PaliCanvas.selObjArr.clear();
-			 touchview.tempObj = null;
-			 touchview.selected = false;
-			 touchview.invalidate();
-			 customview.DrawScreen();
+		case R.id.deletBtn:
+
 			 dialog.dismiss();
+			Log.w("LongPress","MAIN: "+Integer.toString(PaliCanvas.selObjArr.size()));
+			touchview.deleteObject();
 			break;		
 		}		
 	}
