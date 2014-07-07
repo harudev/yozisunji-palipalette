@@ -76,6 +76,7 @@ public class PaliTouchCanvas extends View {
 	
 	public void onDraw(Canvas cnvs)
 	{
+		cnvs.scale(PaliCanvas.zoom, PaliCanvas.zoom);
 		if(tempObj!=null)
 		{
 			tempObj.setStrokeColor(Color.BLUE);
@@ -96,15 +97,13 @@ public class PaliTouchCanvas extends View {
 	 {
 		
 		 super.onTouchEvent(e);		 
-		 switch(e.getAction())
+		 switch(e.getAction() & MotionEvent.ACTION_MASK)
 		 {
 		 
 		 case MotionEvent.ACTION_DOWN:	
 			 
-			 downX = e.getX();
-			 downY = e.getY();
-			 time = e.getDownTime();
-			 			 
+			 downX = e.getX()/PaliCanvas.zoom;
+			 downY = e.getY()/PaliCanvas.zoom;
 			
 			 switch(PaliCanvas.selectedTool)
 			 {
@@ -112,7 +111,6 @@ public class PaliTouchCanvas extends View {
 				 if(this.selected && tempObj.getRect().contains(downX, downY))
 				 {
 					 startTimeout();
-					 Log.w("LongPress","Started");
 				 }
 				 break;
 			 case PaliCanvas.TOOL_PENCIL:
@@ -137,7 +135,6 @@ public class PaliTouchCanvas extends View {
 		 case MotionEvent.ACTION_POINTER_DOWN:
 			 newDist = spacing(e);
 			 oldDist = spacing(e);
-			 
 			 this.zoom = true;
 			 return true;
 		 case MotionEvent.ACTION_POINTER_UP:
@@ -151,24 +148,24 @@ public class PaliTouchCanvas extends View {
 				 if (newDist - oldDist > 20) { // zoom in
 	                    oldDist = newDist;
 	                    if(PaliCanvas.zoom < 1000)
-	                    	PaliCanvas.zoom *= 1.5;
+	                    	PaliCanvas.zoom *= 1.1;
 	                } else if(oldDist - newDist > 20) { // zoom out
 	                    oldDist = newDist;
 	                    if(PaliCanvas.zoom > 1)
-	                    	PaliCanvas.zoom /= 1.5;
+	                    	PaliCanvas.zoom /= 1.1;
 	                }
+				 this.invalidate();
 				 canvas.DrawScreen();
 			 }
 			 else
 			 {
-				 moveX = e.getX();
-				 moveY = e.getY();
+				 moveX = e.getX()/PaliCanvas.zoom;
+				 moveY = e.getY()/PaliCanvas.zoom;
 				 
 				 switch(PaliCanvas.selectedTool)
 				 {
 				 case PaliCanvas.TOOL_PICKOBJECT:
 					 stopTimeout();
-					 Log.w("LongPress","Stopped - move");
 					 break;
 				 case PaliCanvas.TOOL_PENCIL:
 					 minX=min(minX,moveX);
@@ -210,8 +207,8 @@ public class PaliTouchCanvas extends View {
 			 strokeColor = Integer.toHexString(PaliCanvas.strokeColor).substring(2);
 			 strokeWidth = PaliCanvas.strokeWidth;
 			 
-			 upX = e.getX();
-			 upY = e.getY();
+			 upX = e.getX()/PaliCanvas.zoom;
+			 upY = e.getY()/PaliCanvas.zoom;
 			 
 			 switch(PaliCanvas.selectedTool) {
 			 case PaliCanvas.TOOL_PICKOBJECT:
@@ -219,7 +216,6 @@ public class PaliTouchCanvas extends View {
 				 PaliObject temp;
 				 
 				 stopTimeout();
-				 Log.w("LongPress","Stopped - up");
 				 this.selected=false;
 				 PaliCanvas.selObjArr.clear();
 				 this.tempObj=null;
@@ -297,7 +293,6 @@ public class PaliTouchCanvas extends View {
                  PaliCanvas.currentObject++;
                  PaliCanvas.drawMode = false;
                  canvas.DrawScreen();
-                 Log.i("debug", ""+html);
                  break;
 			 case PaliCanvas.TOOL_BRUSH:
 				 minX=min(minX,upX);
@@ -346,7 +341,7 @@ public class PaliTouchCanvas extends View {
 				 PaliCanvas.drawMode = false;
 				 canvas.DrawScreen();
 				 
-				 Log.i("debug", ""+html);
+				
 				 
 				 break;				 
 			 case PaliCanvas.TOOL_RECTANGLE:
@@ -387,7 +382,7 @@ public class PaliTouchCanvas extends View {
 	}
 	public void startTimeout(){
 		mLongPressed = false;
-		mHandler.postDelayed( mLongPressCheckRunnable, 1000 );
+		mHandler.postDelayed( mLongPressCheckRunnable, 700 );
 	}
 	
 	public void stopTimeout(){
@@ -396,8 +391,8 @@ public class PaliTouchCanvas extends View {
 	}
 	
 	 private float spacing(MotionEvent event) {
-	        float x = event.getX(0) - event.getX(1);
-	        float y = event.getY(0) - event.getY(1);
+	        float x = (event.getX(0) - event.getX(1))/PaliCanvas.zoom;
+	        float y = (event.getY(0) - event.getY(1))/PaliCanvas.zoom;
 	        return FloatMath.sqrt(x * x + y * y);
 	 
 	    }
@@ -407,7 +402,6 @@ public class PaliTouchCanvas extends View {
 		public void run() {
 			mLongPressed = true;
 			parent.performHapticFeedback( HapticFeedbackConstants.LONG_PRESS );
-			Log.w("LongPress","Thread running");
 			((MainActivity) mContext).popUpSubMenu();
 		}
 	}
