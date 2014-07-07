@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -96,8 +97,24 @@ public class MainActivity extends Activity {
 		case R.id.pasteBtn:
 			dialog.dismiss();
 			break;
-		case R.id.deletBtn:			
-			dialog.dismiss();
+		case R.id.deletBtn:		
+			Log.w("LongPress","Delete Button Clicked");
+			Log.w("LongPress","Size : "+Integer.toString(PaliCanvas.selObjArr.size()));
+			for(int i=0;i<PaliCanvas.selObjArr.size();i++)
+			 {
+				 SVGParser.Layers.get(PaliCanvas.selObjArr.get(i).x).objs.remove(PaliCanvas.selObjArr.get(i).y);
+				 Log.w("LongPress","Deleted Object"+Integer.toString(PaliCanvas.selObjArr.get(i).x)+" : "+Integer.toString(PaliCanvas.selObjArr.get(i).y));
+			 }
+			 
+			 PaliCanvas.selObjArr.clear();
+			 Log.w("LongPress","Flush Array");
+			 touchview.tempObj = null;
+			 touchview.selected = false;
+			 Log.w("LongPress","Invalidate touch");
+			 touchview.invalidate();
+			 Log.w("LongPress","Invalidate view");
+			 customview.DrawScreen();
+			 dialog.dismiss();
 			break;		
 		}		
 	}

@@ -59,6 +59,11 @@ public abstract class PaliObject {
 		paint.setStyle(s);
 	}
 	
+	public RectF getRect()
+	{
+		return this.rect;
+	}
+	
 	public abstract void drawObject(Canvas c);
 	
 }

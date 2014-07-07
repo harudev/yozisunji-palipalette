@@ -12,10 +12,14 @@ import android.graphics.Paint.Style;
 import android.graphics.Path;
 import android.graphics.Path.Direction;
 import android.graphics.RectF;
+import android.os.Handler;
 import android.util.AttributeSet;
+import android.util.FloatMath;
 import android.util.Log;
+import android.view.HapticFeedbackConstants;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
 
 public class PaliTouchCanvas extends View {
 	Path pencilPath = new Path();
@@ -37,7 +41,18 @@ public class PaliTouchCanvas extends View {
 	
 	RectF rect;
 	
-	boolean selected=false;
+	public boolean selected=false;
+	
+	private boolean zoom = false;
+	float oldDist = 1f, newDist = 1f;
+	private PaliTouchCanvas parent;
+	
+	private boolean mLongPressed = false;
+	private Handler mHandler = new Handler();
+	private LongPressCheckRunnable mLongPressCheckRunnable = new LongPressCheckRunnable();
+	
+	private int mLongPressTimeout;
+	private int mScaledTouchSlope;
 	long time;
 	
 	private Context mContext;
@@ -49,6 +64,9 @@ public class PaliTouchCanvas extends View {
 		// TODO Auto-generated constructor stub
 		tempObj = null;
 		p = new Paint();
+		mLongPressTimeout = ViewConfiguration.getLongPressTimeout();
+		mScaledTouchSlope = ViewConfiguration.get( context ).getScaledTouchSlop();
+		parent = this;
 	}
 	
 	public void setCanvasAddr(PaliCanvas c)
@@ -87,8 +105,16 @@ public class PaliTouchCanvas extends View {
 			 downY = e.getY();
 			 time = e.getDownTime();
 			 			 
+			
 			 switch(PaliCanvas.selectedTool)
 			 {
+			 case PaliCanvas.TOOL_PICKOBJECT:
+				 if(this.selected && tempObj.getRect().contains(downX, downY))
+				 {
+					 startTimeout();
+					 Log.w("LongPress","Started");
+				 }
+				 break;
 			 case PaliCanvas.TOOL_PENCIL:
 				 pencilPath.reset();
 				 minX=downX; minY=downY;
@@ -108,146 +134,156 @@ public class PaliTouchCanvas extends View {
 				 break;
 			 }
 			 return true;
-		 case MotionEvent.ACTION_MOVE:
-			 moveX = e.getX();
-			 moveY = e.getY();
+		 case MotionEvent.ACTION_POINTER_DOWN:
+			 newDist = spacing(e);
+			 oldDist = spacing(e);
 			 
-			 switch(PaliCanvas.selectedTool)
+			 this.zoom = true;
+			 return true;
+		 case MotionEvent.ACTION_POINTER_UP:
+			 this.zoom = false;
+			 return true;
+		 case MotionEvent.ACTION_MOVE:
+			 if(zoom==true)
 			 {
-			 case PaliCanvas.TOOL_PENCIL:
-				 minX=min(minX,moveX);
-                 minY=min(minY,moveY);
-                 maxX=max(maxX,moveX);
-                 maxY=max(maxY,moveY);
-				 movement = movement + " " + moveX + " " + moveY;
-				 pencilPath.lineTo(moveX, moveY);
-				 ((PaliFreeDraw)tempObj).getPath().lineTo(moveX,moveY);
-				 break;
-			 case PaliCanvas.TOOL_BRUSH:
-				 minX=min(minX,moveX);
-                 minY=min(minY,moveY);
-                 maxX=max(maxX,moveX);
-                 maxY=max(maxY,moveY);
-				 movement = movement + " " + moveX + " " + moveY;
-				 brushPath.lineTo(moveX, moveY);
-				 brushPath.addCircle(moveX, moveY, 30, Direction.CW);
-				 ((PaliBrush)tempObj).getPath().lineTo(moveX,moveY);				
-				 break;
-			 case PaliCanvas.TOOL_CIRCLE:
-				 tempObj = new PaliCircle(downX, downY, (float)Math.sqrt((float)Math.pow(moveX-downX, 2) + (float)Math.pow(moveY-downY, 2)));
-				 break;
-			 case PaliCanvas.TOOL_ELLIPSE:
-				 tempObj = new PaliEllipse(downX, downY, moveX, moveY);
-				 break;
-			 case PaliCanvas.TOOL_RECTANGLE:
-				 tempObj = new PaliRectangle(downX, downY, moveX, moveY);
+				 newDist = spacing(e);
 				 
+				 if (newDist - oldDist > 20) { // zoom in
+	                    oldDist = newDist;
+	                    if(PaliCanvas.zoom < 1000)
+	                    	PaliCanvas.zoom *= 1.5;
+	                } else if(oldDist - newDist > 20) { // zoom out
+	                    oldDist = newDist;
+	                    if(PaliCanvas.zoom > 1)
+	                    	PaliCanvas.zoom /= 1.5;
+	                }
+				 canvas.DrawScreen();
 			 }
+			 else
+			 {
+				 moveX = e.getX();
+				 moveY = e.getY();
+				 
+				 switch(PaliCanvas.selectedTool)
+				 {
+				 case PaliCanvas.TOOL_PICKOBJECT:
+					 stopTimeout();
+					 Log.w("LongPress","Stopped - move");
+					 break;
+				 case PaliCanvas.TOOL_PENCIL:
+					 minX=min(minX,moveX);
+	                 minY=min(minY,moveY);
+	                 maxX=max(maxX,moveX);
+	                 maxY=max(maxY,moveY);
+					 movement = movement + " " + moveX + " " + moveY;
+					 pencilPath.lineTo(moveX, moveY);
+					 ((PaliFreeDraw)tempObj).getPath().lineTo(moveX,moveY);
+					 break;
+				 case PaliCanvas.TOOL_BRUSH:
+					 minX=min(minX,moveX);
+	                 minY=min(minY,moveY);
+	                 maxX=max(maxX,moveX);
+	                 maxY=max(maxY,moveY);
+					 movement = movement + " " + moveX + " " + moveY;
+					 brushPath.lineTo(moveX, moveY);
+					 brushPath.addCircle(moveX, moveY, 30, Direction.CW);
+					 ((PaliBrush)tempObj).getPath().lineTo(moveX,moveY);				
+					 break;
+				 case PaliCanvas.TOOL_CIRCLE:
+					 tempObj = new PaliCircle(downX, downY, (float)Math.sqrt((float)Math.pow(moveX-downX, 2) + (float)Math.pow(moveY-downY, 2)));
+					 break;
+				 case PaliCanvas.TOOL_ELLIPSE:
+					 tempObj = new PaliEllipse(downX, downY, moveX, moveY);
+					 break;
+				 case PaliCanvas.TOOL_RECTANGLE:
+					 tempObj = new PaliRectangle(downX, downY, moveX, moveY);
+					 
+				 }
+			 }
+			
 			 //this.DrawScreen();
 			 this.invalidate();
 			 return true;
 		 
 		 case MotionEvent.ACTION_UP:
-			 
 			 fillColor = Integer.toHexString(PaliCanvas.fillColor).substring(2);
 			 strokeColor = Integer.toHexString(PaliCanvas.strokeColor).substring(2);
 			 strokeWidth = PaliCanvas.strokeWidth;
 			 
 			 upX = e.getX();
 			 upY = e.getY();
-			 time = e.getEventTime() - time;
 			 
 			 switch(PaliCanvas.selectedTool) {
 			 case PaliCanvas.TOOL_PICKOBJECT:
 				 float left=999999, right=0, top=999999, bottom=0;
 				 PaliObject temp;
-				 if(time>1500 && this.selected)
+				 
+				 stopTimeout();
+				 Log.w("LongPress","Stopped - up");
+				 this.selected=false;
+				 PaliCanvas.selObjArr.clear();
+				 this.tempObj=null;
+				 
+				 if(upX==downX && upY==downY)
 				 {
-					 ((MainActivity) mContext).popUpSubMenu();
-					 /*
-					 for(int i=0;i<PaliCanvas.selObjArr.size();i++)
+					 for(int i = SVGParser.Layers.size()-1; i>=0;i--)
 					 {
-						 SVGParser.Layers.get(PaliCanvas.selObjArr.get(i).x).objs.remove(PaliCanvas.selObjArr.get(i).y);
+						 if(SVGParser.Layers.get(i).visibility==100)
+						 {
+							 for(int j=SVGParser.Layers.get(i).objs.size()-1;j>=0;j--)
+							 {
+								 temp = SVGParser.Layers.get(i).objs.get(j);
+								 if(temp.rect.contains(upX,upY))
+								 {
+									 tempObj=new PaliRectangle(temp.rect);
+									 PaliCanvas.selObjArr.add(new PaliPoint(i,j));
+									 this.selected = true;
+									 break;
+								 }
+							 }
+						 }
 					 }
-					 PaliCanvas.selObjArr.clear();
-					 this.tempObj = null;
-					 this.selected = false;
+
 					 this.invalidate();
-					 canvas.DrawScreen();
-					 */
 				 }
 				 else
 				 {
-					 this.selected=false;
-					 
-					 if(upX==downX && upY==downY)
+					 this.rect = new RectF(min(downX,upX), min(downY,upY), max(downX,upX), max(downY,upY));
+
+					 for(int i = SVGParser.Layers.size()-1; i>=0;i--)
 					 {
-						 for(int i = SVGParser.Layers.size()-1; i>=0;i--)
+						 if(SVGParser.Layers.get(i).visibility==100)
 						 {
-							 if(SVGParser.Layers.get(i).visibility==100)
+							 for(int j=SVGParser.Layers.get(i).objs.size()-1;j>=0;j--)
 							 {
-								 for(int j=SVGParser.Layers.get(i).objs.size()-1;j>=0;j--)
+								 temp = SVGParser.Layers.get(i).objs.get(j);
+								 if(this.rect.contains(temp.rect))
 								 {
-									 temp = SVGParser.Layers.get(i).objs.get(j);
-									 if(temp.rect.contains(upX,upY))
-									 {
-										 tempObj=new PaliRectangle(temp.rect);
-										 PaliCanvas.selObjArr.add(new PaliPoint(i,j));
-										 this.selected = true;
-										 break;
-									 }
+									 PaliCanvas.selObjArr.add(new PaliPoint(i,j));
+									 left = min(left, temp.rect.left);
+									 top = min(top, temp.rect.top);
+									 right = max(right, temp.rect.right);
+									 bottom = max(bottom, temp.rect.bottom);
+									 this.selected = true;
 								 }
 							 }
 						 }
-						 if(this.selected)
-						 {
-							 this.invalidate();
-						 }
-						 else
-						 {
-							 PaliCanvas.selObjArr.clear();
-							 this.tempObj=null;
-							 this.invalidate();
-						 }
+					 }
+					 
+					 if(selected)
+					 {
+						 tempObj = new PaliRectangle(left, top, right, bottom);
+						 this.invalidate();
 					 }
 					 else
 					 {
-						 this.rect = new RectF(min(downX,upX), min(downY,upY), max(downX,upX), max(downY,upY));
-	
-						 for(int i = SVGParser.Layers.size()-1; i>=0;i--)
-						 {
-							 if(SVGParser.Layers.get(i).visibility==100)
-							 {
-								 for(int j=SVGParser.Layers.get(i).objs.size()-1;j>=0;j--)
-								 {
-									 temp = SVGParser.Layers.get(i).objs.get(j);
-									 if(this.rect.contains(temp.rect))
-									 {
-										 PaliCanvas.selObjArr.add(new PaliPoint(i,j));
-										 left = min(left, temp.rect.left);
-										 top = min(top, temp.rect.top);
-										 right = max(right, temp.rect.right);
-										 bottom = max(bottom, temp.rect.bottom);
-										 this.selected = true;
-									 }
-								 }
-							 }
-						 }
-						 
-						 if(selected)
-						 {
-							 tempObj = new PaliRectangle(left, top, right, bottom);
-							 this.invalidate();
-						 }
-						 else
-						 {
-							 PaliCanvas.selObjArr.clear();
-							 this.tempObj=null;
-							 this.invalidate();
-						 }
+						 PaliCanvas.selObjArr.clear();
+						 this.tempObj=null;
+						 this.invalidate();
 					 }
 				 }
-				 return false;
+				 
+				 return true;
 			 case PaliCanvas.TOOL_PENCIL:
                  minX=min(minX,upX);
                  minY=min(minY,upY);
@@ -348,5 +384,31 @@ public class PaliTouchCanvas extends View {
 	float max(float a, float b)
 	{
 		return (a>b)?a:b;
+	}
+	public void startTimeout(){
+		mLongPressed = false;
+		mHandler.postDelayed( mLongPressCheckRunnable, 1000 );
+	}
+	
+	public void stopTimeout(){
+		if ( !mLongPressed )
+			mHandler.removeCallbacks( mLongPressCheckRunnable );
+	}
+	
+	 private float spacing(MotionEvent event) {
+	        float x = event.getX(0) - event.getX(1);
+	        float y = event.getY(0) - event.getY(1);
+	        return FloatMath.sqrt(x * x + y * y);
+	 
+	    }
+	
+	private class LongPressCheckRunnable implements Runnable{
+		@Override
+		public void run() {
+			mLongPressed = true;
+			parent.performHapticFeedback( HapticFeedbackConstants.LONG_PRESS );
+			Log.w("LongPress","Thread running");
+			((MainActivity) mContext).popUpSubMenu();
+		}
 	}
 }
