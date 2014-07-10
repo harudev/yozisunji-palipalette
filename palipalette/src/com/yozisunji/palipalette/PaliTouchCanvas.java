@@ -31,7 +31,7 @@ public class PaliTouchCanvas extends View {
 	float pressure;
 	List<Float> brushX = new ArrayList<Float>();
     List<Float> brushY = new ArrayList<Float>();
-    List<Integer> brushA = new ArrayList<Integer>();
+    List<Float> brushP = new ArrayList<Float>();
     float brushR=0;
 	String 			movement="";
 	String 			html="";
@@ -160,7 +160,7 @@ public class PaliTouchCanvas extends View {
 				 brushX.add(downX);
                  brushY.add(downY);
                  pressure = e.getPressure();                   
-                 brushA.add((int)(pressure*255));
+                 brushP.add(pressure);
                  brushR = 30;
                  
                  tempObj = new PaliFreeDraw();
@@ -233,7 +233,7 @@ public class PaliTouchCanvas extends View {
 					 brushX.add(moveX);
                      brushY.add(moveY);
                      pressure = e.getPressure();                   
-                     brushA.add((int)(pressure*255));
+                     brushP.add(pressure);
                      
                      html += "<circle cx=\""+moveX+"\" cy=\""+moveY+"\" r=\""+brushR+"\" fill=\"#"+fillColor+"\" fill-opacity=\""+pressure+"\" />";
                      ((PaliFreeDraw)tempObj).getPath().lineTo(moveX,moveY);
@@ -374,8 +374,8 @@ public class PaliTouchCanvas extends View {
 				 p.setColor(PaliCanvas.fillColor);
 				 p.setStyle(Paint.Style.FILL);
                  
-                 for(int i=0; i<brushX.size(); i++) {
-                	 p.setAlpha(brushA.get(i));
+                 for(int i=0; i<brushX.size(); i++) {               	 
+                	 p.setAlpha((int)(PaliCanvas.alpha * brushP.get(i)));
                 	 c.drawCircle(brushX.get(i)-rect.left,brushY.get(i)-rect.top,brushR,p);
                  }
                  
@@ -390,7 +390,7 @@ public class PaliTouchCanvas extends View {
 	             
 	             brushX.clear();
 	             brushY.clear();
-	             brushA.clear();
+	             brushP.clear();
 	             
 	             //Log.i("debug", ""+html);
 	             break;
