@@ -366,6 +366,16 @@ class SVGHandler extends DefaultHandler {
             	SVGParser.Layers.get(SVGParser.Layers.size()-1).objs.add(new PaliCircle(localName,centerX,centerY,radius));
             	PaliCanvas.currentObject++;
             }
+        } else if (localName.equals("ellipse")) {
+        	Float centerX = getFloatAttr("cx", atts);
+            Float centerY = getFloatAttr("cy", atts);
+            Float radiusX = getFloatAttr("rx", atts);
+            Float radiusY = getFloatAttr("ry", atts);
+            if (centerX != null && centerY != null && radiusX != null && radiusY != null) {
+            	SVGParser.Layers.get(SVGParser.Layers.size()-1).objs.add(new PaliEllipse(localName,centerX-radiusX,centerY-radiusY,centerX+radiusX,centerY+radiusY));
+            	PaliCanvas.currentObject++;
+            	Log.i("debug",""+localName);
+            }
         } else if (localName.equals("rect")) {
         	Float centerX = getFloatAttr("x", atts);
         	Float centerY = getFloatAttr("y", atts);
