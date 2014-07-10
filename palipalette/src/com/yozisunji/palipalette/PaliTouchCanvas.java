@@ -160,7 +160,7 @@ public class PaliTouchCanvas extends View {
 				 brushX.add(downX);
                  brushY.add(downY);
                  pressure = e.getPressure();                   
-                 brushA.add((int)(pressure*100));
+                 brushA.add((int)(pressure*255));
                  brushR = 30;
                  
                  tempObj = new PaliFreeDraw();
@@ -233,7 +233,7 @@ public class PaliTouchCanvas extends View {
 					 brushX.add(moveX);
                      brushY.add(moveY);
                      pressure = e.getPressure();                   
-                     brushA.add((int)(pressure*100));
+                     brushA.add((int)(pressure*255));
                      
                      html += "<circle cx=\""+moveX+"\" cy=\""+moveY+"\" r=\""+brushR+"\" fill=\"#"+fillColor+"\" fill-opacity=\""+pressure+"\" />";
                      ((PaliFreeDraw)tempObj).getPath().lineTo(moveX,moveY);
@@ -357,7 +357,7 @@ public class PaliTouchCanvas extends View {
                  PaliCanvas.currentObject++;
                  PaliCanvas.drawMode = false;
                  canvas.DrawScreen();
-                 Log.i("debug",""+html);
+                 //Log.i("debug",""+html);
                  break;
 			 case PaliCanvas.TOOL_BRUSH:				 
 				 html += "</g>";
@@ -392,7 +392,7 @@ public class PaliTouchCanvas extends View {
 	             brushY.clear();
 	             brushA.clear();
 	             
-	             Log.i("debug", ""+html);
+	             //Log.i("debug", ""+html);
 	             break;
 	             
 				 /*
@@ -442,10 +442,7 @@ public class PaliTouchCanvas extends View {
 				 tempObj=null;
 				 PaliCanvas.currentObject++;
 				 PaliCanvas.drawMode = false;
-				 canvas.DrawScreen();
-				 
-				
-				 
+				 canvas.DrawScreen();				 
 				 break;				 
 			 case PaliCanvas.TOOL_RECTANGLE:
 				 x = Math.min(downX, upX);
@@ -463,8 +460,7 @@ public class PaliTouchCanvas extends View {
 				 tempObj=null;
 				 PaliCanvas.currentObject++;
 				 PaliCanvas.drawMode = false;
-				 canvas.DrawScreen();
-				 			 
+				 canvas.DrawScreen();				 			 
 				 break;
 			 }
 			 this.invalidate();
