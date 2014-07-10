@@ -4,15 +4,12 @@ package com.yozisunji.palipalette;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.samsung.spensdk.SCanvasView;
-
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.graphics.Path;
-import android.graphics.Path.Direction;
 import android.graphics.RectF;
 import android.os.Handler;
 import android.util.AttributeSet;
@@ -33,8 +30,8 @@ public class PaliTouchCanvas extends View {
 	float pressure;
 	List<Float> brushX = new ArrayList<Float>();
     List<Float> brushY = new ArrayList<Float>();
-    List<Float> brushR = new ArrayList<Float>();
     List<Integer> brushA = new ArrayList<Integer>();
+    float brushR=0;
 	String 			movement="";
 	String 			html="";
 	String fillColor;
@@ -128,6 +125,9 @@ public class PaliTouchCanvas extends View {
 		 {
 		 
 		 case MotionEvent.ACTION_DOWN:	
+			 fillColor = Integer.toHexString(PaliCanvas.fillColor).substring(2);
+			 strokeColor = Integer.toHexString(PaliCanvas.strokeColor).substring(2);
+			 strokeWidth = PaliCanvas.strokeWidth;
 			 			 			 
 			 downX = e.getX()/PaliCanvas.zoom;
 			 downY = e.getY()/PaliCanvas.zoom;
@@ -137,7 +137,7 @@ public class PaliTouchCanvas extends View {
 			 case PaliCanvas.TOOL_PICKOBJECT:
 				 if(this.selected && tempObj.getRect().contains(downX, downY))
 				 {
-					 Log.w("LongPress","DOWN: "+Integer.toString(PaliCanvas.selObjArr.size()));
+					 Log.w("debug","DOWN: "+Integer.toString(PaliCanvas.selObjArr.size()));
 					 startTimeout();
 				 }
 				 break;
@@ -152,9 +152,11 @@ public class PaliTouchCanvas extends View {
 			 case PaliCanvas.TOOL_BRUSH:
 				 brushX.add(downX);
                  brushY.add(downY);
-                 brushR.add(30f);
                  pressure = e.getPressure();                   
                  brushA.add((int)(pressure*100));
+                 brushR = 30;
+                 
+                 html = "<g>";
                  break;
 				 /*
 				 brushPath = new Path();
@@ -216,9 +218,10 @@ public class PaliTouchCanvas extends View {
 				 case PaliCanvas.TOOL_BRUSH:
 					 brushX.add(moveX);
                      brushY.add(moveY);
-                     brushR.add(30f);
                      pressure = e.getPressure();                   
                      brushA.add((int)(pressure*100));
+                     
+                     html += "<circle cx=\""+moveX+"\" cy=\""+moveY+"\" r=\""+brushR+"\" fill=\"#"+fillColor+"\" fill-opacity=\""+pressure+"\" />";
                      break;
 					 /*
 					 minX=min(minX,moveX);
@@ -247,11 +250,7 @@ public class PaliTouchCanvas extends View {
 			 this.invalidate();
 			 return true;
 		 
-		 case MotionEvent.ACTION_UP:
-			 fillColor = Integer.toHexString(PaliCanvas.fillColor).substring(2);
-			 strokeColor = Integer.toHexString(PaliCanvas.strokeColor).substring(2);
-			 strokeWidth = PaliCanvas.strokeWidth;
-			 
+		 case MotionEvent.ACTION_UP:			 
 			 upX = e.getX()/PaliCanvas.zoom;
 			 upY = e.getY()/PaliCanvas.zoom;
 			 float left=999999, right=0, top=999999, bottom=0;
@@ -343,10 +342,11 @@ public class PaliTouchCanvas extends View {
                  PaliCanvas.currentObject++;
                  PaliCanvas.drawMode = false;
                  canvas.DrawScreen();
+                 Log.i("debug",""+html);
                  break;
 			 case PaliCanvas.TOOL_BRUSH:
 				 for(int i=0;i<brushX.size();i++) {
-                     SVGParser.Layers.get(PaliCanvas.currentLayer).objs.add(new PaliCircle(brushX.get(i),brushY.get(i),brushR.get(i),brushA.get(i)));
+                     SVGParser.Layers.get(PaliCanvas.currentLayer).objs.add(new PaliCircle(brushX.get(i),brushY.get(i),brushR,brushA.get(i)));
 	             }
 	             tempObj=null;
 	             PaliCanvas.currentObject++;
@@ -355,8 +355,11 @@ public class PaliTouchCanvas extends View {
 	             
 	             brushX.clear();
 	             brushY.clear();
-	             brushR.clear();
 	             brushA.clear();
+	             
+	             html += "</g>";
+	             
+	             Log.i("debug", ""+html);
 	             break;
 	             
 				 /*

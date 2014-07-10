@@ -27,7 +27,7 @@ public class PaliCanvas extends SurfaceView implements SurfaceHolder.Callback {
 	public static int width, height;
 	public static int currentLayer;
 	public static int currentObject;
-	public static int selectedTool=1;
+	public static int selectedTool=0;
 	
 	public static boolean drawMode = true;
 	public static float zoom = 1;
@@ -93,7 +93,9 @@ public class PaliCanvas extends SurfaceView implements SurfaceHolder.Callback {
 							 for(int j=0;j<SVGParser.Layers.get(i).objs.size();j++)
 							 {
 								 temp = SVGParser.Layers.get(i).objs.get(j);
-								 temp.setColor(strokeColor, fillColor);
+								 if(PaliCanvas.selectedTool != PaliCanvas.TOOL_BRUSH) {
+									 temp.setColor(strokeColor, fillColor);
+								 }
 								 temp.setWidth(5);
 								 temp.drawObject(cnvs);
 							 }
