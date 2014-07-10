@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -39,11 +40,13 @@ public class PaliTouchCanvas extends View {
 	int strokeWidth;	
 	
 	PaliObject tempObj;
+
+	PaliCanvas canvas;	
+	RectF rect;
+	Bitmap bm;
+	Canvas c;
 	Paint p;
 	
-	PaliCanvas canvas;
-	
-	RectF rect;
 	
 	public boolean selected=false;
 	
@@ -67,7 +70,6 @@ public class PaliTouchCanvas extends View {
 		this.mContext = context; 
 		// TODO Auto-generated constructor stub
 		tempObj = null;
-		p = new Paint();
 		mLongPressTimeout = ViewConfiguration.getLongPressTimeout();
 		mScaledTouchSlope = ViewConfiguration.get( context ).getScaledTouchSlop();
 		parent = this;	
@@ -150,14 +152,21 @@ public class PaliTouchCanvas extends View {
 				 ((PaliFreeDraw)tempObj).getPath().moveTo(downX, downY);
 				 break;
 			 case PaliCanvas.TOOL_BRUSH:
+				 html = "<g>";
+				 				 
+				 minX=downX; minY=downY;
+                 maxX=downX; maxY=downY;
+				 
 				 brushX.add(downX);
                  brushY.add(downY);
                  pressure = e.getPressure();                   
                  brushA.add((int)(pressure*100));
                  brushR = 30;
                  
-                 html = "<g>";
-                 break;
+                 tempObj = new PaliFreeDraw();
+				 ((PaliFreeDraw)tempObj).getPath().moveTo(downX, downY);          
+				 break;
+				 
 				 /*
 				 brushPath = new Path();
 				 minX=downX; minY=downY;
@@ -216,12 +225,18 @@ public class PaliTouchCanvas extends View {
 					 ((PaliFreeDraw)tempObj).getPath().lineTo(moveX,moveY);
 					 break;
 				 case PaliCanvas.TOOL_BRUSH:
+					 minX=min(minX,moveX);
+	                 minY=min(minY,moveY);
+	                 maxX=max(maxX,moveX);
+	                 maxY=max(maxY,moveY);	                 
+								 
 					 brushX.add(moveX);
                      brushY.add(moveY);
                      pressure = e.getPressure();                   
                      brushA.add((int)(pressure*100));
                      
                      html += "<circle cx=\""+moveX+"\" cy=\""+moveY+"\" r=\""+brushR+"\" fill=\"#"+fillColor+"\" fill-opacity=\""+pressure+"\" />";
+                     ((PaliFreeDraw)tempObj).getPath().lineTo(moveX,moveY);
                      break;
 					 /*
 					 minX=min(minX,moveX);
@@ -344,11 +359,31 @@ public class PaliTouchCanvas extends View {
                  canvas.DrawScreen();
                  Log.i("debug",""+html);
                  break;
-			 case PaliCanvas.TOOL_BRUSH:
-				 for(int i=0;i<brushX.size();i++) {
-                     SVGParser.Layers.get(PaliCanvas.currentLayer).objs.add(new PaliCircle(brushX.get(i),brushY.get(i),brushR,brushA.get(i)));
-	             }
+			 case PaliCanvas.TOOL_BRUSH:				 
+				 html += "</g>";
+
+				 minX=min(minX,upX);
+                 minY=min(minY,upY);
+                 maxX=max(maxX,upX);
+                 maxY=max(maxY,upY);
+                 rect = new RectF(minX-brushR, minY-brushR, maxX+brushR, maxY+brushR);
+                 
+                 bm = Bitmap.createBitmap((int)(rect.right), (int)(rect.bottom), Bitmap.Config.ARGB_8888);
+				 c = new Canvas(bm);
+				 p = new Paint();
+				 p.setColor(PaliCanvas.fillColor);
+				 p.setStyle(Paint.Style.FILL);
+                 
+                 for(int i=0; i<brushX.size(); i++) {
+                	 p.setAlpha(brushA.get(i));
+                	 c.drawCircle(brushX.get(i)-rect.left,brushY.get(i)-rect.top,brushR,p);
+                 }
+                 
+	             SVGParser.Layers.get(PaliCanvas.currentLayer).objs.add(new PaliBrush(html, bm, rect));
+	             
 	             tempObj=null;
+	             bm=null;
+	             c=null;
 	             PaliCanvas.currentObject++;
 	             PaliCanvas.drawMode = false;
 	             canvas.DrawScreen();
@@ -356,8 +391,6 @@ public class PaliTouchCanvas extends View {
 	             brushX.clear();
 	             brushY.clear();
 	             brushA.clear();
-	             
-	             html += "</g>";
 	             
 	             Log.i("debug", ""+html);
 	             break;
