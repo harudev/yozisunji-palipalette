@@ -4,6 +4,7 @@ import android.R;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 
@@ -22,10 +23,28 @@ public class PaliRectangle extends PaliObject {
 	{
 		super(tag,scolor,fcolor);
 	}
+	
+	PaliRectangle(float left, float top, float right, float bottom)
+	{
+		paint = new Paint();
+		paint.setAntiAlias(true);
+		paint.setColor(Color.GREEN);
+		paint.setStyle(Paint.Style.FILL);
+		this.left = left;
+		this.top = top;
+		this.right = right;
+		this.bottom = bottom;
+		
+		this.rect = new RectF(left, top, right, bottom);
+	}
+	
 	PaliRectangle(String tag, float left, float top, float right, float bottom)
 	{
 		paint = new Paint();
 		paint.setAntiAlias(true);
+		paint.setColor(PaliCanvas.fillColor);
+		paint.setStyle(Paint.Style.FILL);
+		paint.setAlpha(PaliCanvas.alpha);
 		svgtag = tag;
 		this.left = left;
 		this.top = top;
@@ -34,17 +53,7 @@ public class PaliRectangle extends PaliObject {
 		
 		this.rect = new RectF(left, top, right, bottom);
 	}
-	PaliRectangle(float left, float top, float right, float bottom)
-	{
-		paint = new Paint();
-		paint.setAntiAlias(true);
-		this.left = left;
-		this.top = top;
-		this.right = right;
-		this.bottom = bottom;
-		
-		this.rect = new RectF(left, top, right, bottom);
-	}
+	
 	PaliRectangle(String tag, float left, float top, float right, float bottom, int scolor, int fcolor)
 	{
 		svgtag = tag;

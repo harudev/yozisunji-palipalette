@@ -1,6 +1,7 @@
 package com.yozisunji.palipalette;
 
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 
@@ -16,14 +17,33 @@ public class PaliEllipse extends PaliObject {
 		this.right = rect.right;
 		this.bottom = rect.bottom;
 	}
+	
 	PaliEllipse(String tag, int scolor, int fcolor)
 	{
 		super(tag,scolor,fcolor);
 	}
+	
+	PaliEllipse(float left, float top, float right, float bottom)
+	{
+		paint = new Paint();
+		paint.setAntiAlias(true);
+		paint.setColor(Color.GREEN);
+		paint.setStyle(Paint.Style.FILL);
+		this.left = left;
+		this.top = top;
+		this.right = right;
+		this.bottom = bottom;
+		
+		this.rect = new RectF(left, top, right, bottom);
+	}
+	
 	PaliEllipse(String tag, float left, float top, float right, float bottom)
 	{
 		paint = new Paint();
 		paint.setAntiAlias(true);
+		paint.setColor(PaliCanvas.fillColor);
+		paint.setStyle(Paint.Style.FILL);
+		paint.setAlpha(PaliCanvas.alpha);
 		svgtag = tag;
 		this.left = left;
 		this.top = top;
@@ -32,17 +52,7 @@ public class PaliEllipse extends PaliObject {
 		
 		this.rect = new RectF(left, top, right, bottom);
 	}
-	PaliEllipse(float left, float top, float right, float bottom)
-	{
-		paint = new Paint();
-		paint.setAntiAlias(true);
-		this.left = left;
-		this.top = top;
-		this.right = right;
-		this.bottom = bottom;
-		
-		this.rect = new RectF(left, top, right, bottom);
-	}
+	
 	PaliEllipse(String tag, float left, float top, float right, float bottom, int scolor, int fcolor)
 	{
 		svgtag = tag;

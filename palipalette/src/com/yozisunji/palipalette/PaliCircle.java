@@ -9,11 +9,7 @@ import android.util.Log;
 public class PaliCircle extends PaliObject {
 	float x, y;
 	float r;
-	/*
-	PaliCircle()
-	{
-		super();
-	}*/
+
 	PaliCircle(String tag, int scolor, int fcolor)
 	{
 		super(tag,scolor,fcolor);
@@ -34,24 +30,12 @@ public class PaliCircle extends PaliObject {
 		this.rect = new RectF(x-r, y-r, x+r, y+r);
 	}
 	
-	PaliCircle(float x, float y, float r, int alpha)
-	{
-		paint = new Paint();
-        paint.setAntiAlias(true);        
-		paint.setColor(Color.GREEN);
-		paint.setStyle(Paint.Style.FILL_AND_STROKE);
-		paint.setAlpha(alpha);
-		this.x = x;
-		this.y = y;
-		this.r = r;
-		
-		this.rect = new RectF(x-r, y-r, x+r, y+r);
-	}
-
 	PaliCircle(String tag, float x, float y, float r)
 	{
 		paint = new Paint();
         paint.setAntiAlias(true);
+        paint.setColor(PaliCanvas.fillColor);
+        paint.setAlpha(PaliCanvas.alpha);
 		svgtag=tag;
 		this.x = x;
 		this.y = y;

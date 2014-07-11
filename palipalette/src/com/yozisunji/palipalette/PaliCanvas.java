@@ -96,9 +96,9 @@ public class PaliCanvas extends SurfaceView implements SurfaceHolder.Callback {
 							 {
 								 temp = SVGParser.Layers.get(i).objs.get(j);
 								 if(PaliCanvas.selectedTool != PaliCanvas.TOOL_BRUSH) {
-									 temp.setColor(strokeColor, fillColor);
+									 temp.setColor(temp.paint.getColor(), temp.paint.getColor());
 								 }
-								 temp.setWidth(5);
+								 temp.setWidth(temp.paint.getStrokeWidth());
 								 temp.drawObject(cnvs);
 							 }
 						 }

@@ -1,6 +1,7 @@
 package com.yozisunji.palipalette;
 
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
@@ -16,6 +17,7 @@ public class PaliFreeDraw extends PaliObject {
 	{
 		paint = new Paint();
 		paint.setAntiAlias(true);
+		paint.setColor(PaliCanvas.fillColor);
 		svgtag = tag;
 		this.path = path;
 		this.rect = new RectF(100, 100, 500, 500);
@@ -24,6 +26,10 @@ public class PaliFreeDraw extends PaliObject {
 	{
 		paint = new Paint();
 		paint.setAntiAlias(true);
+		paint.setColor(PaliCanvas.fillColor);
+		paint.setStyle(Paint.Style.FILL);
+		paint.setAlpha(PaliCanvas.alpha);
+		paint.setStrokeWidth(PaliCanvas.strokeWidth);
 		svgtag = tag;
 		this.path = path;
 		this.rect = rect;
@@ -52,7 +58,6 @@ public class PaliFreeDraw extends PaliObject {
 	}
 	
 	public void drawObject(Canvas c) {
-		paint.setStrokeWidth(PaliCanvas.strokeWidth);
 		paint.setStyle(Paint.Style.STROKE);
 		c.drawPath(path, paint);
 	}

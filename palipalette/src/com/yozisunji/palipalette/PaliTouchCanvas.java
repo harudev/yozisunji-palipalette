@@ -28,7 +28,7 @@ public class PaliTouchCanvas extends View {
 	float minX=0, minY=0, maxX=0, maxY=0;
 	float x=0, y=0, width=0, height=0;
 	float cx=0, cy=0, r=0;
-	float pressure;
+	float pressure, opacity;
 	List<Float> brushX = new ArrayList<Float>();
     List<Float> brushY = new ArrayList<Float>();
     List<Float> brushP = new ArrayList<Float>();
@@ -349,15 +349,14 @@ public class PaliTouchCanvas extends View {
                  maxX=max(maxX,upX);
                  maxY=max(maxY,upY);
                  rect = new RectF(minX, minY, maxX, maxY);
-                 
-                 html = "<path fill=\"none\" stroke=\"#"+strokeColor+"\" stroke-width=\""+strokeWidth+"\" d=\"M"+downX+" "+downY+""+movement+"\" />";
+                 opacity = PaliCanvas.alpha / 255.0f;
+                 html = "<path fill=\"none\" stroke=\"#"+strokeColor+"\" stroke-width=\""+strokeWidth+"\" stroke-opacity=\""+opacity+"\" d=\"M"+downX+" "+downY+""+movement+"\" />";
                  SVGParser.Layers.get(canvas.currentLayer).objs.add(new PaliFreeDraw(html, pencilPath, rect));
                  tempObj=null;
                  pencilPath = null;
                  PaliCanvas.currentObject++;
                  PaliCanvas.drawMode = false;
-                 canvas.DrawScreen();
-                 //Log.i("debug",""+html);
+                 canvas.DrawScreen();                 
                  break;
 			 case PaliCanvas.TOOL_BRUSH:				 
 				 html += "</g>";
@@ -415,8 +414,9 @@ public class PaliTouchCanvas extends View {
 				 r = (float)Math.sqrt((float)Math.pow(upX-downX, 2) + (float)Math.pow(upY-downY, 2));
 				 cx = downX;
 				 cy = downY;
+				 opacity = PaliCanvas.alpha / 255.0f;
 				 
-				 html = "<circle cx=\""+cx+"\" cy=\""+cy+"\" r=\""+r+"\" stroke=\"#"+strokeColor+"\" stroke-width=\""+strokeWidth+"\" fill=\"#"+fillColor+"\" />";
+				 html = "<circle cx=\""+cx+"\" cy=\""+cy+"\" r=\""+r+"\" stroke=\"#"+strokeColor+"\" stroke-width=\""+strokeWidth+"\" fill=\"#"+fillColor+"\" stroke-opacity=\""+opacity+"\" fill-opacity=\""+opacity+"\" />";
 				 SVGParser.Layers.get(PaliCanvas.currentLayer).objs.add(new PaliCircle(html,cx,cy,r));
 				 tempObj=null;
 				 PaliCanvas.currentObject++;
@@ -431,13 +431,14 @@ public class PaliTouchCanvas extends View {
 				 
 				 cx=x+(width/2);
 				 cy=y+(height/2);
+				 opacity = PaliCanvas.alpha / 255.0f;
 				 
 				 left = downX;
 				 top = downY;
 				 right = upX;
-				 bottom = upY;
+				 bottom = upY;				 
 				 
-				 html = "<ellipse cx=\""+cx+"\" cy=\""+cy+"\" rx=\""+width+"\" ry=\""+height+"\" stroke=\"#"+strokeColor+"\" stroke-width=\""+strokeWidth+"\" fill=\"#"+fillColor+"\" />";
+				 html = "<ellipse cx=\""+cx+"\" cy=\""+cy+"\" rx=\""+width+"\" ry=\""+height+"\" stroke=\"#"+strokeColor+"\" stroke-width=\""+strokeWidth+"\" fill=\"#"+fillColor+"\" stroke-opacity=\""+opacity+"\" fill-opacity=\""+opacity+"\" />";
 				 SVGParser.Layers.get(canvas.currentLayer).objs.add(new PaliEllipse(html,left,top,right,bottom));	
 				 tempObj=null;
 				 PaliCanvas.currentObject++;
@@ -449,18 +450,19 @@ public class PaliTouchCanvas extends View {
 				 y = Math.min(downY, upY);
 				 width = (float)Math.sqrt((float)Math.pow(upX-downX, 2));
 				 height = (float)Math.sqrt((float)Math.pow(upY-downY, 2));
+				 opacity = PaliCanvas.alpha / 255.0f;
 				 
 				 left = downX;
 				 top = downY;
 				 right = upX;
 				 bottom = upY;
 				 
-				 html = "<rect x=\""+x+"\" y=\""+y+"\" width=\""+width+"\" height=\""+height+"\" stroke=\"#"+strokeColor+"\" stroke-width=\""+strokeWidth+"\" fill=\"#"+fillColor+"\" />";
+				 html = "<rect x=\""+x+"\" y=\""+y+"\" width=\""+width+"\" height=\""+height+"\" stroke=\"#"+strokeColor+"\" stroke-width=\""+strokeWidth+"\" fill=\"#"+fillColor+"\" stroke-opacity=\""+opacity+"\" fill-opacity=\""+opacity+"\" />";
 				 SVGParser.Layers.get(canvas.currentLayer).objs.add(new PaliRectangle(html,left,top,right,bottom));	
 				 tempObj=null;
 				 PaliCanvas.currentObject++;
 				 PaliCanvas.drawMode = false;
-				 canvas.DrawScreen();				 			 
+				 canvas.DrawScreen();
 				 break;
 			 }
 			 this.invalidate();
