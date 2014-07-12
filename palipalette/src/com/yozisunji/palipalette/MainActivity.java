@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -25,7 +26,7 @@ public class MainActivity extends Activity {
 	PaliTouchCanvas touchview;
 	private Context mContext;
 	static SubMenuDialog dialog;
-
+	public static HelloAccessoryProviderService hs;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -46,7 +47,7 @@ public class MainActivity extends Activity {
 		touchview.setCanvasAddr(customview,
 				(LinearLayout) findViewById(R.id.selectLayout));
 
-		HelloAccessoryProviderService hs = new HelloAccessoryProviderService(this);
+		hs = new HelloAccessoryProviderService(this);
 
 		dialog = new SubMenuDialog();
 		Button copyBtn = (Button) findViewById(R.id.copyBtn);
@@ -105,5 +106,11 @@ public class MainActivity extends Activity {
 			touchview.deleteObject();
 			break;
 		}
+	}
+	
+	public void launchCustomizing()
+	{
+		Intent intent = new Intent(this, CustomizingMainActivity.class);
+		startActivity(intent);
 	}
 }
