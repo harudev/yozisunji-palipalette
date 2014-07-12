@@ -96,7 +96,8 @@ public class PaliSelector extends View {
 	}
 	public void onDraw(Canvas cnvs)
 	{
-		cnvs.scale(PaliCanvas.zoom,PaliCanvas.zoom);
+		cnvs.scale(PaliCanvas.zoom, PaliCanvas.zoom);
+		//cnvs.translate(PaliCanvas.canvasX, PaliCanvas.canvasY);
 		moveButton.draw(cnvs);
 		scaleButton.draw(cnvs);
 		rotateButton.draw(cnvs);

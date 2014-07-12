@@ -31,6 +31,7 @@ public class PaliCanvas extends SurfaceView implements SurfaceHolder.Callback {
 	public static int selectedTool=5;
 	
 	public static boolean drawMode = true;
+	public static float canvasX=0, canvasY=0;
 	public static float zoom = 1;
 	private Bitmap presaveBuffer, saveBuffer;
 	public static int scale;
@@ -75,7 +76,6 @@ public class PaliCanvas extends SurfaceView implements SurfaceHolder.Callback {
 			cnvs = new Canvas(saveBuffer);
 			
 			cnvs = getHolder().lockCanvas(null);			
-			
 			if(drawMode)
 			{		
 				synchronized(getHolder())
@@ -84,6 +84,7 @@ public class PaliCanvas extends SurfaceView implements SurfaceHolder.Callback {
 					p.setColor(Color.WHITE);
 					cnvs.drawPaint(p);
 					cnvs.scale(zoom, zoom);
+					cnvs.translate(canvasX, canvasY);
 
                     
 					for(int i = 0; i<SVGParser.Layers.size();i++)

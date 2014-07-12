@@ -28,6 +28,7 @@ public class PaliTouchCanvas extends View {
 	float x=0, y=0, width=0, height=0;
 	float cx=0, cy=0, r=0;
 	float pressure, opacity;
+	PaliPoint Point0, Point1;
 	List<Float> brushX = new ArrayList<Float>();
     List<Float> brushY = new ArrayList<Float>();
     List<Float> brushP = new ArrayList<Float>();
@@ -49,8 +50,9 @@ public class PaliTouchCanvas extends View {
 	PaliSelector selector=null;
 	public boolean selected=false;
 	
+	private boolean pinch = false;
 	private boolean zoom = false;
-	private boolean prezoom = false;
+	private boolean prepinch = false;
 	float oldDist = 1f, newDist = 1f;
 	public static PaliTouchCanvas parent;
 	
@@ -68,6 +70,9 @@ public class PaliTouchCanvas extends View {
 		tempObj = null;
 		
 		mScaledTouchSlope = ViewConfiguration.get( context ).getScaledTouchSlop();
+		
+		Point0 = new PaliPoint();
+		Point1 = new PaliPoint();
 		//parent = this;
 		
 		/*
@@ -136,8 +141,8 @@ public class PaliTouchCanvas extends View {
 			 strokeColor = Integer.toHexString(PaliCanvas.strokeColor).substring(2);
 			 strokeWidth = PaliCanvas.strokeWidth;
 			 			 			 
-			 downX = e.getX()/PaliCanvas.zoom;
-			 downY = e.getY()/PaliCanvas.zoom;
+			 downX = (e.getX()-PaliCanvas.canvasX)/PaliCanvas.zoom;
+			 downY = (e.getY()-PaliCanvas.canvasY)/PaliCanvas.zoom;
 			
 			 switch(PaliCanvas.selectedTool)
 			 {
@@ -178,47 +183,83 @@ public class PaliTouchCanvas extends View {
 			 }
 			 return true;
 		 case MotionEvent.ACTION_POINTER_DOWN:
+			 Point0.fx = e.getX(0);
+			 Point0.fy = e.getY(0);
+			 Point1.fx = e.getX(1);
+			 Point1.fy = e.getY(1);
+			 
 			 newDist = spacing(e);
 			 oldDist = spacing(e);
-			 this.zoom = true;
+			 this.pinch = true;
 			 return true;
 		 case MotionEvent.ACTION_POINTER_UP:
+			 this.pinch = false;
 			 this.zoom = false;
-			 this.prezoom = true;
+			 this.prepinch = true;
 			 return true;
 		 case MotionEvent.ACTION_MOVE:
-			 if(zoom==true)
+			 if(pinch==true)
 			 {
-				 newDist = spacing(e);
-				 
-				 if (newDist - oldDist > 20) { // zoom in
-	                    oldDist = newDist;
-	                    if(PaliCanvas.zoom < 1000)
-	                    	PaliCanvas.zoom *= 1.1;
-	                } else if(oldDist - newDist > 20) { // zoom out
-	                    oldDist = newDist;
-	                    if(PaliCanvas.zoom > 1)
-	                    	PaliCanvas.zoom /= 1.1;
-	                }
-				 
-				 if(selected)
+				 if(directing(e,Point0, Point1))
 				 {
-					 rect = selector.getRect();
-					 LinearLayout.LayoutParams params = (LinearLayout.LayoutParams)selector.getLayoutParams();
-					 params.leftMargin = (int)(rect.left * PaliCanvas.zoom);
-					 params.topMargin = (int)(rect.top * PaliCanvas.zoom);
-			         params.width = (int)((rect.right-rect.left) * PaliCanvas.zoom);
-			         params.height = (int)((rect.bottom-rect.top) * PaliCanvas.zoom);
-			         selector.setLayoutParams(params);
-					 selector.setVisibility(View.VISIBLE);
+					 zoom = false;
+					 float dx = e.getX(0) - Point0.fx;
+					 float dy = e.getY(0) - Point0.fy;
+					 				 
+					 PaliCanvas.canvasX += dx;
+					 PaliCanvas.canvasY += dy; 
+					 
+					 if(selected)
+					 {
+						 rect = selector.getRect();
+						 LinearLayout.LayoutParams params = (LinearLayout.LayoutParams)selector.getLayoutParams();
+						
+						 params.leftMargin = (int)((rect.left + PaliCanvas.canvasX) * PaliCanvas.zoom);
+						 params.topMargin = (int)((rect.top + PaliCanvas.canvasY) * PaliCanvas.zoom);
+						 
+				         selector.setLayoutParams(params);
+				         selector.invalidate();
+					 }
+					 canvas.DrawScreen();
+					 
+					 Point0.fx = e.getX(0);
+					 Point0.fy = e.getY(0);
+					 Point1.fx = e.getX(1);
+					 Point1.fy = e.getY(1);
 				 }
-				 this.invalidate();
-				 canvas.DrawScreen();
+				 else
+				 {
+					 newDist = spacing(e);
+					 zoom = true;
+					 
+					 if (newDist - oldDist > 20) { // zoom in
+						 oldDist = newDist;
+		                 if(PaliCanvas.zoom < 1000)
+		                	 PaliCanvas.zoom *= 1.1;
+					 } else if(oldDist - newDist > 20) { // zoom out
+						 oldDist = newDist;
+						 if(PaliCanvas.zoom > 1)
+							 PaliCanvas.zoom /= 1.1;
+					 }
+					 if(selected)
+					 {
+						 rect = selector.getRect();
+						 LinearLayout.LayoutParams params = (LinearLayout.LayoutParams)selector.getLayoutParams();
+						 params.leftMargin = (int)((rect.left + PaliCanvas.canvasX) * PaliCanvas.zoom);
+						 params.topMargin = (int)((rect.top + PaliCanvas.canvasY) * PaliCanvas.zoom);
+				         params.width = (int)((rect.right-rect.left) * PaliCanvas.zoom);
+				         params.height = (int)((rect.bottom-rect.top) * PaliCanvas.zoom);
+				         selector.setLayoutParams(params);
+				         selector.invalidate();
+					 }
+					 canvas.DrawScreen();
+				 }
+				 
 			 }
 			 else
 			 {
-				 moveX = e.getX()/PaliCanvas.zoom;
-				 moveY = e.getY()/PaliCanvas.zoom;
+				 moveX = (e.getX()-PaliCanvas.canvasX)/PaliCanvas.zoom;
+				 moveY = (e.getY()-PaliCanvas.canvasY)/PaliCanvas.zoom;
 				 
 				 switch(PaliCanvas.selectedTool)
 				 {
@@ -273,8 +314,8 @@ public class PaliTouchCanvas extends View {
 			 return true;
 		 
 		 case MotionEvent.ACTION_UP:			 
-			 upX = e.getX()/PaliCanvas.zoom;
-			 upY = e.getY()/PaliCanvas.zoom;
+			 upX = (e.getX()-PaliCanvas.canvasX)/PaliCanvas.zoom;
+			 upY = (e.getY()-PaliCanvas.canvasY)/PaliCanvas.zoom;
 			 float left=999999, right=0, top=999999, bottom=0;
 			 PaliObject temp;
 			 
@@ -282,7 +323,7 @@ public class PaliTouchCanvas extends View {
 			 case PaliCanvas.TOOL_PICKOBJECT:
 				 if(this.selected)
 				 {
-					 if(!this.prezoom)
+					 if(!this.prepinch)
 					 {
 						 if(selector.getRect().contains(upX,upY))
 						 {
@@ -292,10 +333,11 @@ public class PaliTouchCanvas extends View {
 						 {
 							 this.selected=false;
 							 selector.selObjArr.clear();
+							 selector.setVisibility(View.GONE);
 						 }
 					 }
 				 }
-				 if (!prezoom){
+				 if (!prepinch){
 					 this.selected=false;
 					 selector.selObjArr.clear();
 					 
@@ -350,8 +392,8 @@ public class PaliTouchCanvas extends View {
 					 {
 						 selector.setRect(rect);
 						 LinearLayout.LayoutParams params = (LinearLayout.LayoutParams)selector.getLayoutParams();
-						 params.leftMargin = (int)(rect.left * PaliCanvas.zoom);
-						 params.topMargin = (int)(rect.top * PaliCanvas.zoom);
+						 params.leftMargin = (int)((rect.left + PaliCanvas.canvasX) * PaliCanvas.zoom);
+						 params.topMargin = (int)((rect.top + PaliCanvas.canvasY) * PaliCanvas.zoom);
 				         params.width = (int)((rect.right-rect.left) * PaliCanvas.zoom);
 				         params.height = (int)((rect.bottom-rect.top) * PaliCanvas.zoom);
 				         selector.setLayoutParams(params);
@@ -359,14 +401,14 @@ public class PaliTouchCanvas extends View {
 				         
 					 }
 				 }
-				 if(!selected && !this.prezoom)
+				 if(!selected && !this.prepinch)
 				 {
 					 selector.setVisibility(android.view.View.GONE);
 				 }
-				 this.prezoom=false;
+				 this.prepinch=false;
 				 return true;
 			 case PaliCanvas.TOOL_PENCIL:
-				 if(!this.prezoom)
+				 if(!this.prepinch)
 				 {
 	                 minX=min(minX,upX);
 	                 minY=min(minY,upY);
@@ -383,10 +425,10 @@ public class PaliTouchCanvas extends View {
 	                 canvas.DrawScreen();
 				 }
 				 else
-					 this.prezoom=false;
+					 this.prepinch=false;
 	             break;
 			 case PaliCanvas.TOOL_BRUSH:	
-				 if(!this.prezoom)
+				 if(!this.prepinch)
 				 {
 					 html += "</g>";
 	
@@ -422,7 +464,7 @@ public class PaliTouchCanvas extends View {
 	             
 				 }
 				 else
-					 this.prezoom=false;
+					 this.prepinch=false;
 	             //Log.i("debug", ""+html);
 	             break;
 	             
@@ -443,7 +485,7 @@ public class PaliTouchCanvas extends View {
 				 break;
 				 */
 			 case PaliCanvas.TOOL_CIRCLE:
-				 if(!this.prezoom)
+				 if(!this.prepinch)
 				 {
 					 r = (float)Math.sqrt((float)Math.pow(upX-downX, 2) + (float)Math.pow(upY-downY, 2));
 					 cx = downX;
@@ -458,10 +500,10 @@ public class PaliTouchCanvas extends View {
 					 canvas.DrawScreen();
 				 }
 				 else
-					 this.prezoom=false;
+					 this.prepinch=false;
 				 break;
 			 case PaliCanvas.TOOL_ELLIPSE:
-				 if(!this.prezoom)
+				 if(!this.prepinch)
 				 {
 					 x = Math.min(downX, upX);
 					 y = Math.min(downY, upY);
@@ -485,10 +527,10 @@ public class PaliTouchCanvas extends View {
 					 canvas.DrawScreen();	
 				 }
 				 else
-					 this.prezoom=false;
+					 this.prepinch=false;
 				 break;				 
 			 case PaliCanvas.TOOL_RECTANGLE:
-				 if(!this.prezoom)
+				 if(!this.prepinch)
 				 {
 					 x = Math.min(downX, upX);
 					 y = Math.min(downY, upY);
@@ -509,7 +551,7 @@ public class PaliTouchCanvas extends View {
 					 canvas.DrawScreen();
 				 }
 				 else
-					 this.prezoom=false;
+					 this.prepinch=false;
 				 break;
 			 }
 			 this.invalidate();
@@ -530,12 +572,24 @@ public class PaliTouchCanvas extends View {
 	}
 	
 	
-	 private float spacing(MotionEvent event) {
-	        float x = (event.getX(0) - event.getX(1));
-	        float y = (event.getY(0) - event.getY(1));
-	        return FloatMath.sqrt(x * x + y * y);
+	 private float spacing(MotionEvent event)
+	 {
+        float x = (event.getX(0) - event.getX(1));
+        float y = (event.getY(0) - event.getY(1));
+        return FloatMath.sqrt(x * x + y * y);
+	 }
 	 
-	    }
+	 private boolean directing(MotionEvent e, PaliPoint p0, PaliPoint p1)
+	 {
+		 float b = (p1.fy-e.getY(1))/(p1.fx-e.getX(1));
+		 float a = (p0.fy-e.getY(0))/(p0.fx-e.getX(0));
+		 
+		 if(a*b>0)
+			 return true;
+		 else
+			 return false;
+	 }
+	 
 	 public void deleteObject()
 	 {
 		 for(int i=0;i<selector.selObjArr.size();i++)
