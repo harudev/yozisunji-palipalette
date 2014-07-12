@@ -1,17 +1,15 @@
 package com.yozisunji.palipalette;
 
 
-import com.samsung.android.example.helloaccessoryprovider.R;
-
 import java.util.ArrayList;
 
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Paint.Style;
 import android.graphics.Rect;
 import android.graphics.RectF;
-import android.graphics.Paint.Style;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.util.Log;
@@ -19,6 +17,8 @@ import android.view.HapticFeedbackConstants;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
+
+import com.samsung.android.example.helloaccessoryprovider.R;
 
 public class PaliSelector extends View {
 	RectF rect;
@@ -135,6 +135,8 @@ public class PaliSelector extends View {
 			 {
 				 mScalePressed = true;
 			 }
+			 
+			 Log.i("debug",""+mMovePressed+" "+mRotatePressed+" "+mScalePressed);
 			 break;
 		 case MotionEvent.ACTION_MOVE:
 			 moveX = e.getX();
@@ -147,8 +149,11 @@ public class PaliSelector extends View {
 			 stopTimeout();
 			 
 			 upX = e.getX();
-			 upY = e.getY();
+			 upY = e.getY();			 
 			 
+			 mMovePressed = false;
+			 mRotatePressed = false;
+			 mScalePressed = false;
 			 break;
 		 }
 		return true;

@@ -370,7 +370,6 @@ class SVGHandler extends DefaultHandler {
             if (centerX != null && centerY != null && radiusX != null && radiusY != null) {
             	SVGParser.Layers.get(SVGParser.Layers.size()-1).objs.add(new PaliEllipse(localName,centerX-radiusX,centerY-radiusY,centerX+radiusX,centerY+radiusY));
             	PaliCanvas.currentObject++;
-            	Log.i("debug",""+localName);
             }
         } else if (localName.equals("rect")) {
         	Float centerX = getFloatAttr("x", atts);
