@@ -8,6 +8,8 @@ import android.view.Window;
 import android.view.WindowManager;
 
 public class CustomizingActivity extends Activity {
+	PaliScreen screen;
+	
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 

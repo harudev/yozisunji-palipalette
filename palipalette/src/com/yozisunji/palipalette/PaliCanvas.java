@@ -15,12 +15,12 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 public class PaliCanvas extends SurfaceView implements SurfaceHolder.Callback {
-	public static final int TOOL_PENCIL=0;
-	public static final int TOOL_BRUSH=1;
-	public static final int TOOL_CIRCLE=2;
-	public static final int TOOL_ELLIPSE=3;
-	public static final int TOOL_RECTANGLE=4;
-	public static final int TOOL_PICKOBJECT=5;
+	public static final int TOOL_PENCIL=1;
+	public static final int TOOL_BRUSH=2;
+	public static final int TOOL_CIRCLE=3;
+	public static final int TOOL_ELLIPSE=4;
+	public static final int TOOL_RECTANGLE=5;
+	public static final int TOOL_PICKOBJECT=0;
 	public static int strokeColor;
 	public static int fillColor;
 	public static int alpha;
