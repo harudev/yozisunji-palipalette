@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.util.Log;
 
 public class PaliBrush extends PaliObject {
 	Bitmap bitmap;
@@ -49,11 +50,18 @@ public class PaliBrush extends PaliObject {
 	}
 
 	public void Move(float dx, float dy) {
-		
-		
+		this.rect.left += dx; this.rect.right += dx; this.rect.top += dy; this.rect.bottom += dy;		
 	}
 
 	public void Scale(float dx, float dy) {
-		this.bitmap = Bitmap.createScaledBitmap(this.bitmap, (int)(this.bitmap.getWidth()+dx), (int)(this.bitmap.getHeight()+dy), true);
+		float width = 1f+(dx/100.0f);
+		float height = 1f+(dy/100.0f);		
+		if(width < 0) width = 0.1f;
+		if(height < 0) height = 0.1f;		
+		
+		this.bitmap = Bitmap.createScaledBitmap(this.bitmap, (int)(this.bitmap.getWidth()*width), (int)(this.bitmap.getHeight()*height), true);
+
+		this.rect.right = this.rect.left + ((this.rect.right - this.rect.left) * width);
+		this.rect.bottom = this.rect.top + ((this.rect.bottom - this.rect.top) * height);
 	}
 }

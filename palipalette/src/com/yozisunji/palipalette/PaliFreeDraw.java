@@ -81,10 +81,8 @@ public class PaliFreeDraw extends PaliObject {
 		scaleMatrix.setScale(width, height, this.rect.left, this.rect.top);
 		this.path.transform(scaleMatrix);
 		
-		Log.i("debug","right: "+this.rect.right);
 		this.rect.right = this.rect.left + ((this.rect.right - this.rect.left) * width);
 		this.rect.bottom = this.rect.top + ((this.rect.bottom - this.rect.top) * height);
-		Log.i("debug","right: "+this.rect.right);
 
 	}
 }
