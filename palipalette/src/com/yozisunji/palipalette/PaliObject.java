@@ -10,6 +10,8 @@ public abstract class PaliObject {
 	String svgtag;
 	
 	RectF rect;
+	float theta = 0;
+	
 	PaliObject(){        
         f_paint = new Paint();
         f_paint.setAntiAlias(true);
@@ -69,9 +71,15 @@ public abstract class PaliObject {
 	{
 		return this.rect;
 	}
-	
+
+	public void Rotate(float theta)
+	{
+		this.theta += theta;
+		this.theta %= 360;
+	}
 	public abstract void drawObject(Canvas c);
-	
+	public abstract void Move(float dx, float dy);
+	public abstract void Scale(float dx, float dy);	
 }
 
 

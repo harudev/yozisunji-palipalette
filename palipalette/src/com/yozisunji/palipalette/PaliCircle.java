@@ -74,4 +74,13 @@ public class PaliCircle extends PaliObject {
 		c.drawCircle(x, y, r, s_paint);
 		c.drawCircle(x, y, r, f_paint);
 	}
+	public void Move(float dx, float dy)
+	{
+		this.x += dx;
+		this.y += dy;
+	}
+	public void Scale(float dx, float dy)
+	{
+		this.r += Math.sqrt(dx*dx + dy*dy);
+	}
 }

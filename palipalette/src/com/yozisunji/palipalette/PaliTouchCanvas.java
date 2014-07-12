@@ -56,6 +56,7 @@ public class PaliTouchCanvas extends View {
 	public boolean selected=false;
 	
 	private boolean zoom = false;
+	private boolean prezoom = false;
 	float oldDist = 1f, newDist = 1f;
 	public static PaliTouchCanvas parent;
 	
@@ -189,6 +190,7 @@ public class PaliTouchCanvas extends View {
 			 return true;
 		 case MotionEvent.ACTION_POINTER_UP:
 			 this.zoom = false;
+			 this.prezoom = true;
 			 return true;
 		 case MotionEvent.ACTION_MOVE:
 			 if(zoom==true)
@@ -204,6 +206,18 @@ public class PaliTouchCanvas extends View {
 	                    if(PaliCanvas.zoom > 1)
 	                    	PaliCanvas.zoom /= 1.1;
 	                }
+				 
+				 if(selected)
+				 {
+					 rect = selector.getRect();
+					 LinearLayout.LayoutParams params = (LinearLayout.LayoutParams)selector.getLayoutParams();
+					 params.leftMargin = (int)(rect.left * PaliCanvas.zoom);
+					 params.topMargin = (int)(rect.top * PaliCanvas.zoom);
+			         params.width = (int)((rect.right-rect.left) * PaliCanvas.zoom);
+			         params.height = (int)((rect.bottom-rect.top) * PaliCanvas.zoom);
+			         selector.setLayoutParams(params);
+					 selector.setVisibility(View.VISIBLE);
+				 }
 				 this.invalidate();
 				 canvas.DrawScreen();
 			 }
@@ -328,10 +342,10 @@ public class PaliTouchCanvas extends View {
 					 {
 						 selector.setRect(rect);
 						 LinearLayout.LayoutParams params = (LinearLayout.LayoutParams)selector.getLayoutParams();
-						 params.leftMargin = (int)rect.left;
-						 params.topMargin = (int)rect.top;
-				         params.width = (int)(rect.right-rect.left);
-				         params.height = (int)(rect.bottom-rect.top);
+						 params.leftMargin = (int)(rect.left * PaliCanvas.zoom);
+						 params.topMargin = (int)(rect.top * PaliCanvas.zoom);
+				         params.width = (int)((rect.right-rect.left) * PaliCanvas.zoom);
+				         params.height = (int)((rect.bottom-rect.top) * PaliCanvas.zoom);
 				         selector.setLayoutParams(params);
 						 selector.setVisibility(View.VISIBLE);
 				         
@@ -340,13 +354,13 @@ public class PaliTouchCanvas extends View {
 				 }
 				 else
 				 {
-					 if(!selector.getRect().contains(upX,upY))
+					 if(!selector.getRect().contains(upX,upY) && this.prezoom)
 					 {
 						 this.selected=false;
 						 selector.selObjArr.clear();
 					 }
 				 }
-				 if(!selected)
+				 if(!selected && this.prezoom)
 				 {
 					 selector.setVisibility(android.view.View.GONE);
 				 }

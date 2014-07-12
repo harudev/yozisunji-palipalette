@@ -87,4 +87,12 @@ public class PaliRectangle extends PaliObject {
 		c.drawRect(left, top, right, bottom, s_paint);
 		c.drawRect(left, top, right, bottom, f_paint);
 	}
+	public void Move(float dx, float dy)
+	{
+	
+	}
+	public void Scale(float dx, float dy)
+	{
+		
+	}
 }

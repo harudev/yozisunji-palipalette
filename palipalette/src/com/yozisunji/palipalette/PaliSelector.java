@@ -25,6 +25,10 @@ public class PaliSelector extends View {
 	Rect recti;
 	int width, height;
 	
+	
+	boolean mMovePressed = false;
+	boolean mScalePressed = false;
+	boolean mRotatePressed = false;
 	public boolean mLongPressed = false;
 	private Handler mHandler = new Handler();
 	private LongPressCheckRunnable mLongPressCheckRunnable = new LongPressCheckRunnable();
@@ -32,6 +36,8 @@ public class PaliSelector extends View {
 	private int mLongPressTimeout;
 	
 	public ArrayList<PaliPoint> selObjArr;
+	
+	float downX=0, downY=0, upX=0, upY=0, moveX=0, moveY=0, premoveX=0, premoveY=0;
 	
 	Drawable moveButton;
 	Drawable scaleButton;
@@ -90,6 +96,7 @@ public class PaliSelector extends View {
 	}
 	public void onDraw(Canvas cnvs)
 	{
+		cnvs.scale(PaliCanvas.zoom,PaliCanvas.zoom);
 		moveButton.draw(cnvs);
 		scaleButton.draw(cnvs);
 		rotateButton.draw(cnvs);
@@ -106,15 +113,42 @@ public class PaliSelector extends View {
 	}
 	public boolean onTouchEvent(MotionEvent e)
 	{
-		 super.onTouchEvent(e);		 
+		 super.onTouchEvent(e);
+		 Rect temp;
 		 switch(e.getAction() & MotionEvent.ACTION_MASK)
 		 {
-		 
 		 case MotionEvent.ACTION_DOWN:
 			 startTimeout();
+			 
+			 downX = e.getX();
+			 downY = e.getY();
+			 
+			 if(moveButton.getBounds().contains((int)downX, (int)downY))
+			 {
+				 mMovePressed = true;
+			 }
+			 if(rotateButton.getBounds().contains((int)downX, (int)downY))
+			 {
+				 mRotatePressed = true;
+			 }
+			 if(scaleButton.getBounds().contains((int)downX, (int)downY))
+			 {
+				 mScalePressed = true;
+			 }
 			 break;
 		 case MotionEvent.ACTION_MOVE:
+			 moveX = e.getX();
+			 moveY = e.getY();
+			 
+			 if((Math.abs(moveX-downX)>10) || (Math.abs(moveY-downY)>10))
+				 stopTimeout();
+			 break;
+		 case MotionEvent.ACTION_UP:
 			 stopTimeout();
+			 
+			 upX = e.getX();
+			 upY = e.getY();
+			 
 			 break;
 		 }
 		return true;

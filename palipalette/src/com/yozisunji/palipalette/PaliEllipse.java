@@ -86,4 +86,12 @@ public class PaliEllipse extends PaliObject {
 		c.drawOval(new RectF(left, top, right, bottom), s_paint);
 		c.drawOval(new RectF(left, top, right, bottom), f_paint);
 	}
+	public void Move(float dx, float dy)
+	{
+	
+	}
+	public void Scale(float dx, float dy)
+	{
+		
+	}
 }

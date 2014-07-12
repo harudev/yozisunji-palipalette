@@ -47,4 +47,13 @@ public class PaliBrush extends PaliObject {
 	public void drawObject(Canvas c) {
 		c.drawBitmap(bitmap, rect.left, rect.top, f_paint);
 	}
+	
+	public void Move(float dx, float dy)
+	{
+	
+	}
+	public void Scale(float dx, float dy)
+	{
+		
+	}
 }
