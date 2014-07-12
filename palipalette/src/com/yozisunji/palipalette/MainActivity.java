@@ -25,7 +25,6 @@ public class MainActivity extends Activity {
 	PaliCanvas customview;
 	PaliTouchCanvas touchview;
 	private Context mContext;
-	public static LinearLayout selectorll = null;
 	static SubMenuDialog dialog;
 
 	@Override
@@ -44,8 +43,7 @@ public class MainActivity extends Activity {
         customview = (PaliCanvas) findViewById(R.id.paliCanvas);
         customview.setBound(800,600);
         touchview = (PaliTouchCanvas) findViewById(R.id.paliTouch);
-        selectorll = (LinearLayout)findViewById(R.id.selectLayout);
-        touchview.setCanvasAddr(customview);
+        touchview.setCanvasAddr(customview,(LinearLayout)findViewById(R.id.selectLayout));
         
         HelloAccessoryProviderService hs;
         
@@ -100,9 +98,7 @@ public class MainActivity extends Activity {
 			dialog.dismiss();
 			break;
 		case R.id.deletBtn:
-
-			 dialog.dismiss();
-			Log.w("LongPress","MAIN: "+Integer.toString(PaliCanvas.selObjArr.size()));
+			dialog.dismiss();
 			touchview.deleteObject();
 			break;		
 		}		

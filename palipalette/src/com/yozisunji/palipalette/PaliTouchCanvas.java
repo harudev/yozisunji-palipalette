@@ -57,17 +57,13 @@ public class PaliTouchCanvas extends View {
 	
 	private boolean zoom = false;
 	float oldDist = 1f, newDist = 1f;
-	private PaliTouchCanvas parent;
+	public static PaliTouchCanvas parent;
 	
-	public boolean mLongPressed = false;
-	private Handler mHandler = new Handler();
-	private LongPressCheckRunnable mLongPressCheckRunnable = new LongPressCheckRunnable();
 	
-	private int mLongPressTimeout;
 	private int mScaledTouchSlope;
 	long time;
 	
-	private Context mContext;
+	public static Context mContext;
 	
 
 	public PaliTouchCanvas(Context context, AttributeSet attrs) {
@@ -75,9 +71,9 @@ public class PaliTouchCanvas extends View {
 		this.mContext = context; 
 		// TODO Auto-generated constructor stub
 		tempObj = null;
-		mLongPressTimeout = ViewConfiguration.getLongPressTimeout();
+		
 		mScaledTouchSlope = ViewConfiguration.get( context ).getScaledTouchSlop();
-		parent = this;
+		//parent = this;
 		
 		/*
 		this.setOnHoverListener(new OnHoverListener() {			
@@ -91,9 +87,17 @@ public class PaliTouchCanvas extends View {
 		
 	}
 	
-	public void setCanvasAddr(PaliCanvas c)
+	public void setCanvasAddr(PaliCanvas c, LinearLayout selectorll)
 	{
 		canvas = c;
+		
+		selector = new PaliSelector(mContext, new RectF(0, 0, 100, 100));
+		selectorll.addView(selector);
+		LinearLayout.LayoutParams params = (LinearLayout.LayoutParams)selector.getLayoutParams();
+        params.width = LayoutParams.MATCH_PARENT;
+        params.height = LayoutParams.MATCH_PARENT;
+        selector.setLayoutParams(params);
+		selector.setVisibility(View.GONE); 
 	}
 	
 	public void onDraw(Canvas cnvs)
@@ -118,11 +122,12 @@ public class PaliTouchCanvas extends View {
 		boolean onHoverEvent(View v, MotionEvent e);
 	}
 	
+	/*
 	public boolean onHoverEvent(View v, MotionEvent e) {
 		Log.i("debug","hover");
-		return mLongPressed;
+		return true;
 		
-	}
+	}*/
 	
 	public boolean onTouchEvent(MotionEvent e)
 	 {
@@ -141,12 +146,6 @@ public class PaliTouchCanvas extends View {
 			
 			 switch(PaliCanvas.selectedTool)
 			 {
-			 case PaliCanvas.TOOL_PICKOBJECT:
-				 if(this.selected && tempObj.getRect().contains(downX, downY))
-				 {
-					 startTimeout();
-				 }
-				 break;
 			 case PaliCanvas.TOOL_PENCIL:
 				 pencilPath = new Path();
 				 minX=downX; minY=downY;
@@ -215,9 +214,6 @@ public class PaliTouchCanvas extends View {
 				 
 				 switch(PaliCanvas.selectedTool)
 				 {
-				 case PaliCanvas.TOOL_PICKOBJECT:
-					 stopTimeout();
-					 break;
 				 case PaliCanvas.TOOL_PENCIL:
 					 minX=min(minX,moveX);
 	                 minY=min(minY,moveY);
@@ -276,13 +272,10 @@ public class PaliTouchCanvas extends View {
 			 
 			 switch(PaliCanvas.selectedTool) {
 			 case PaliCanvas.TOOL_PICKOBJECT:
-				 if(!mLongPressed)
+				 if(!this.selected)
 				 {
-					 stopTimeout();
-					 
 					 this.selected=false;
-					 PaliCanvas.selObjArr.clear();
-					 selector = null;
+					 selector.selObjArr.clear();
 					 
 					 if(upX==downX && upY==downY)
 					 {
@@ -295,21 +288,9 @@ public class PaliTouchCanvas extends View {
 									 temp = SVGParser.Layers.get(i).objs.get(j);
 									 if(temp.rect.contains(upX,upY))
 									 {
-										 PaliCanvas.selObjArr.add(new PaliPoint(i,j));
-										 
+										 selector.selObjArr.add(new PaliPoint(i,j));
 										 rect = temp.rect;
-										 selector = new PaliSelector(mContext,temp.rect);
-										 MainActivity.selectorll.addView(selector);
 										 
-										 LinearLayout.LayoutParams params = (LinearLayout.LayoutParams)selector.getLayoutParams();
-										 params.leftMargin = (int)rect.left;
-										 params.topMargin = (int)rect.top;
-								         params.width = (int)(rect.right-rect.left);
-								         params.height = (int)(rect.bottom-rect.top);
-								         selector.setLayoutParams(params);
-								         
-								         //selector.invalidate();
-								         
 										 this.selected = true;
 										 break;
 									 }
@@ -331,7 +312,7 @@ public class PaliTouchCanvas extends View {
 									 temp = SVGParser.Layers.get(i).objs.get(j);
 									 if(this.rect.contains(temp.rect))
 									 {
-										 PaliCanvas.selObjArr.add(new PaliPoint(i,j));
+										 selector.selObjArr.add(new PaliPoint(i,j));
 										 left = min(left, temp.rect.left);
 										 top = min(top, temp.rect.top);
 										 right = max(right, temp.rect.right);
@@ -340,23 +321,35 @@ public class PaliTouchCanvas extends View {
 									 }
 								 }
 							 }
-						 }	
-						 if(selected)
-						 {
-							 selector = new PaliSelector(mContext,new RectF(left, right, top, bottom));
-							 MainActivity.selectorll.addView(selector);
-
-							 LinearLayout.LayoutParams params = (LinearLayout.LayoutParams)selector.getLayoutParams();
-							 params.leftMargin = (int)rect.left;
-							 params.topMargin = (int)rect.top;
-					         params.width = (int)(rect.right-rect.left);
-					         params.height = (int)(rect.bottom-rect.top);
-					         selector.setLayoutParams(params);
 						 }
 					 }
 					 
+					 if(selected)
+					 {
+						 selector.setRect(rect);
+						 LinearLayout.LayoutParams params = (LinearLayout.LayoutParams)selector.getLayoutParams();
+						 params.leftMargin = (int)rect.left;
+						 params.topMargin = (int)rect.top;
+				         params.width = (int)(rect.right-rect.left);
+				         params.height = (int)(rect.bottom-rect.top);
+				         selector.setLayoutParams(params);
+						 selector.setVisibility(View.VISIBLE);
+				         
+					 }
+					 return true;
 				 }
-				 
+				 else
+				 {
+					 if(!selector.getRect().contains(upX,upY))
+					 {
+						 this.selected=false;
+						 selector.selObjArr.clear();
+					 }
+				 }
+				 if(!selected)
+				 {
+					 selector.setVisibility(android.view.View.GONE);
+				 }
 				 return true;
 			 case PaliCanvas.TOOL_PENCIL:
                  minX=min(minX,upX);
@@ -496,15 +489,7 @@ public class PaliTouchCanvas extends View {
 	{
 		return (a>b)?a:b;
 	}
-	public void startTimeout(){
-		mLongPressed = false;
-		mHandler.postDelayed( mLongPressCheckRunnable, 700 );
-	}
 	
-	public void stopTimeout(){
-		if ( !mLongPressed )
-			mHandler.removeCallbacks( mLongPressCheckRunnable );
-	}
 	
 	 private float spacing(MotionEvent event) {
 	        float x = (event.getX(0) - event.getX(1));
@@ -512,35 +497,20 @@ public class PaliTouchCanvas extends View {
 	        return FloatMath.sqrt(x * x + y * y);
 	 
 	    }
-	 
 	 public void deleteObject()
 	 {
-		 for(int i=0;i<PaliCanvas.selObjArr.size();i++)
+		 for(int i=0;i<selector.selObjArr.size();i++)
 		 {
-			 SVGParser.Layers.get(PaliCanvas.selObjArr.get(i).x).objs.remove(PaliCanvas.selObjArr.get(i).y);
+			 SVGParser.Layers.get(selector.selObjArr.get(i).x).objs.remove(selector.selObjArr.get(i).y);
 		 }
 		 
-		 PaliCanvas.selObjArr.clear();
+		 selector.selObjArr.clear();
 		 this.tempObj = null;
 		 this.selected = false;
 		 this.invalidate();
 		 canvas.DrawScreen();
-		 mLongPressed=false;
-	 }
-	
-	 public void finishLongPressed()
-	 {
-		 this.mLongPressed=false;
-	 }
+		 selector.mLongPressed = false;
+		 selector.setVisibility(View.GONE);
+	 }	
 	 
-	private class LongPressCheckRunnable implements Runnable{
-		@Override
-		public void run() {
-			mLongPressed = true;
-			parent.performHapticFeedback( HapticFeedbackConstants.LONG_PRESS );
-			 Log.w("LongPress","THREAD : "+Integer.toString(PaliCanvas.selObjArr.size()));
-			((MainActivity) mContext).popUpSubMenu();
-		}
-	}
-	
 }

@@ -35,7 +35,6 @@ public class PaliCanvas extends SurfaceView implements SurfaceHolder.Callback {
 	private Bitmap presaveBuffer, saveBuffer;
 	public static int scale;
 	
-	public static ArrayList<PaliPoint> selObjArr;
 	public static ArrayList<PaliPoint> CopiedObjArr;
 
 		
@@ -50,7 +49,6 @@ public class PaliCanvas extends SurfaceView implements SurfaceHolder.Callback {
 		currentObject=-1;
 		SurfaceHolder holder = getHolder();
 		holder.addCallback(this);
-		selObjArr = new ArrayList<PaliPoint>();
 	}
 	public void setBound(int w, int h)
 	{
