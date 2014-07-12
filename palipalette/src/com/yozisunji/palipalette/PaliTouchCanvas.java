@@ -345,7 +345,7 @@ public class PaliTouchCanvas extends View {
 					 {
 						 for(int i = SVGParser.Layers.size()-1; i>=0;i--)
 						 {
-							 if(SVGParser.Layers.get(i).visibility==100)
+							 if(SVGParser.Layers.get(i).visibility==true)
 							 {
 								 for(int j=SVGParser.Layers.get(i).objs.size()-1;j>=0;j--)
 								 {
@@ -369,7 +369,7 @@ public class PaliTouchCanvas extends View {
 	
 						 for(int i = SVGParser.Layers.size()-1; i>=0;i--)
 						 {
-							 if(SVGParser.Layers.get(i).visibility==100)
+							 if(SVGParser.Layers.get(i).visibility==true)
 							 {
 								 for(int j=SVGParser.Layers.get(i).objs.size()-1;j>=0;j--)
 								 {

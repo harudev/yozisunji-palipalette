@@ -89,7 +89,7 @@ public class PaliCanvas extends SurfaceView implements SurfaceHolder.Callback {
                     
 					for(int i = 0; i<SVGParser.Layers.size();i++)
 					 {
-						 if(SVGParser.Layers.get(i).visibility==100)
+						 if(SVGParser.Layers.get(i).visibility==true)
 						 {
 							 for(int j=0;j<SVGParser.Layers.get(i).objs.size();j++)
 							 {

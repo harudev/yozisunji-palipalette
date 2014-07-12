@@ -46,7 +46,7 @@ public class MainActivity extends Activity {
 		touchview.setCanvasAddr(customview,
 				(LinearLayout) findViewById(R.id.selectLayout));
 
-		HelloAccessoryProviderService hs;
+		HelloAccessoryProviderService hs = new HelloAccessoryProviderService(customview);
 
 		dialog = new SubMenuDialog();
 		Button copyBtn = (Button) findViewById(R.id.copyBtn);
