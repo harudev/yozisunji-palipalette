@@ -1,9 +1,11 @@
 package com.yozisunji.palipalette;
 
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
+import android.util.Log;
 
 public class PaliFreeDraw extends PaliObject {
 	Path path;
@@ -62,10 +64,27 @@ public class PaliFreeDraw extends PaliObject {
 	}
 	public void Move(float dx, float dy)
 	{
+		Matrix moveMatrix = new Matrix();
+		moveMatrix.setTranslate(dx,dy);
+		this.path.transform(moveMatrix); 
+		this.rect.left += dx; this.rect.right += dx; this.rect.top += dy; this.rect.bottom += dy;
 	
 	}
 	public void Scale(float dx, float dy)
 	{
+		float width = 1f+(dx/100.0f);
+		float height = 1f+(dy/100.0f);		
+		if(width < 0) width = 0.1f;
+		if(height < 0) height = 0.1f;		
+
+		Matrix scaleMatrix = new Matrix();
+		scaleMatrix.setScale(width, height, this.rect.left, this.rect.top);
+		this.path.transform(scaleMatrix);
 		
+		Log.i("debug","right: "+this.rect.right);
+		this.rect.right = this.rect.left + ((this.rect.right - this.rect.left) * width);
+		this.rect.bottom = this.rect.top + ((this.rect.bottom - this.rect.top) * height);
+		Log.i("debug","right: "+this.rect.right);
+
 	}
 }

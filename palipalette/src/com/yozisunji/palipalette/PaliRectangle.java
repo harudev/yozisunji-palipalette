@@ -86,10 +86,16 @@ public class PaliRectangle extends PaliObject {
 	}
 	public void Move(float dx, float dy)
 	{
-	
+		this.left += dx;
+		this.right += dx;
+		this.top += dy;
+		this.bottom += dy;
+		this.rect.left += dx; this.rect.right += dx; this.rect.top += dy; this.rect.bottom += dy;	
 	}
 	public void Scale(float dx, float dy)
 	{
-		
+		this.right += dx;
+		this.bottom += dy;
+		this.rect.right += dx; this.rect.bottom += dy;
 	}
 }

@@ -21,7 +21,7 @@ import com.samsung.android.example.helloaccessoryprovider.service.HelloAccessory
 public class MainActivity extends Activity {
 
 	static SVGParser svg;
-	PaliCanvas customview;
+	public PaliCanvas customview;
 	PaliTouchCanvas touchview;
 	private Context mContext;
 	static SubMenuDialog dialog;
@@ -46,7 +46,7 @@ public class MainActivity extends Activity {
 		touchview.setCanvasAddr(customview,
 				(LinearLayout) findViewById(R.id.selectLayout));
 
-		HelloAccessoryProviderService hs = new HelloAccessoryProviderService(customview);
+		HelloAccessoryProviderService hs = new HelloAccessoryProviderService(this);
 
 		dialog = new SubMenuDialog();
 		Button copyBtn = (Button) findViewById(R.id.copyBtn);

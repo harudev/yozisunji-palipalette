@@ -91,7 +91,7 @@ public class PaliTouchCanvas extends View {
 	{
 		canvas = c;
 		
-		selector = new PaliSelector(mContext, new RectF(0, 0, 100, 100));
+		selector = new PaliSelector(mContext, new RectF(0, 0, 100, 100), c);
 		selectorll.addView(selector);
 		LinearLayout.LayoutParams params = (LinearLayout.LayoutParams)selector.getLayoutParams();
         params.width = LayoutParams.MATCH_PARENT;

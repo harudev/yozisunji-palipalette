@@ -2,6 +2,7 @@ package com.yozisunji.palipalette;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.RectF;
 
@@ -48,10 +49,11 @@ public class PaliBrush extends PaliObject {
 	}
 
 	public void Move(float dx, float dy) {
-
+		
+		
 	}
 
 	public void Scale(float dx, float dy) {
-
+		this.bitmap = Bitmap.createScaledBitmap(this.bitmap, (int)(this.bitmap.getWidth()+dx), (int)(this.bitmap.getHeight()+dy), true);
 	}
 }

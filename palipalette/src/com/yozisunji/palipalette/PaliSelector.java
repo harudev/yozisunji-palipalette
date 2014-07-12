@@ -12,6 +12,7 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
+import android.text.Selection;
 import android.util.Log;
 import android.view.HapticFeedbackConstants;
 import android.view.MotionEvent;
@@ -23,12 +24,12 @@ import com.samsung.android.example.helloaccessoryprovider.R;
 public class PaliSelector extends View {
 	RectF rect;
 	Rect recti;
-	int width, height;
-	
+	int width, height;	
 	
 	boolean mMovePressed = false;
 	boolean mScalePressed = false;
 	boolean mRotatePressed = false;
+	PaliCanvas canvas;
 	public boolean mLongPressed = false;
 	private Handler mHandler = new Handler();
 	private LongPressCheckRunnable mLongPressCheckRunnable = new LongPressCheckRunnable();
@@ -43,20 +44,7 @@ public class PaliSelector extends View {
 	Drawable scaleButton;
 	Drawable rotateButton;
 	
-	public PaliSelector(Context context) {
-		super(context);
-		// TODO Auto-generated constructor stub
-
-		selObjArr = new ArrayList<PaliPoint>();
-		
-		moveButton = getResources().getDrawable(R.drawable.select_icon_move);
-		scaleButton = getResources().getDrawable(R.drawable.select_icon_scale);
-		rotateButton = getResources().getDrawable(R.drawable.select_icon_rotate);
-		
-		mLongPressTimeout = ViewConfiguration.getLongPressTimeout();
-	}
-	
-	public PaliSelector(Context context, RectF r) {
+	public PaliSelector(Context context, RectF r, PaliCanvas c) {
 		super(context);
 		// TODO Auto-generated constructor stub
 
@@ -76,6 +64,8 @@ public class PaliSelector extends View {
 		moveButton.setBounds( 0, 0, 50, 50 );
 		rotateButton.setBounds( width-50, 0, width, 50 );
 		scaleButton.setBounds( width-50, height-50, width, height );
+		
+		canvas = c;
 	}
 	
 	public void setRect(RectF r)
@@ -104,7 +94,7 @@ public class PaliSelector extends View {
 		
 		Paint paint = new Paint();
 		paint.setColor(Color.BLUE);
-		paint.setStrokeWidth(2);
+		paint.setStrokeWidth(3);
 		paint.setStyle(Style.STROKE);
 		cnvs.drawRect(0,0,width,height, paint);
 	}
@@ -136,12 +126,15 @@ public class PaliSelector extends View {
 			 {
 				 mScalePressed = true;
 			 }
+
+			 //SVGParser.Layers.get(selObjArr.get(0).x).objs.get(selObjArr.get(0).y).Move(100, 100);
+			 //canvas.DrawScreen();
 			 
-			 Log.i("debug",""+mMovePressed+" "+mRotatePressed+" "+mScalePressed);
+			 
 			 break;
 		 case MotionEvent.ACTION_MOVE:
 			 moveX = e.getX();
-			 moveY = e.getY();
+			 moveY = e.getY();			
 			 
 			 if((Math.abs(moveX-downX)>10) || (Math.abs(moveY-downY)>10))
 				 stopTimeout();
@@ -150,7 +143,26 @@ public class PaliSelector extends View {
 			 stopTimeout();
 			 
 			 upX = e.getX();
-			 upY = e.getY();			 
+			 upY = e.getY();	
+			 
+			 if(mMovePressed) {
+				 for(int i=selObjArr.size()-1 ; i>=0; i--) {
+					 SVGParser.Layers.get(selObjArr.get(i).x).objs.get(selObjArr.get(i).y).Move(upX-downX, upY-downY);
+				 }
+			 }
+			 else if(mRotatePressed) {
+				 for(int i=selObjArr.size()-1 ; i>=0; i--) {
+					 SVGParser.Layers.get(selObjArr.get(i).x).objs.get(selObjArr.get(i).y).Rotate((upX-downX)+(upY-downY));
+				 }
+			 }
+			 else if(mScalePressed) {
+				 for(int i=selObjArr.size()-1 ; i>=0; i--) {
+					 SVGParser.Layers.get(selObjArr.get(i).x).objs.get(selObjArr.get(i).y).Scale((upX-downX)/2, (upY-downY)/2);
+				 }
+			 }
+			 
+			 this.invalidate();
+			 canvas.DrawScreen();			 
 			 
 			 mMovePressed = false;
 			 mRotatePressed = false;
