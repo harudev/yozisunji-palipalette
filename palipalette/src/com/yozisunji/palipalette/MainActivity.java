@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.LinearLayout;
 
 import com.samsung.android.example.helloaccessoryprovider.R;
 //import com.samsung.android.example.helloaccessoryprovider.service.HelloAccessoryProviderService;
@@ -24,7 +25,7 @@ public class MainActivity extends Activity {
 	PaliCanvas customview;
 	PaliTouchCanvas touchview;
 	private Context mContext;
-	
+	public static LinearLayout selectorll = null;
 	static SubMenuDialog dialog;
 
 	@Override
@@ -37,12 +38,13 @@ public class MainActivity extends Activity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
                 WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
         setContentView(R.layout.main);	
-		
+	
 		svg = new SVGParser();        
         svg.parse(getResources().openRawResource(R.drawable.test));
         customview = (PaliCanvas) findViewById(R.id.paliCanvas);
         customview.setBound(800,600);
         touchview = (PaliTouchCanvas) findViewById(R.id.paliTouch);
+        selectorll = (LinearLayout)findViewById(R.id.selectLayout);
         touchview.setCanvasAddr(customview);
         
         HelloAccessoryProviderService hs;
