@@ -286,8 +286,22 @@ public class PaliTouchCanvas extends View {
 			 
 			 switch(PaliCanvas.selectedTool) {
 			 case PaliCanvas.TOOL_PICKOBJECT:
-				 if(!this.selected)
+				 if(this.selected)
 				 {
+					 if(!this.prezoom)
+					 {
+						 if(selector.getRect().contains(upX,upY))
+						 {
+							 return true;
+						 }
+						 else
+						 {
+							 this.selected=false;
+							 selector.selObjArr.clear();
+						 }
+					 }
+				 }
+				 if (!prezoom){
 					 this.selected=false;
 					 selector.selObjArr.clear();
 					 
@@ -350,69 +364,71 @@ public class PaliTouchCanvas extends View {
 						 selector.setVisibility(View.VISIBLE);
 				         
 					 }
-					 return true;
 				 }
-				 else
-				 {
-					 if(!selector.getRect().contains(upX,upY) && this.prezoom)
-					 {
-						 this.selected=false;
-						 selector.selObjArr.clear();
-					 }
-				 }
-				 if(!selected && this.prezoom)
+				 if(!selected && !this.prezoom)
 				 {
 					 selector.setVisibility(android.view.View.GONE);
 				 }
+				 this.prezoom=false;
 				 return true;
 			 case PaliCanvas.TOOL_PENCIL:
-                 minX=min(minX,upX);
-                 minY=min(minY,upY);
-                 maxX=max(maxX,upX);
-                 maxY=max(maxY,upY);
-                 rect = new RectF(minX, minY, maxX, maxY);
-                 opacity = PaliCanvas.alpha / 255.0f;
-                 html = "<path fill=\"none\" stroke=\"#"+strokeColor+"\" stroke-width=\""+strokeWidth+"\" stroke-opacity=\""+opacity+"\" d=\"M"+downX+" "+downY+""+movement+"\" />";
-                 SVGParser.Layers.get(canvas.currentLayer).objs.add(new PaliFreeDraw(html, pencilPath, rect));
-                 tempObj=null;
-                 pencilPath = null;
-                 PaliCanvas.currentObject++;
-                 PaliCanvas.drawMode = false;
-                 canvas.DrawScreen();                 
-                 break;
-			 case PaliCanvas.TOOL_BRUSH:				 
-				 html += "</g>";
-
-				 minX=min(minX,upX);
-                 minY=min(minY,upY);
-                 maxX=max(maxX,upX);
-                 maxY=max(maxY,upY);
-                 rect = new RectF(minX-brushR, minY-brushR, maxX+brushR, maxY+brushR);
-                 
-                 bm = Bitmap.createBitmap((int)(rect.right), (int)(rect.bottom), Bitmap.Config.ARGB_8888);
-				 c = new Canvas(bm);
-				 p = new Paint();
-				 p.setColor(PaliCanvas.fillColor);
-				 p.setStyle(Paint.Style.FILL);
-                 
-                 for(int i=0; i<brushX.size(); i++) {               	 
-                	 p.setAlpha((int)(PaliCanvas.alpha * brushP.get(i)));
-                	 c.drawCircle(brushX.get(i)-rect.left,brushY.get(i)-rect.top,brushR,p);
-                 }
-                 
-	             SVGParser.Layers.get(PaliCanvas.currentLayer).objs.add(new PaliBrush(html, bm, rect));
+				 if(!this.prezoom)
+				 {
+	                 minX=min(minX,upX);
+	                 minY=min(minY,upY);
+	                 maxX=max(maxX,upX);
+	                 maxY=max(maxY,upY);
+	                 rect = new RectF(minX, minY, maxX, maxY);
+	                 opacity = PaliCanvas.alpha / 255.0f;
+	                 html = "<path fill=\"none\" stroke=\"#"+strokeColor+"\" stroke-width=\""+strokeWidth+"\" stroke-opacity=\""+opacity+"\" d=\"M"+downX+" "+downY+""+movement+"\" />";
+	                 SVGParser.Layers.get(canvas.currentLayer).objs.add(new PaliFreeDraw(html, pencilPath, rect));
+	                 tempObj=null;
+	                 pencilPath = null;
+	                 PaliCanvas.currentObject++;
+	                 PaliCanvas.drawMode = false;
+	                 canvas.DrawScreen();
+				 }
+				 else
+					 this.prezoom=false;
+	             break;
+			 case PaliCanvas.TOOL_BRUSH:	
+				 if(!this.prezoom)
+				 {
+					 html += "</g>";
+	
+					 minX=min(minX,upX);
+	                 minY=min(minY,upY);
+	                 maxX=max(maxX,upX);
+	                 maxY=max(maxY,upY);
+	                 rect = new RectF(minX-brushR, minY-brushR, maxX+brushR, maxY+brushR);
+	                 
+	                 bm = Bitmap.createBitmap((int)(rect.right), (int)(rect.bottom), Bitmap.Config.ARGB_8888);
+					 c = new Canvas(bm);
+					 p = new Paint();
+					 p.setColor(PaliCanvas.fillColor);
+					 p.setStyle(Paint.Style.FILL);
+	                 
+	                 for(int i=0; i<brushX.size(); i++) {               	 
+	                	 p.setAlpha((int)(PaliCanvas.alpha * brushP.get(i)));
+	                	 c.drawCircle(brushX.get(i)-rect.left,brushY.get(i)-rect.top,brushR,p);
+	                 }
+	                 
+		             SVGParser.Layers.get(PaliCanvas.currentLayer).objs.add(new PaliBrush(html, bm, rect));
+		             
+		             tempObj=null;
+		             bm=null;
+		             c=null;
+		             PaliCanvas.currentObject++;
+		             PaliCanvas.drawMode = false;
+		             canvas.DrawScreen();
+		             
+		             brushX.clear();
+		             brushY.clear();
+		             brushP.clear();
 	             
-	             tempObj=null;
-	             bm=null;
-	             c=null;
-	             PaliCanvas.currentObject++;
-	             PaliCanvas.drawMode = false;
-	             canvas.DrawScreen();
-	             
-	             brushX.clear();
-	             brushY.clear();
-	             brushP.clear();
-	             
+				 }
+				 else
+					 this.prezoom=false;
 	             //Log.i("debug", ""+html);
 	             break;
 	             
@@ -433,58 +449,73 @@ public class PaliTouchCanvas extends View {
 				 break;
 				 */
 			 case PaliCanvas.TOOL_CIRCLE:
-				 r = (float)Math.sqrt((float)Math.pow(upX-downX, 2) + (float)Math.pow(upY-downY, 2));
-				 cx = downX;
-				 cy = downY;
-				 opacity = PaliCanvas.alpha / 255.0f;
-				 
-				 html = "<circle cx=\""+cx+"\" cy=\""+cy+"\" r=\""+r+"\" stroke=\"#"+strokeColor+"\" stroke-width=\""+strokeWidth+"\" fill=\"#"+fillColor+"\" stroke-opacity=\""+opacity+"\" fill-opacity=\""+opacity+"\" />";
-				 SVGParser.Layers.get(PaliCanvas.currentLayer).objs.add(new PaliCircle(html,cx,cy,r));
-				 tempObj=null;
-				 PaliCanvas.currentObject++;
-				 PaliCanvas.drawMode = false;
-				 canvas.DrawScreen();
+				 if(!this.prezoom)
+				 {
+					 r = (float)Math.sqrt((float)Math.pow(upX-downX, 2) + (float)Math.pow(upY-downY, 2));
+					 cx = downX;
+					 cy = downY;
+					 opacity = PaliCanvas.alpha / 255.0f;
+					 
+					 html = "<circle cx=\""+cx+"\" cy=\""+cy+"\" r=\""+r+"\" stroke=\"#"+strokeColor+"\" stroke-width=\""+strokeWidth+"\" fill=\"#"+fillColor+"\" stroke-opacity=\""+opacity+"\" fill-opacity=\""+opacity+"\" />";
+					 SVGParser.Layers.get(PaliCanvas.currentLayer).objs.add(new PaliCircle(html,cx,cy,r));
+					 tempObj=null;
+					 PaliCanvas.currentObject++;
+					 PaliCanvas.drawMode = false;
+					 canvas.DrawScreen();
+				 }
+				 else
+					 this.prezoom=false;
 				 break;
-			 case PaliCanvas.TOOL_ELLIPSE: 
-				 x = Math.min(downX, upX);
-				 y = Math.min(downY, upY);
-				 width = (float)Math.sqrt((float)Math.pow(upX-downX, 2));
-				 height = (float)Math.sqrt((float)Math.pow(upY-downY, 2));
-				 
-				 cx=x+(width/2);
-				 cy=y+(height/2);
-				 opacity = PaliCanvas.alpha / 255.0f;
-				 
-				 left = downX;
-				 top = downY;
-				 right = upX;
-				 bottom = upY;				 
-				 
-				 html = "<ellipse cx=\""+cx+"\" cy=\""+cy+"\" rx=\""+width+"\" ry=\""+height+"\" stroke=\"#"+strokeColor+"\" stroke-width=\""+strokeWidth+"\" fill=\"#"+fillColor+"\" stroke-opacity=\""+opacity+"\" fill-opacity=\""+opacity+"\" />";
-				 SVGParser.Layers.get(canvas.currentLayer).objs.add(new PaliEllipse(html,left,top,right,bottom));	
-				 tempObj=null;
-				 PaliCanvas.currentObject++;
-				 PaliCanvas.drawMode = false;
-				 canvas.DrawScreen();				 
+			 case PaliCanvas.TOOL_ELLIPSE:
+				 if(!this.prezoom)
+				 {
+					 x = Math.min(downX, upX);
+					 y = Math.min(downY, upY);
+					 width = (float)Math.sqrt((float)Math.pow(upX-downX, 2));
+					 height = (float)Math.sqrt((float)Math.pow(upY-downY, 2));
+					 
+					 cx=x+(width/2);
+					 cy=y+(height/2);
+					 opacity = PaliCanvas.alpha / 255.0f;
+					 
+					 left = downX;
+					 top = downY;
+					 right = upX;
+					 bottom = upY;				 
+					 
+					 html = "<ellipse cx=\""+cx+"\" cy=\""+cy+"\" rx=\""+width+"\" ry=\""+height+"\" stroke=\"#"+strokeColor+"\" stroke-width=\""+strokeWidth+"\" fill=\"#"+fillColor+"\" stroke-opacity=\""+opacity+"\" fill-opacity=\""+opacity+"\" />";
+					 SVGParser.Layers.get(canvas.currentLayer).objs.add(new PaliEllipse(html,left,top,right,bottom));	
+					 tempObj=null;
+					 PaliCanvas.currentObject++;
+					 PaliCanvas.drawMode = false;
+					 canvas.DrawScreen();	
+				 }
+				 else
+					 this.prezoom=false;
 				 break;				 
 			 case PaliCanvas.TOOL_RECTANGLE:
-				 x = Math.min(downX, upX);
-				 y = Math.min(downY, upY);
-				 width = (float)Math.sqrt((float)Math.pow(upX-downX, 2));
-				 height = (float)Math.sqrt((float)Math.pow(upY-downY, 2));
-				 opacity = PaliCanvas.alpha / 255.0f;
-				 
-				 left = downX;
-				 top = downY;
-				 right = upX;
-				 bottom = upY;
-				 
-				 html = "<rect x=\""+x+"\" y=\""+y+"\" width=\""+width+"\" height=\""+height+"\" stroke=\"#"+strokeColor+"\" stroke-width=\""+strokeWidth+"\" fill=\"#"+fillColor+"\" stroke-opacity=\""+opacity+"\" fill-opacity=\""+opacity+"\" />";
-				 SVGParser.Layers.get(canvas.currentLayer).objs.add(new PaliRectangle(html,left,top,right,bottom));	
-				 tempObj=null;
-				 PaliCanvas.currentObject++;
-				 PaliCanvas.drawMode = false;
-				 canvas.DrawScreen();
+				 if(!this.prezoom)
+				 {
+					 x = Math.min(downX, upX);
+					 y = Math.min(downY, upY);
+					 width = (float)Math.sqrt((float)Math.pow(upX-downX, 2));
+					 height = (float)Math.sqrt((float)Math.pow(upY-downY, 2));
+					 opacity = PaliCanvas.alpha / 255.0f;
+					 
+					 left = downX;
+					 top = downY;
+					 right = upX;
+					 bottom = upY;
+					 
+					 html = "<rect x=\""+x+"\" y=\""+y+"\" width=\""+width+"\" height=\""+height+"\" stroke=\"#"+strokeColor+"\" stroke-width=\""+strokeWidth+"\" fill=\"#"+fillColor+"\" stroke-opacity=\""+opacity+"\" fill-opacity=\""+opacity+"\" />";
+					 SVGParser.Layers.get(canvas.currentLayer).objs.add(new PaliRectangle(html,left,top,right,bottom));	
+					 tempObj=null;
+					 PaliCanvas.currentObject++;
+					 PaliCanvas.drawMode = false;
+					 canvas.DrawScreen();
+				 }
+				 else
+					 this.prezoom=false;
 				 break;
 			 }
 			 this.invalidate();
