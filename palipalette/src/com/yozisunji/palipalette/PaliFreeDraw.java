@@ -15,35 +15,35 @@ public class PaliFreeDraw extends PaliObject {
 	}
 	PaliFreeDraw(String tag, Path path)
 	{
-		paint = new Paint();
-		paint.setAntiAlias(true);
-		paint.setColor(PaliCanvas.fillColor);
+		s_paint = new Paint();
+		s_paint.setAntiAlias(true);
+		s_paint.setColor(PaliCanvas.strokeColor);
 		svgtag = tag;
 		this.path = path;
-		this.rect = new RectF(100, 100, 500, 500);
+		//this.rect = new RectF(100, 100, 500, 500);
 	}
 	PaliFreeDraw(String tag, Path path, RectF rect)
 	{
-		paint = new Paint();
-		paint.setAntiAlias(true);
-		paint.setColor(PaliCanvas.fillColor);
-		paint.setStyle(Paint.Style.FILL);
-		paint.setAlpha(PaliCanvas.alpha);
-		paint.setStrokeWidth(PaliCanvas.strokeWidth);
+		s_paint = new Paint();
+		s_paint.setAntiAlias(true);
+		s_paint.setColor(PaliCanvas.strokeColor);
+		s_paint.setStyle(Paint.Style.STROKE);
+		s_paint.setAlpha(PaliCanvas.alpha);
+		s_paint.setStrokeWidth(PaliCanvas.strokeWidth);
 		svgtag = tag;
 		this.path = path;
 		this.rect = rect;
 	}
-	PaliFreeDraw(String tag, Path path, RectF rect, int scolor, int fcolor)
+	PaliFreeDraw(String tag, Path path, RectF rect, int scolor)
 	{
 		svgtag = tag;		
 		this.path = path;		
-		paint = new Paint();
-		paint.setAntiAlias(true);
-		paint.setColor(scolor);
-		paint.setStyle(Paint.Style.STROKE);
-		paint.setColor(fcolor);
-		paint.setStyle(Paint.Style.FILL);
+		s_paint = new Paint();        
+        s_paint.setAntiAlias(true);        
+        s_paint.setStyle(Paint.Style.STROKE);
+        s_paint.setColor(PaliCanvas.strokeColor);
+        s_paint.setAlpha(PaliCanvas.alpha);
+        s_paint.setStrokeWidth(PaliCanvas.strokeWidth);
 		this.rect = rect;
 	}
 
@@ -58,7 +58,7 @@ public class PaliFreeDraw extends PaliObject {
 	}
 	
 	public void drawObject(Canvas c) {
-		paint.setStyle(Paint.Style.STROKE);
-		c.drawPath(path, paint);
+		s_paint.setStyle(Paint.Style.STROKE);
+		c.drawPath(path, s_paint);
 	}
 }

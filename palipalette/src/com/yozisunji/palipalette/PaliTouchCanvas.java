@@ -105,7 +105,7 @@ public class PaliTouchCanvas extends View {
 		cnvs.scale(PaliCanvas.zoom, PaliCanvas.zoom);
 		if(tempObj!=null)
 		{
-			tempObj.setStrokeColor(Color.BLUE);
+			tempObj.setStrokeColor(Color.GREEN);
 			tempObj.setStyle(Style.STROKE);
 			tempObj.setWidth(2);
 			if(canvas.selectedTool!=PaliCanvas.TOOL_PICKOBJECT)

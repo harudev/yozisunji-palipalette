@@ -66,7 +66,7 @@ public class PaliCanvas extends SurfaceView implements SurfaceHolder.Callback {
 	 public void DrawScreen() 
 	 {
 		Canvas cnvs = null;
-		PaliObject temp;	
+		PaliObject temp;
 		drawMode = true;
 		
 		try
@@ -94,9 +94,9 @@ public class PaliCanvas extends SurfaceView implements SurfaceHolder.Callback {
 							 {
 								 temp = SVGParser.Layers.get(i).objs.get(j);
 								 if(PaliCanvas.selectedTool != PaliCanvas.TOOL_BRUSH) {
-									 temp.setColor(temp.paint.getColor(), temp.paint.getColor());
+									 temp.setColor(temp.s_paint.getColor(), temp.f_paint.getColor());
 								 }
-								 temp.setWidth(temp.paint.getStrokeWidth());
+								 temp.setWidth(temp.s_paint.getStrokeWidth());
 								 temp.drawObject(cnvs);
 							 }
 						 }

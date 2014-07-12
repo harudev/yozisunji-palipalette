@@ -25,10 +25,10 @@ public class PaliEllipse extends PaliObject {
 	
 	PaliEllipse(float left, float top, float right, float bottom)
 	{
-		paint = new Paint();
-		paint.setAntiAlias(true);
-		paint.setColor(Color.GREEN);
-		paint.setStyle(Paint.Style.FILL);
+		f_paint = new Paint();
+		f_paint.setAntiAlias(true);
+		f_paint.setColor(Color.GREEN);
+		f_paint.setStyle(Paint.Style.FILL);
 		this.left = left;
 		this.top = top;
 		this.right = right;
@@ -39,11 +39,19 @@ public class PaliEllipse extends PaliObject {
 	
 	PaliEllipse(String tag, float left, float top, float right, float bottom)
 	{
-		paint = new Paint();
-		paint.setAntiAlias(true);
-		paint.setColor(PaliCanvas.fillColor);
-		paint.setStyle(Paint.Style.FILL);
-		paint.setAlpha(PaliCanvas.alpha);
+		s_paint = new Paint();        
+        s_paint.setAntiAlias(true);        
+        s_paint.setStyle(Paint.Style.STROKE);
+        s_paint.setColor(PaliCanvas.strokeColor);
+        s_paint.setAlpha(PaliCanvas.alpha);
+        s_paint.setStrokeWidth(PaliCanvas.strokeWidth);
+        
+        f_paint = new Paint();        
+        f_paint.setAntiAlias(true);
+        f_paint.setStyle(Paint.Style.FILL);
+        f_paint.setColor(PaliCanvas.fillColor);
+        f_paint.setAlpha(PaliCanvas.alpha); 
+        
 		svgtag = tag;
 		this.left = left;
 		this.top = top;
@@ -60,17 +68,22 @@ public class PaliEllipse extends PaliObject {
 		this.top = top;
 		this.right = right;
 		this.bottom = bottom;
-		paint = new Paint();
-		paint.setAntiAlias(true);
-		paint.setColor(scolor);
-		paint.setStyle(Paint.Style.STROKE);
-		paint.setColor(fcolor);
-		paint.setStyle(Paint.Style.FILL);
+		
+		s_paint = new Paint();        
+        s_paint.setAntiAlias(true);        
+        s_paint.setStyle(Paint.Style.STROKE);
+        s_paint.setColor(scolor);
+        
+        f_paint = new Paint();        
+        f_paint.setAntiAlias(true);
+        f_paint.setStyle(Paint.Style.FILL);
+        f_paint.setColor(fcolor);
 		
 		this.rect = new RectF(left, top, right, bottom);
 	}
 	
 	public void drawObject(Canvas c) {
-		c.drawOval(new RectF(left, top, right, bottom), paint);
+		c.drawOval(new RectF(left, top, right, bottom), s_paint);
+		c.drawOval(new RectF(left, top, right, bottom), f_paint);
 	}
 }

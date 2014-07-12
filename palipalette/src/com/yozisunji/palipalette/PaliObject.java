@@ -5,24 +5,30 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 
 public abstract class PaliObject {
-	Paint paint;
+	Paint f_paint;
+	Paint s_paint;
 	String svgtag;
 	
 	RectF rect;
-	PaliObject(){
-		paint = new Paint();
-        paint.setAntiAlias(true);
+	PaliObject(){        
+        f_paint = new Paint();
+        f_paint.setAntiAlias(true);
+        s_paint = new Paint();
+        s_paint.setAntiAlias(true);
 	}
 	
 	PaliObject(String tag, int scolor, int fcolor)
 	{
 		svgtag = tag;
-		paint = new Paint();
-        paint.setAntiAlias(true);
-		paint.setColor(scolor);
-		paint.setStyle(Paint.Style.STROKE);
-		paint.setColor(fcolor);
-		paint.setStyle(Paint.Style.FILL);
+		s_paint = new Paint();        
+        s_paint.setAntiAlias(true);        
+        s_paint.setStyle(Paint.Style.STROKE);
+        s_paint.setColor(scolor);
+        
+        f_paint = new Paint();        
+        f_paint.setAntiAlias(true);
+        f_paint.setStyle(Paint.Style.FILL);
+        f_paint.setColor(fcolor);
 	}
 	public void SetTag(String tag)
 	{
@@ -31,32 +37,32 @@ public abstract class PaliObject {
 	
 	public void setStrokeColor(int color)
 	{
-		paint.setColor(color);
-		paint.setStyle(Paint.Style.STROKE);
+		s_paint.setColor(color);
+		s_paint.setStyle(Paint.Style.STROKE);
 	}
 	
 	public void setFillColor(int color)
 	{
-		paint.setColor(color);
-		paint.setStyle(Paint.Style.FILL);
+		f_paint.setColor(color);
+		f_paint.setStyle(Paint.Style.FILL);
 	}
 	
 	public void setWidth(float w)
 	{
-		paint.setStrokeWidth(w);
+		s_paint.setStrokeWidth(w);
 	}
 	
 	public void setColor(int scolor, int fcolor)
 	{
-		paint.setColor(scolor);
-		paint.setStyle(Paint.Style.STROKE);
-		paint.setColor(fcolor);
-		paint.setStyle(Paint.Style.FILL);
+		s_paint.setColor(scolor);
+		s_paint.setStyle(Paint.Style.STROKE);
+		f_paint.setColor(fcolor);
+		f_paint.setStyle(Paint.Style.FILL);
 	}
 	
 	public void setStyle(Paint.Style s)
 	{
-		paint.setStyle(s);
+		s_paint.setStyle(s);
 	}
 	
 	public RectF getRect()
