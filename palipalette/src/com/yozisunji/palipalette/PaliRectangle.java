@@ -81,8 +81,11 @@ public class PaliRectangle extends PaliObject {
 	}
 	
 	public void drawObject(Canvas c) {
+		c.save();
+		c.rotate(theta, this.rect.centerX(), this.rect.centerY());
 		c.drawRect(left, top, right, bottom, s_paint);
 		c.drawRect(left, top, right, bottom, f_paint);
+		c.restore();
 	}
 	public void Move(float dx, float dy)
 	{

@@ -46,7 +46,10 @@ public class PaliBrush extends PaliObject {
 	}
 
 	public void drawObject(Canvas c) {
+		c.save();
+		c.rotate(theta, this.rect.centerX(), this.rect.centerY());
 		c.drawBitmap(bitmap, rect.left, rect.top, f_paint);
+		c.restore();
 	}
 
 	public void Move(float dx, float dy) {

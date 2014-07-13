@@ -26,9 +26,9 @@ public class PaliSelector extends View {
 	Rect recti;
 	int width, height;	
 	
-	boolean mMovePressed = false;
-	boolean mScalePressed = false;
-	boolean mRotatePressed = false;
+	public static boolean mMovePressed = false;
+	public static boolean mScalePressed = false;
+	public static boolean mRotatePressed = false;
 	PaliCanvas canvas;
 	public boolean mLongPressed = false;
 	private Handler mHandler = new Handler();

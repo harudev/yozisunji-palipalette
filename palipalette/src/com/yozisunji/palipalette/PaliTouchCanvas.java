@@ -49,6 +49,7 @@ public class PaliTouchCanvas extends View {
 	
 	PaliSelector selector=null;
 	public boolean selected=false;
+	public static boolean freedrawing=false;
 	
 	private boolean pinch = false;
 	private boolean zoom = false;
@@ -137,6 +138,7 @@ public class PaliTouchCanvas extends View {
 		 {
 		 
 		 case MotionEvent.ACTION_DOWN:	
+			 freedrawing = true;
 			 fillColor = Integer.toHexString(PaliCanvas.fillColor).substring(2);
 			 strokeColor = Integer.toHexString(PaliCanvas.strokeColor).substring(2);
 			 strokeWidth = PaliCanvas.strokeWidth;
@@ -408,6 +410,7 @@ public class PaliTouchCanvas extends View {
 				 this.prepinch=false;
 				 return true;
 			 case PaliCanvas.TOOL_PENCIL:
+				 freedrawing = false;
 				 if(!this.prepinch)
 				 {
 	                 minX=min(minX,upX);
@@ -417,7 +420,7 @@ public class PaliTouchCanvas extends View {
 	                 rect = new RectF(minX, minY, maxX, maxY);
 	                 opacity = PaliCanvas.alpha / 255.0f;
 	                 html = "<path fill=\"none\" stroke=\"#"+strokeColor+"\" stroke-width=\""+strokeWidth+"\" stroke-opacity=\""+opacity+"\" d=\"M"+downX+" "+downY+""+movement+"\" />";
-	                 SVGParser.Layers.get(canvas.currentLayer).objs.add(new PaliFreeDraw(html, pencilPath, rect));
+	                 SVGParser.Layers.get(canvas.currentLayer).objs.add(new PaliPencil(html, pencilPath, rect));
 	                 tempObj=null;
 	                 pencilPath = null;
 	                 PaliCanvas.currentObject++;
