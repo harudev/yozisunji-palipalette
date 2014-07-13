@@ -8,7 +8,6 @@ import android.graphics.RectF;
 import android.util.Log;
 
 public class PaliBrush extends PaliObject {
-	Bitmap bitmap;
 
 	PaliBrush(String tag, int scolor, int fcolor) {
 		super(tag, scolor, fcolor);
@@ -29,6 +28,15 @@ public class PaliBrush extends PaliObject {
 		this.bitmap = bitmap;
 		this.rect = rect;
 	}
+	
+	PaliBrush(String tag, Bitmap bitmap, RectF rect, float theta) {
+		f_paint = new Paint();
+		f_paint.setAntiAlias(true);
+		svgtag = tag;
+		this.bitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true);
+		this.rect = new RectF(rect);
+		this.theta = theta;
+	}
 
 	PaliBrush(String tag, Bitmap bitmap, RectF rect, int scolor, int fcolor) {
 		svgtag = tag;
@@ -46,6 +54,7 @@ public class PaliBrush extends PaliObject {
 	}
 
 	public void drawObject(Canvas c) {
+		this.type = PaliCanvas.TOOL_BRUSH;
 		c.save();
 		c.rotate(theta, this.rect.centerX(), this.rect.centerY());
 		c.drawBitmap(bitmap, rect.left, rect.top, f_paint);

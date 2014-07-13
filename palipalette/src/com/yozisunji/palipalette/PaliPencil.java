@@ -8,7 +8,6 @@ import android.graphics.RectF;
 import android.util.Log;
 
 public class PaliPencil extends PaliObject {
-	Path path;
 
 	PaliPencil(String tag, int scolor, int fcolor)
 	{
@@ -35,6 +34,19 @@ public class PaliPencil extends PaliObject {
 		this.path = path;
 		this.rect = rect;
 	}
+	PaliPencil(String tag, Path path, RectF rect, float theta)
+	{
+		s_paint = new Paint();
+		s_paint.setAntiAlias(true);
+		s_paint.setColor(PaliCanvas.strokeColor);
+		s_paint.setStyle(Paint.Style.STROKE);
+		s_paint.setAlpha(PaliCanvas.alpha);
+		s_paint.setStrokeWidth(PaliCanvas.strokeWidth);
+		svgtag = tag;
+		this.path = new Path(path);
+		this.rect = new RectF(rect);
+		this.theta = theta;
+	}
 	PaliPencil(String tag, Path path, RectF rect, int scolor)
 	{
 		svgtag = tag;		
@@ -59,6 +71,7 @@ public class PaliPencil extends PaliObject {
 	}
 	
 	public void drawObject(Canvas c) {
+		this.type = PaliCanvas.TOOL_PENCIL;
 		s_paint.setStyle(Paint.Style.STROKE);
 		c.save();
 		c.rotate(theta, this.rect.centerX(), this.rect.centerY());		

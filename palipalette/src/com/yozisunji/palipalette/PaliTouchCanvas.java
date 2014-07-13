@@ -14,6 +14,7 @@ import android.graphics.Path;
 import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.util.FloatMath;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
@@ -49,7 +50,6 @@ public class PaliTouchCanvas extends View {
 	
 	PaliSelector selector=null;
 	public boolean selected=false;
-	public static boolean freedrawing=false;
 	
 	private boolean pinch = false;
 	private boolean zoom = false;
@@ -62,7 +62,6 @@ public class PaliTouchCanvas extends View {
 	long time;
 	
 	public static Context mContext;
-	
 
 	public PaliTouchCanvas(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -92,7 +91,7 @@ public class PaliTouchCanvas extends View {
 	{
 		canvas = c;
 		
-		selector = new PaliSelector(mContext, new RectF(0, 0, 100, 100), c);
+		selector = new PaliSelector(mContext, new RectF(0, 0, 100, 100), c, this);
 		selectorll.addView(selector);
 		LinearLayout.LayoutParams params = (LinearLayout.LayoutParams)selector.getLayoutParams();
         params.width = LayoutParams.MATCH_PARENT;
@@ -138,7 +137,6 @@ public class PaliTouchCanvas extends View {
 		 {
 		 
 		 case MotionEvent.ACTION_DOWN:	
-			 freedrawing = true;
 			 fillColor = Integer.toHexString(PaliCanvas.fillColor).substring(2);
 			 strokeColor = Integer.toHexString(PaliCanvas.strokeColor).substring(2);
 			 strokeWidth = PaliCanvas.strokeWidth;
@@ -410,7 +408,6 @@ public class PaliTouchCanvas extends View {
 				 this.prepinch=false;
 				 return true;
 			 case PaliCanvas.TOOL_PENCIL:
-				 freedrawing = false;
 				 if(!this.prepinch)
 				 {
 	                 minX=min(minX,upX);
@@ -609,4 +606,38 @@ public class PaliTouchCanvas extends View {
 		 selector.setVisibility(View.GONE);
 	 }	
 	 
+	 public void copyObject() 
+	 {
+		 PaliObject obj = SVGParser.Layers.get(selector.selObjArr.get(0).x).objs.get(selector.selObjArr.get(0).y);
+		 
+		 switch (obj.type) {
+		 case PaliCanvas.TOOL_PENCIL:
+			 SVGParser.Layers.get(PaliCanvas.currentLayer).objs.add(new PaliPencil(obj.svgtag, obj.path, obj.rect, obj.theta)); 
+			 break;
+		 case PaliCanvas.TOOL_BRUSH:
+			 SVGParser.Layers.get(PaliCanvas.currentLayer).objs.add(new PaliBrush(obj.svgtag, obj.bitmap, obj.rect, obj.theta));
+			 break;
+		 case PaliCanvas.TOOL_CIRCLE:
+			 SVGParser.Layers.get(PaliCanvas.currentLayer).objs.add(new PaliCircle(obj.svgtag, obj.x, obj.y, obj.r));
+			 break;
+		 case PaliCanvas.TOOL_ELLIPSE:
+			 SVGParser.Layers.get(PaliCanvas.currentLayer).objs.add(new PaliEllipse(obj.svgtag, obj.left, obj.top, obj.right, obj.bottom, obj.theta));
+			 break;
+		 case PaliCanvas.TOOL_RECTANGLE:
+			 SVGParser.Layers.get(PaliCanvas.currentLayer).objs.add(new PaliRectangle(obj.svgtag, obj.left, obj.top, obj.right, obj.bottom, obj.theta));
+			 break;
+		 }
+
+		 
+		 
+		 PaliCanvas.currentObject++;
+		 canvas.DrawScreen();
+	 }
+	 
+	 public void afterTransform() 
+	 {		 
+		 this.selected=false;
+		 selector.selObjArr.clear();
+		 selector.setVisibility(View.GONE);	 		 
+	 }	 
 }

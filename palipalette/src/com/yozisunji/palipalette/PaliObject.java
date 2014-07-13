@@ -1,7 +1,9 @@
 package com.yozisunji.palipalette;
 
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.RectF;
 
 public abstract class PaliObject {
@@ -11,6 +13,13 @@ public abstract class PaliObject {
 	
 	RectF rect;
 	float theta = 0;
+	
+	int type;
+	float x,y;
+	float r;
+	float left, top, right, bottom;
+	Path path;
+	Bitmap bitmap;
 	
 	PaliObject(){        
         f_paint = new Paint();
@@ -80,6 +89,7 @@ public abstract class PaliObject {
 	public abstract void drawObject(Canvas c);
 	public abstract void Move(float dx, float dy);
 	public abstract void Scale(float dx, float dy);	
+	//public abstract void copyInfo();
 }
 
 

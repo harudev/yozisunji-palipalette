@@ -98,6 +98,7 @@ public class MainActivity extends Activity {
 	public void OnClick(View v) {
 		switch (v.getId()) {
 		case R.id.copyBtn:
+			touchview.copyObject();
 			dialog.dismiss();
 			break;
 		case R.id.pasteBtn:

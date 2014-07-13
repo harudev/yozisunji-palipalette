@@ -8,7 +8,6 @@ import android.graphics.RectF;
 import android.util.Log;
 
 public class PaliFreeDraw extends PaliObject {
-	Path path;
 
 	PaliFreeDraw(String tag, int scolor, int fcolor)
 	{
@@ -58,7 +57,7 @@ public class PaliFreeDraw extends PaliObject {
 		return path;
 	}
 	
-	public void drawObject(Canvas c) {	
+	public void drawObject(Canvas c) {			
 		s_paint.setStyle(Paint.Style.STROKE);
 		c.drawPath(path, s_paint);		
 	}
