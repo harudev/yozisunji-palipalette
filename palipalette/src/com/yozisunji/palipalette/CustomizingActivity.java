@@ -20,5 +20,9 @@ public class CustomizingActivity extends Activity {
 				WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
 				WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
 		setContentView(R.layout.customizing);
+		
+		this.screen =(PaliScreen) findViewById(R.id.screen_edit);
+		
+		this.screen.copy(CustomizingMainActivity.screens.get(0));
 	}
 }

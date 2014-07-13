@@ -14,7 +14,7 @@ public class PaliItemList implements Serializable {
 		items = new ArrayList<PaliItem>();
 	}
 	
-	public void putItem(int item, int width, int height, Drawable d)
+	public void putItem(int item, int width, int height, int d)
 	{
 		items.add(new PaliItem(item, width, height,d));
 	}
