@@ -34,18 +34,14 @@ public class PaliPencil extends PaliObject {
 		this.path = path;
 		this.rect = rect;
 	}
-	PaliPencil(String tag, Path path, RectF rect, float theta)
+	PaliPencil(String tag, Path path, RectF rect, float theta, Paint s_p)
 	{
-		s_paint = new Paint();
-		s_paint.setAntiAlias(true);
-		s_paint.setColor(PaliCanvas.strokeColor);
-		s_paint.setStyle(Paint.Style.STROKE);
-		s_paint.setAlpha(PaliCanvas.alpha);
-		s_paint.setStrokeWidth(PaliCanvas.strokeWidth);
 		svgtag = tag;
 		this.path = new Path(path);
 		this.rect = new RectF(rect);
 		this.theta = theta;
+		s_paint = new Paint(s_p);
+		this.Move(PaliTouchCanvas.translateX, PaliTouchCanvas.translateY);
 	}
 	PaliPencil(String tag, Path path, RectF rect, int scolor)
 	{

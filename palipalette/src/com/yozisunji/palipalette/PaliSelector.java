@@ -38,7 +38,6 @@ public class PaliSelector extends View {
 	private int mLongPressTimeout;
 
 	public ArrayList<PaliPoint> selObjArr;
-	public ArrayList<PaliPoint> copyObjArr;
 	
 
 	float downX = 0, downY = 0, upX = 0, upY = 0, moveX = 0, moveY = 0,
@@ -56,7 +55,6 @@ public class PaliSelector extends View {
 		// TODO Auto-generated constructor stub
 
 		selObjArr = new ArrayList<PaliPoint>();
-		copyObjArr = new ArrayList<PaliPoint>();
 
 		this.rect = r;
 		recti = new Rect((int) r.left, (int) r.top, (int) r.right,

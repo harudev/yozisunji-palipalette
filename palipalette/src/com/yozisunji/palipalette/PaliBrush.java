@@ -29,13 +29,13 @@ public class PaliBrush extends PaliObject {
 		this.rect = rect;
 	}
 	
-	PaliBrush(String tag, Bitmap bitmap, RectF rect, float theta) {
-		f_paint = new Paint();
-		f_paint.setAntiAlias(true);
+	PaliBrush(String tag, Bitmap bitmap, RectF rect, float theta, Paint f_p) {
+		f_paint = new Paint(f_p);
 		svgtag = tag;
 		this.bitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true);
 		this.rect = new RectF(rect);
 		this.theta = theta;
+		this.Move(PaliTouchCanvas.translateX, PaliTouchCanvas.translateY);
 	}
 
 	PaliBrush(String tag, Bitmap bitmap, RectF rect, int scolor, int fcolor) {

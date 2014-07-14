@@ -63,11 +63,11 @@ public class MainActivity extends Activity {
 				android.os.Process.killProcess(android.os.Process.myPid());
 				return true;
 			case KeyEvent.KEYCODE_MENU:
-				launchCustomizing();
-				/*
+				//launchCustomizing();
+				
 				PaliCanvas.selectedTool++;
 				if (PaliCanvas.selectedTool > 5)
-					PaliCanvas.selectedTool = 0;*/
+					PaliCanvas.selectedTool = 0;
 				return true;
 			}
 		}
@@ -102,6 +102,7 @@ public class MainActivity extends Activity {
 			dialog.dismiss();
 			break;
 		case R.id.pasteBtn:
+			touchview.pasteObject();
 			dialog.dismiss();
 			break;
 		case R.id.deletBtn:

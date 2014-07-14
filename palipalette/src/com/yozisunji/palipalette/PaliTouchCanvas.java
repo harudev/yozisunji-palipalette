@@ -41,6 +41,12 @@ public class PaliTouchCanvas extends View {
 	int strokeWidth;	
 	
 	PaliObject tempObj;
+	public ArrayList<PaliObject> copyObject;
+	float copyPosX=0, copyPosY=0;
+	float pastePosX=0, pastePosY=0;
+	public static float translateX=0;
+	public static float translateY=0;
+	
 
 	PaliCanvas canvas;	
 	RectF rect;
@@ -73,6 +79,8 @@ public class PaliTouchCanvas extends View {
 		
 		Point0 = new PaliPoint();
 		Point1 = new PaliPoint();
+		
+		copyObject = new ArrayList<PaliObject>();
 		//parent = this;
 		
 		/*
@@ -134,9 +142,8 @@ public class PaliTouchCanvas extends View {
 		
 		 super.onTouchEvent(e);		 
 		 switch(e.getAction() & MotionEvent.ACTION_MASK)
-		 {
-		 
-		 case MotionEvent.ACTION_DOWN:	
+		 {		 
+		 case MotionEvent.ACTION_DOWN:				 
 			 fillColor = Integer.toHexString(PaliCanvas.fillColor).substring(2);
 			 strokeColor = Integer.toHexString(PaliCanvas.strokeColor).substring(2);
 			 strokeWidth = PaliCanvas.strokeWidth;
@@ -180,6 +187,11 @@ public class PaliTouchCanvas extends View {
 				 ((PaliBrush)tempObj).getPath().moveTo(downX, downY);
 				 break;
 				 */
+			 case PaliCanvas.TOOL_PICKOBJECT:
+				 selector.startTimeout();
+				 pastePosX = downX;
+				 pastePosY = downY;
+				 break;
 			 }
 			 return true;
 		 case MotionEvent.ACTION_POINTER_DOWN:
@@ -313,7 +325,8 @@ public class PaliTouchCanvas extends View {
 			 this.invalidate();
 			 return true;
 		 
-		 case MotionEvent.ACTION_UP:			 
+		 case MotionEvent.ACTION_UP:		
+			 
 			 upX = (e.getX()-PaliCanvas.canvasX)/PaliCanvas.zoom;
 			 upY = (e.getY()-PaliCanvas.canvasY)/PaliCanvas.zoom;
 			 float left=999999, right=0, top=999999, bottom=0;
@@ -321,6 +334,7 @@ public class PaliTouchCanvas extends View {
 			 
 			 switch(PaliCanvas.selectedTool) {
 			 case PaliCanvas.TOOL_PICKOBJECT:
+				 selector.stopTimeout();
 				 if(this.selected)
 				 {
 					 if(!this.prepinch)
@@ -607,29 +621,39 @@ public class PaliTouchCanvas extends View {
 	 }	
 	 
 	 public void copyObject() 
-	 {
-		 PaliObject obj = SVGParser.Layers.get(selector.selObjArr.get(0).x).objs.get(selector.selObjArr.get(0).y);
-		 
-		 switch (obj.type) {
-		 case PaliCanvas.TOOL_PENCIL:
-			 SVGParser.Layers.get(PaliCanvas.currentLayer).objs.add(new PaliPencil(obj.svgtag, obj.path, obj.rect, obj.theta)); 
-			 break;
-		 case PaliCanvas.TOOL_BRUSH:
-			 SVGParser.Layers.get(PaliCanvas.currentLayer).objs.add(new PaliBrush(obj.svgtag, obj.bitmap, obj.rect, obj.theta));
-			 break;
-		 case PaliCanvas.TOOL_CIRCLE:
-			 SVGParser.Layers.get(PaliCanvas.currentLayer).objs.add(new PaliCircle(obj.svgtag, obj.x, obj.y, obj.r));
-			 break;
-		 case PaliCanvas.TOOL_ELLIPSE:
-			 SVGParser.Layers.get(PaliCanvas.currentLayer).objs.add(new PaliEllipse(obj.svgtag, obj.left, obj.top, obj.right, obj.bottom, obj.theta));
-			 break;
-		 case PaliCanvas.TOOL_RECTANGLE:
-			 SVGParser.Layers.get(PaliCanvas.currentLayer).objs.add(new PaliRectangle(obj.svgtag, obj.left, obj.top, obj.right, obj.bottom, obj.theta));
-			 break;
+	 {		 
+		 copyObject.clear();
+		 for(int i=0; i<selector.selObjArr.size(); i++) {
+			 copyObject.add(SVGParser.Layers.get(selector.selObjArr.get(i).x).objs.get(selector.selObjArr.get(i).y));
 		 }
-
-		 
-		 
+		 copyPosX = rect.centerX();
+		 copyPosY = rect.centerY();
+	 }
+	 
+	 public void pasteObject() 
+	 {
+		 translateX = pastePosX-copyPosX;
+		 translateY = pastePosY-copyPosY;
+		 for(int i=0; i<copyObject.size(); i++) {
+			 PaliObject obj = copyObject.get(i);
+			 switch (obj.type) {
+			 case PaliCanvas.TOOL_PENCIL:
+				 SVGParser.Layers.get(PaliCanvas.currentLayer).objs.add(new PaliPencil(obj.svgtag, obj.path, obj.rect, obj.theta, obj.s_paint)); 
+				 break;
+			 case PaliCanvas.TOOL_BRUSH:
+				 SVGParser.Layers.get(PaliCanvas.currentLayer).objs.add(new PaliBrush(obj.svgtag, obj.bitmap, obj.rect, obj.theta, obj.f_paint));
+				 break;
+			 case PaliCanvas.TOOL_CIRCLE:
+				 SVGParser.Layers.get(PaliCanvas.currentLayer).objs.add(new PaliCircle(obj.svgtag, obj.x+translateX, obj.y+translateY, obj.r, obj.theta, obj.s_paint, obj.f_paint));
+				 break;
+			 case PaliCanvas.TOOL_ELLIPSE:
+				 SVGParser.Layers.get(PaliCanvas.currentLayer).objs.add(new PaliEllipse(obj.svgtag, obj.left+translateX, obj.top+translateY, obj.right+translateX, obj.bottom+translateY, obj.theta, obj.s_paint, obj.f_paint));
+				 break;
+			 case PaliCanvas.TOOL_RECTANGLE:
+				 SVGParser.Layers.get(PaliCanvas.currentLayer).objs.add(new PaliRectangle(obj.svgtag, obj.left+translateX, obj.top+translateY, obj.right+translateX, obj.bottom+translateY, obj.theta, obj.s_paint, obj.f_paint));
+				 break;
+			 }	
+		 } 				 
 		 PaliCanvas.currentObject++;
 		 canvas.DrawScreen();
 	 }
