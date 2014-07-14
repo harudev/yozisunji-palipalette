@@ -252,5 +252,4 @@ public class PaliSelector extends View {
 			((MainActivity) PaliTouchCanvas.mContext).popUpSubMenu();
 		}
 	}
-
 }

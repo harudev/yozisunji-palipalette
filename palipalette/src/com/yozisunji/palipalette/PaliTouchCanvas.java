@@ -209,7 +209,8 @@ public class PaliTouchCanvas extends View {
 			 this.zoom = false;
 			 this.prepinch = true;
 			 return true;
-		 case MotionEvent.ACTION_MOVE:
+		 case MotionEvent.ACTION_MOVE:		 
+			 
 			 if(pinch==true)
 			 {
 				 if(directing(e,Point0, Point1))
@@ -272,6 +273,10 @@ public class PaliTouchCanvas extends View {
 			 {
 				 moveX = (e.getX()-PaliCanvas.canvasX)/PaliCanvas.zoom;
 				 moveY = (e.getY()-PaliCanvas.canvasY)/PaliCanvas.zoom;
+				 
+				 if ((Math.abs(moveX - downX) > 30)
+							|| (Math.abs(moveY - downY) > 30))
+						selector.stopTimeout();
 				 
 				 switch(PaliCanvas.selectedTool)
 				 {
@@ -662,6 +667,25 @@ public class PaliTouchCanvas extends View {
 	 {		 
 		 this.selected=false;
 		 selector.selObjArr.clear();
-		 selector.setVisibility(View.GONE);	 		 
-	 }	 
+		 selector.setVisibility(View.GONE);	 
+	 }	
+	 
+	 public void changeStyle(int style) {
+		 if(selector.selObjArr.size()>0) {
+			 for(int i=0; i<selector.selObjArr.size(); i++) {
+				 switch(style) {
+				 case MainActivity.STYLE_STROKECOLOR:
+					 SVGParser.Layers.get(selector.selObjArr.get(i).x).objs.get(selector.selObjArr.get(i).y).s_paint.setColor(PaliCanvas.strokeColor);
+					 break;
+				 case MainActivity.STYLE_FILLCOLOR:
+					 SVGParser.Layers.get(selector.selObjArr.get(i).x).objs.get(selector.selObjArr.get(i).y).f_paint.setColor(PaliCanvas.fillColor);
+					 break;
+				 case MainActivity.STYLE_STROKEWIDTH:
+					 SVGParser.Layers.get(selector.selObjArr.get(i).x).objs.get(selector.selObjArr.get(i).y).s_paint.setStrokeWidth(PaliCanvas.strokeWidth);
+					 break;
+				 }
+			 }
+		 }
+		 canvas.DrawScreen();
+	 }
 }

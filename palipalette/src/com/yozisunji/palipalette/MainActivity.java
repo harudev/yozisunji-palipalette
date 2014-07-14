@@ -7,6 +7,7 @@ import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +21,10 @@ import com.samsung.android.example.helloaccessoryprovider.R;
 import com.samsung.android.example.helloaccessoryprovider.service.HelloAccessoryProviderService;
 
 public class MainActivity extends Activity {
+	
+	public static final int STYLE_STROKECOLOR=0;
+	public static final int STYLE_FILLCOLOR=1;
+	public static final int STYLE_STROKEWIDTH=2;
 
 	static SVGParser svg;
 	public PaliCanvas customview;
@@ -116,5 +121,9 @@ public class MainActivity extends Activity {
 	{
 		Intent intent = new Intent(this, CustomizingMainActivity.class);
 		startActivity(intent);
+	}
+	
+	public void changeStyle(int style) {
+		touchview.changeStyle(style);
 	}
 }
