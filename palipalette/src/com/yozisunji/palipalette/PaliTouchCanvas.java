@@ -27,6 +27,7 @@ public class PaliTouchCanvas extends View {
 	float downX=0, downY=0, upX=0, upY=0, moveX=0, moveY=0, premoveX=0, premoveY=0;
 	float minX=0, minY=0, maxX=0, maxY=0;
 	float x=0, y=0, width=0, height=0;
+	float left=0, right=0, top=0, bottom=0;
 	float cx=0, cy=0, r=0;
 	float pressure, opacity;
 	PaliPoint Point0, Point1;
@@ -334,7 +335,7 @@ public class PaliTouchCanvas extends View {
 			 
 			 upX = (e.getX()-PaliCanvas.canvasX)/PaliCanvas.zoom;
 			 upY = (e.getY()-PaliCanvas.canvasY)/PaliCanvas.zoom;
-			 float left=999999, right=0, top=999999, bottom=0;
+			 float rect_left=999999, rect_right=0, rect_top=999999, rect_bottom=0;
 			 PaliObject temp;
 			 
 			 switch(PaliCanvas.selectedTool) {
@@ -396,19 +397,20 @@ public class PaliTouchCanvas extends View {
 									 if(this.rect.contains(temp.rect))
 									 {
 										 selector.selObjArr.add(new PaliPoint(i,j));
-										 left = min(left, temp.rect.left);
-										 top = min(top, temp.rect.top);
-										 right = max(right, temp.rect.right);
-										 bottom = max(bottom, temp.rect.bottom);
-										 this.selected = true;
+										 rect_left = min(rect_left, temp.rect.left);
+										 rect_top = min(rect_top, temp.rect.top);
+										 rect_right = max(rect_right, temp.rect.right);
+										 rect_bottom = max(rect_bottom, temp.rect.bottom);										 
+                                         this.selected = true;
 									 }
 								 }
+								 rect.left = rect_left; rect.top = rect_top; rect.right = rect_right; rect.bottom = rect_bottom;
 							 }
 						 }
 					 }
 					 
 					 if(selected)
-					 {
+					 {						 
 						 selector.setRect(rect);
 						 LinearLayout.LayoutParams params = (LinearLayout.LayoutParams)selector.getLayoutParams();
 						 params.leftMargin = (int)((rect.left + PaliCanvas.canvasX) * PaliCanvas.zoom);
