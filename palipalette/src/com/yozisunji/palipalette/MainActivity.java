@@ -73,6 +73,8 @@ public class MainActivity extends Activity {
 				PaliCanvas.selectedTool++;
 				if (PaliCanvas.selectedTool > 5)
 					PaliCanvas.selectedTool = 0;
+				
+				changeTool();
 				return true;
 			}
 		}
@@ -125,5 +127,8 @@ public class MainActivity extends Activity {
 	
 	public void changeStyle(int style) {
 		touchview.changeStyle(style);
+	}
+	public void changeTool() {
+		touchview.selectedClear();
 	}
 }

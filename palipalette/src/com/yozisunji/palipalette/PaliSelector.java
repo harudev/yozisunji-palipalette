@@ -196,21 +196,21 @@ public class PaliSelector extends View {
 					SVGParser.Layers.get(selObjArr.get(i).x).objs.get(
 							selObjArr.get(i).y).Move(upX - downX, upY - downY);
 				}
-				touchCanvas.afterTransform();
+				touchCanvas.selectedClear();
 			} else if (mRotatePressed) {
 				for (int i = selObjArr.size() - 1; i >= 0; i--) {
 					SVGParser.Layers.get(selObjArr.get(i).x).objs.get(
 							selObjArr.get(i).y).Rotate(
 							(upX - downX) + (upY - downY));
 				}
-				touchCanvas.afterTransform();
+				touchCanvas.selectedClear();
 			} else if (mScalePressed) {
 				for (int i = selObjArr.size() - 1; i >= 0; i--) {
 					SVGParser.Layers.get(selObjArr.get(i).x).objs.get(
 							selObjArr.get(i).y).Scale((upX - downX) / 2,
 							(upY - downY) / 2);
 				}
-				touchCanvas.afterTransform();
+				touchCanvas.selectedClear();
 			}			
 			
 			canvas.DrawScreen();

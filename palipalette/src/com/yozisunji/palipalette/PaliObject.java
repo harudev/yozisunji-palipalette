@@ -2,6 +2,7 @@ package com.yozisunji.palipalette;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.ColorFilter;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
@@ -20,6 +21,8 @@ public abstract class PaliObject {
 	float left, top, right, bottom;
 	Path path;
 	Bitmap bitmap;
+	
+	ColorFilter filter;
 	
 	PaliObject(){        
         f_paint = new Paint();

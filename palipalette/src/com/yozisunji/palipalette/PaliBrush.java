@@ -2,6 +2,9 @@ package com.yozisunji.palipalette;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.ColorFilter;
+import android.graphics.LightingColorFilter;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.RectF;
@@ -27,14 +30,16 @@ public class PaliBrush extends PaliObject {
 		svgtag = tag;
 		this.bitmap = bitmap;
 		this.rect = rect;
+		filter = new LightingColorFilter(PaliCanvas.fillColor, 1);
 	}
 	
-	PaliBrush(String tag, Bitmap bitmap, RectF rect, float theta, Paint f_p) {
-		f_paint = new Paint(f_p);
+	PaliBrush(String tag, Bitmap bitmap, RectF rect, float theta, Paint f_p, ColorFilter filter) {
+		f_paint = new Paint(f_p);		
 		svgtag = tag;
 		this.bitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true);
 		this.rect = new RectF(rect);
 		this.theta = theta;
+		this.filter = filter;
 		this.Move(PaliTouchCanvas.translateX, PaliTouchCanvas.translateY);
 	}
 
@@ -57,6 +62,7 @@ public class PaliBrush extends PaliObject {
 		this.type = PaliCanvas.TOOL_BRUSH;
 		c.save();
 		c.rotate(theta, this.rect.centerX(), this.rect.centerY());
+		f_paint.setColorFilter(filter);
 		c.drawBitmap(bitmap, rect.left, rect.top, f_paint);
 		c.restore();
 	}
