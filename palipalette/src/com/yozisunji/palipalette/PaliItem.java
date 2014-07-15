@@ -10,61 +10,41 @@ import android.graphics.drawable.Drawable;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 
-public class PaliItem implements Serializable
+public class PaliItem 
 {
-	int x, y;
+	public static final int TYPE_ICON = 0;
+	public static final int TYPE_WIDGET = 1;
+	
 	int width, height;
 	int funcNum;
 	int itemNum;
 	int imageid;
-	Bitmap image;
-	ImageView imgview;
-	GridLayout.LayoutParams gl;
-	Context context;
+	int itemType;
 	
+	String funcName;
+	String itemTypeName;
+		
 	public PaliItem()
 	{
 	}
 	
-	public PaliItem(int itemNum, int width, int height, int imageid)
+	public PaliItem(int funcNum, int itemNum, int itemType, int width, int height, int imageid, String fName)
 	{
+		this.funcNum = funcNum;
 		this.itemNum = itemNum;
+		this.itemType = itemType;
 		this.width = width;
 		this.height = height;
 		this.imageid = imageid;
-	}
-	
-	public PaliItem(int f, int i, int x, int y, Context context)
-	{
-		PaliItem temp = CustomizingMainActivity.GearUIList.get(f).items.get(i);
-		this.funcNum = f;
-		this.itemNum = i;
-		this.x = x;
-		this.y = y;
-		this.width = temp.width;
-		this.height = temp.height;
-		this.imageid = temp.imageid;
-		this.context = context;
+		this.funcName = fName;
 		
-		imgview = new ImageView(context);
-		gl = new GridLayout.LayoutParams(GridLayout.spec(x,width), GridLayout.spec(y,height));
+		switch(itemType)
+		{
+		case TYPE_ICON:
+			itemTypeName="Icon";
+			break;
+		case TYPE_WIDGET:
+			itemTypeName="Widget";
+		}
 	}
-	
-	public void createImageView(Context context)
-	{
-		this.imgview = new ImageView(context);
-		gl = new GridLayout.LayoutParams(GridLayout.spec(x,width), GridLayout.spec(y,height));
-		image = BitmapFactory.decodeResource(context.getResources(), imageid);
-		imgview.setImageBitmap(image);
-	}
-	
-	public ImageView getImageView(int scaler)
-	{
-		BitmapFactory.Options option  = new BitmapFactory.Options();
-		option.inSampleSize = scaler;
-		image = BitmapFactory.decodeResource(context.getResources(), imageid, option);
-		imgview.setImageBitmap(image);
-		return this.imgview;
-	}
-	
 }

@@ -1,22 +1,25 @@
 package com.yozisunji.palipalette;
 
-
-import java.io.Serializable;
 import java.util.ArrayList;
 
-import android.graphics.drawable.Drawable;
 
-public class PaliItemList implements Serializable {
+public class PaliItemList {
+	String FuncName;
 	ArrayList<PaliItem> items;
 	
 	public PaliItemList()
 	{
 		items = new ArrayList<PaliItem>();
 	}
-	
-	public void putItem(int item, int width, int height, int d)
+	public PaliItemList(String f)
 	{
-		items.add(new PaliItem(item, width, height,d));
+		items = new ArrayList<PaliItem>();
+		this.FuncName = f;
+	}
+	
+	public void putItem(int func, int item, int itemType, int width, int height, int d)
+	{
+		items.add(new PaliItem(func, item, itemType, width, height,d,FuncName));
 	}
 	/*
 	public PaliItem getItem(int func, int item)

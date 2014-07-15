@@ -1,62 +1,77 @@
 package com.yozisunji.palipalette;
 
 import java.util.ArrayList;
-
 import com.samsung.android.example.helloaccessoryprovider.R;
-
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
 import android.widget.GridLayout;
-import android.view.View;
-import android.view.View.OnClickListener;
+import android.util.AttributeSet;
+import android.view.MotionEvent;
 
-public class PaliScreen extends GridLayout implements OnClickListener{
-	PaliItemList itemList;
+public class PaliScreen extends GridLayout{
+	ArrayList<PaliItemView> items;
 	Context mContext;
-	Bitmap bground;
+	
 	public PaliScreen(Context context) {
 		super(context);
 		// TODO Auto-generated constructor stub
 		mContext = context;
-		itemList = new PaliItemList();
+		items = new ArrayList<PaliItemView>();
+		this.setBackgroundResource(R.drawable.screen_background);
 		this.setRowCount(3);
 		this.setColumnCount(3);
-		
-		this.layout(0, 0, 100, 100);
 	}
-	public void copy(PaliScreen p)
-	{
-		itemList = p.itemList;
+	
+	public PaliScreen(Context context, AttributeSet attrs) {
+		super(context, attrs);
+		// TODO Auto-generated constructor stub
+		mContext = context;
+		items = new ArrayList<PaliItemView>();
+		this.setBackgroundResource(R.drawable.screen_background);
+		this.setRowCount(3);
+		this.setColumnCount(3);
 	}
 	
 	public void putItem(int func, int item, int posX, int posY)
 	{
-		this.itemList.items.add(new PaliItem(func, item, posX, posY,mContext));
-		//
-		//
+		PaliItemView temp = new PaliItemView(func, item, posX, posY,mContext);
+		this.items.add(temp);
+		this.addView(temp , temp.gl);
 	}
 	
-	public PaliScreen getScreen(int scaler)
-	{
+	public void copy(PaliScreen p, int width, int height)
+	{		
+		PaliItemView temp;
+		
 		this.removeAllViews();
-		BitmapFactory.Options option  = new BitmapFactory.Options();
-		option.inSampleSize = scaler;
-		bground = BitmapFactory.decodeResource(mContext.getResources(),R.drawable.screen_background, option);
-		this.setBackground(new BitmapDrawable(mContext.getResources(),bground));
-		for(int i = 0; i<itemList.items.size() ; i++)
-			this.addView(itemList.items.get(i).getImageView(scaler) , itemList.items.get(i).gl);
-		this.invalidate();
 		
-		return this;
+		for(int i = 0; i<p.items.size();i++)
+		{
+			temp = p.items.get(i);
+						
+			this.items.add(new PaliItemView(temp.iteminfo.funcNum, temp.iteminfo.itemNum, temp.x, temp.y, temp.context));
+			this.addView(this.items.get(i) , temp.gl);
+		}
+		
+		this.setSize(width, height);
+		this.invalidate();
 	}
 	
-	@Override
-	public void onClick(View v) {
-		// TODO Auto-generated method stub
+	public void setSize(int width, int height)
+	{
+		this.getLayoutParams().width = width;
+		this.getLayoutParams().height = height;
 		
+		for(int i = 0; i<items.size() ; i++)
+		{
+			items.get(i).setSize(width/3, height/3);
+		}
 	}
-
+	public boolean onTouchEvent(MotionEvent e)
+	{
+		switch(e.getAction())
+		{
+		
+		}
+		return super.onTouchEvent(e);
+	}	
 }

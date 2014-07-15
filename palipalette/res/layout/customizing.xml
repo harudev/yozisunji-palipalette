@@ -6,26 +6,27 @@
     
     <LinearLayout
          android:layout_width="wrap_content"
-    	android:layout_height="wrap_content"
+    	android:layout_height="match_parent"
     	android:orientation="vertical"
+    	android:padding="20dip"
         >
           <com.yozisunji.palipalette.PaliScreen
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="300dp"
+            android:layout_height="300dp"
             android:layout_gravity="center_horizontal"
             android:id="@+id/screen_edit" />
     </LinearLayout>
     
     <LinearLayout
-         android:layout_width="wrap_content"
-    	android:layout_height="wrap_content"
+         android:layout_width="400dip"
+    	android:layout_height="match_parent"
     	>
-        <ListView 
-            android:layout_width="wrap_content"
+         <ExpandableListView
+             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/itemlistview">
-            
-        </ListView>
+            android:paddingLeft="3dip"
+            android:id="@+id/itemmainlistview"
+            android:background="#FFFFFF"></ExpandableListView>
     </LinearLayout>
     
 </LinearLayout>

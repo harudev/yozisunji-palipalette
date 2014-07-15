@@ -385,7 +385,7 @@ public class PaliTouchCanvas extends View {
 					 }
 					 else
 					 {
-						 this.rect = new RectF(min(downX,upX), min(downY,upY), max(downX,upX), max(downY,upY));
+						 this.rect = new RectF(max(downX,upX), max(downY,upY), min(downX,upX), min(downY,upY));
 	
 						 for(int i = SVGParser.Layers.size()-1; i>=0;i--)
 						 {
