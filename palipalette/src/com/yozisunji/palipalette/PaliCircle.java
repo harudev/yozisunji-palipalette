@@ -81,6 +81,7 @@ public class PaliCircle extends PaliObject {
 
 	public void drawObject(Canvas c) {		
 		this.type = PaliCanvas.TOOL_CIRCLE;
+		this.rotRect = this.rect;
 		c.drawCircle(x, y, r, s_paint);
 		c.drawCircle(x, y, r, f_paint);
 	}

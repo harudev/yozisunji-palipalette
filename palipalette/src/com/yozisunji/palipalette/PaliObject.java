@@ -24,6 +24,9 @@ public abstract class PaliObject {
 	
 	ColorFilter filter;
 	
+	boolean rotFlag = false;
+	RectF rotRect;
+	
 	PaliObject(){        
         f_paint = new Paint();
         f_paint.setAntiAlias(true);
@@ -86,6 +89,9 @@ public abstract class PaliObject {
 
 	public void Rotate(float theta)
 	{
+		if(rotFlag == false) {
+			rotFlag = true;
+		}		
 		this.theta += theta;
 		this.theta %= 360;
 	}
@@ -93,6 +99,43 @@ public abstract class PaliObject {
 	public abstract void Move(float dx, float dy);
 	public abstract void Scale(float dx, float dy);	
 	//public abstract void copyInfo();
+	
+	RectF rotateRect(RectF r, float theta) {
+		double radian = ((Math.PI * theta) / 180);
+		double sin = Math.sin(radian);
+		double cos = Math.cos(radian);
+
+		float lt_x = (float) ((r.centerX() - r.left) * cos - ((r.centerY() - r.top) * sin));
+		float lt_y = (float) ((r.centerX() - r.left) * sin - ((r.centerY() - r.top) * cos));
+
+		float rt_x = (float) ((r.centerX() - r.right) * cos - ((r.centerY() - r.top) * sin));
+		float rt_y = (float) ((r.centerX() - r.right) * sin - ((r.centerY() - r.top) * cos));
+
+		float lb_x = (float) ((r.centerX() - r.left) * cos - ((r.centerY() - r.bottom) * sin));
+		float lb_y = (float) ((r.centerX() - r.left) * sin - ((r.centerY() - r.bottom) * cos));
+
+		float rb_x = (float) ((r.centerX() - r.right) * cos - ((r.centerY() - r.bottom) * sin));
+		float rb_y = (float) ((r.centerX() - r.right) * sin - ((r.centerY() - r.bottom) * cos));
+
+		float r_left = Math.min(lt_x, rt_x);
+		r_left = Math.min(r_left, lb_x);
+		r_left = Math.min(r_left, rb_x);	
+		
+		float r_top = Math.min(lt_y, rt_y);
+		r_top = Math.min(r_top, lb_y);
+		r_top = Math.min(r_top, rb_y);
+		
+		float r_right = Math.max(lt_x, rt_x);
+		r_right = Math.max(r_right, lb_x);
+		r_right = Math.max(r_right, rb_x);	
+		
+		float r_bottom = Math.max(lt_y, rt_y);
+		r_bottom = Math.max(r_bottom, lb_y);
+		r_bottom = Math.max(r_bottom, rb_y);
+
+		RectF r_rect = new RectF(r_left+r.centerX(), r_top+r.centerY(), r_right+r.centerX(), r_bottom+r.centerY());
+		return r_rect;
+	}
 }
 
 

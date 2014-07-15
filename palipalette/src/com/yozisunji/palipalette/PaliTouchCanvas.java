@@ -22,6 +22,15 @@ import android.view.ViewConfiguration;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
 
+import com.samsung.android.sdk.look.Slook;
+import com.samsung.android.sdk.look.airbutton.SlookAirButton;
+import com.samsung.android.sdk.look.airbutton.SlookAirButton.ItemSelectListener;
+import com.samsung.android.sdk.look.airbutton.SlookAirButtonAdapter;
+import com.samsung.android.sdk.look.smartclip.SlookSmartClip;
+import com.samsung.android.sdk.look.smartclip.SlookSmartClip.DataExtractionListener;
+import com.samsung.android.sdk.look.smartclip.SlookSmartClipCroppedArea;
+import com.samsung.android.sdk.look.smartclip.SlookSmartClipDataElement;
+
 public class PaliTouchCanvas extends View {
         Path pencilPath = new Path();
         Path brushPath = new Path();
@@ -84,22 +93,35 @@ public class PaliTouchCanvas extends View {
                 Point0 = new PaliPoint();
                 Point1 = new PaliPoint();
                 
-                copyObject = new ArrayList<PaliObject>();
-                //parent = this;
+                copyObject = new ArrayList<PaliObject>();  
                 
-                /*
-                this.setOnHoverListener(new OnHoverListener() {                 
-                        @Override
-                        public boolean onHover(View v, MotionEvent event) {
-                                Log.i("debug","hover"); // È£¹ö±â´É.
-                                return false;
-                        }
-                });
-                */
-                
+                SlookAirButtonAdapter adp = new SlookAirButtonAdapter();
+        		SlookAirButton bt = new SlookAirButton(this, adp, SlookAirButton.UI_TYPE_MENU);
+        		bt.setItemSelectListener(airButtonListener); 
+        		
+        		SlookSmartClip ssc = new SlookSmartClip(this);
+        		ssc.setDataExtractionListener(smartClipListener);
         }
         
-        public void setCanvasAddr(PaliCanvas c, LinearLayout selectorll)
+        private ItemSelectListener airButtonListener = new ItemSelectListener() {
+        				
+			@Override
+			public void onItemSelected(View arg0, int arg1, Object arg2) {		
+				
+			}
+		};
+		
+		private DataExtractionListener smartClipListener = new DataExtractionListener() {
+			
+			@Override
+			public int onExtractSmartClipData(View arg0,
+					SlookSmartClipDataElement arg1, SlookSmartClipCroppedArea arg2) {
+
+				return 0;
+			}
+		};
+
+		public void setCanvasAddr(PaliCanvas c, LinearLayout selectorll)
         {
                 canvas = c;
                 
@@ -147,7 +169,9 @@ public class PaliTouchCanvas extends View {
                  super.onTouchEvent(e);          
                  switch(e.getAction() & MotionEvent.ACTION_MASK)
                  {               
-                 case MotionEvent.ACTION_DOWN:                           
+                 case MotionEvent.ACTION_DOWN:   
+                	     
+                	     
                          fillColor = Integer.toHexString(PaliCanvas.fillColor).substring(2);
                          strokeColor = Integer.toHexString(PaliCanvas.strokeColor).substring(2);
                          strokeWidth = PaliCanvas.strokeWidth;
@@ -213,8 +237,7 @@ public class PaliTouchCanvas extends View {
                          this.zoom = false;
                          this.prepinch = true;
                          return true;
-                 case MotionEvent.ACTION_MOVE:           
-                         
+                 case MotionEvent.ACTION_MOVE:                          
                          if(pinch==true)
                          {
                         	 selector.stopTimeout();
@@ -377,7 +400,7 @@ public class PaliTouchCanvas extends View {
                                                                          if(temp.rect.contains(upX,upY))
                                                                          {
                                                                                  selector.selObjArr.add(new PaliPoint(i,j));
-                                                                                 rect = temp.rect;
+                                                                                 rect = temp.rotRect;
                                                                                  
                                                                                  this.selected = true;
                                                                                  break;

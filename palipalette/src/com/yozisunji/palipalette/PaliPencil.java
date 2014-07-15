@@ -68,6 +68,7 @@ public class PaliPencil extends PaliObject {
 	
 	public void drawObject(Canvas c) {
 		this.type = PaliCanvas.TOOL_PENCIL;
+		this.rotRect = rotateRect(this.rect, this.theta);
 		s_paint.setStyle(Paint.Style.STROKE);
 		c.save();
 		c.rotate(theta, this.rect.centerX(), this.rect.centerY());		

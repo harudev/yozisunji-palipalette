@@ -19,12 +19,17 @@ import android.widget.LinearLayout;
 import com.samsung.android.example.helloaccessoryprovider.R;
 //import com.samsung.android.example.helloaccessoryprovider.service.HelloAccessoryProviderService;
 import com.samsung.android.example.helloaccessoryprovider.service.HelloAccessoryProviderService;
+import com.samsung.android.sdk.SsdkUnsupportedException;
+import com.samsung.android.sdk.look.Slook;
+import com.samsung.android.sdk.look.airbutton.SlookAirButton;
+import com.samsung.android.sdk.look.airbutton.SlookAirButton.ItemSelectListener;
+import com.samsung.android.sdk.look.airbutton.SlookAirButtonAdapter;
 
 public class MainActivity extends Activity {
-	
-	public static final int STYLE_STROKECOLOR=0;
-	public static final int STYLE_FILLCOLOR=1;
-	public static final int STYLE_STROKEWIDTH=2;
+
+	public static final int STYLE_STROKECOLOR = 0;
+	public static final int STYLE_FILLCOLOR = 1;
+	public static final int STYLE_STROKEWIDTH = 2;
 
 	static SVGParser svg;
 	public PaliCanvas customview;
@@ -32,6 +37,7 @@ public class MainActivity extends Activity {
 	private Context mContext;
 	static SubMenuDialog dialog;
 	public static HelloAccessoryProviderService hs;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -58,6 +64,8 @@ public class MainActivity extends Activity {
 		Button copyBtn = (Button) findViewById(R.id.copyBtn);
 		Button pasteBtn = (Button) findViewById(R.id.pasteBtn);
 		Button deletBtn = (Button) findViewById(R.id.deletBtn);
+						
+		
 	}
 
 	@Override
@@ -68,12 +76,12 @@ public class MainActivity extends Activity {
 				android.os.Process.killProcess(android.os.Process.myPid());
 				return true;
 			case KeyEvent.KEYCODE_MENU:
-				//launchCustomizing();
-				
+				// launchCustomizing();
+
 				PaliCanvas.selectedTool++;
 				if (PaliCanvas.selectedTool > 5)
 					PaliCanvas.selectedTool = 0;
-				
+
 				changeTool();
 				return true;
 			}
@@ -118,16 +126,16 @@ public class MainActivity extends Activity {
 			break;
 		}
 	}
-	
-	public void launchCustomizing()
-	{
+
+	public void launchCustomizing() {
 		Intent intent = new Intent(this, CustomizingMainActivity.class);
 		startActivity(intent);
 	}
-	
+
 	public void changeStyle(int style) {
 		touchview.changeStyle(style);
 	}
+
 	public void changeTool() {
 		touchview.selectedClear();
 	}

@@ -60,6 +60,7 @@ public class PaliBrush extends PaliObject {
 
 	public void drawObject(Canvas c) {
 		this.type = PaliCanvas.TOOL_BRUSH;
+		this.rotRect = rotateRect(this.rect, this.theta);
 		c.save();
 		c.rotate(theta, this.rect.centerX(), this.rect.centerY());
 		f_paint.setColorFilter(filter);

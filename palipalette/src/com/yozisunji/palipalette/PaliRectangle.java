@@ -94,6 +94,7 @@ public class PaliRectangle extends PaliObject {;
 	
 	public void drawObject(Canvas c) {
 		this.type = PaliCanvas.TOOL_RECTANGLE;
+		this.rotRect = rotateRect(this.rect, this.theta);
 		c.save();
 		c.rotate(theta, this.rect.centerX(), this.rect.centerY());
 		c.drawRect(left, top, right, bottom, s_paint);
