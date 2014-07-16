@@ -1,6 +1,0 @@
-<svg width="800" height="600">
-  <circle cx="100" cy="300" r="50" stroke="green" stroke-width="4" fill="yellow" />
-  <rect x="50" y="50" width="100" height="100" style="fill:rgb(0,0,255);stroke-width:3;stroke:rgb(0,0,0)" />
-  <path fill="none" stroke="black" d="M100 500 L200 500 200 400 300 400 400 500" />
-  <ellipse cx="300" cy="80" rx="100" ry="50" style="fill:yellow;stroke:purple;stroke-width:2" />
-</svg>

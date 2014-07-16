@@ -1,6 +1,7 @@
 package com.yozisunji.palipalette;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -15,6 +16,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,7 +24,6 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.samsung.android.example.helloaccessoryprovider.R;
 //import com.samsung.android.example.helloaccessoryprovider.service.HelloAccessoryProviderService;
@@ -41,6 +42,9 @@ public class MainActivity extends Activity {
 	static SubMenuDialog dialog;
 	public static HelloAccessoryProviderService hs;
 
+	int screenHeight;
+	int screenWidth;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -52,10 +56,15 @@ public class MainActivity extends Activity {
 				WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
 				WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
 		setContentView(R.layout.main);
+		
+		DisplayMetrics displaymetrics = new DisplayMetrics();
+		getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+		screenHeight = displaymetrics.heightPixels;
+		screenWidth = displaymetrics.widthPixels;
 
 		svg = new SVGParser();
-		svg.parse(getResources().openRawResource(R.drawable.bin));
-		// svg.parse(getResources().openRawResource(R.drawable.test));
+		svg.addLayer();
+		//svg.parse(getResources().openRawResource(R.drawable.test));
 		customview = (PaliCanvas) findViewById(R.id.paliCanvas);
 		customview.setBound(800, 600);
 		touchview = (PaliTouchCanvas) findViewById(R.id.paliTouch);
@@ -80,8 +89,7 @@ public class MainActivity extends Activity {
 				return true;
 			case KeyEvent.KEYCODE_MENU:
 				// launchCustomizing();
-				saveSVG();
-
+				
 				PaliCanvas.selectedTool++;
 				if (PaliCanvas.selectedTool > 5)
 					PaliCanvas.selectedTool = 0;
@@ -156,11 +164,10 @@ public class MainActivity extends Activity {
 		PaliCanvas.currentObject = -1;
 
 		customview.DrawScreen();
-
 	}
 
 	public void saveSVG() {
-		String SVGTag = "<svg>";
+		String SVGTag = "<svg width=\""+screenWidth+"\" height=\""+screenHeight+"\">";
 		PaliObject temp;
 		for (int i = 0; i < SVGParser.Layers.size(); i++) {
 			if (SVGParser.Layers.get(i).visibility == true) {
@@ -191,6 +198,28 @@ public class MainActivity extends Activity {
 			e.printStackTrace();
 		}
 
+	}
+	
+	public void openSVG() {
+		newActivity();
+		
+		String path = "/mnt/sdcard/PaliPalette/";
+		String fileName = "PaliSVG.svg";
+		
+		File file = new File(path+fileName);
+
+		try {
+			FileInputStream fis = new FileInputStream(file);  						
+			svg.parse(fis);	
+			fis.close();
+            		
+		} catch (Exception e) {
+            e.printStackTrace();
+        }		
+		
+		
+		//svg.parse(getResources().openRawResource(R.drawable.test));
+		customview.DrawScreen();
 	}
 	
 	public void exportPNG() {

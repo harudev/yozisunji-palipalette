@@ -60,8 +60,7 @@ public class SVGParser
 //      Util.debug("Parsing SVG...");
      
     	try
-    	{
-    	  
+    	{    	  
           long start = System.currentTimeMillis();
           SAXParserFactory spf = SAXParserFactory.newInstance();
           SAXParser sp = spf.newSAXParser();
@@ -359,7 +358,7 @@ class SVGHandler extends DefaultHandler {
             Float centerY = getFloatAttr("cy", atts);
             Float radius = getFloatAttr("r", atts);
             if (centerX != null && centerY != null && radius != null) {
-            	SVGParser.Layers.get(SVGParser.Layers.size()-1).objs.add(new PaliCircle(localName,centerX,centerY,radius));
+            	SVGParser.Layers.get(PaliCanvas.currentLayer).objs.add(new PaliCircle("",centerX,centerY,radius));
             	PaliCanvas.currentObject++;
             }
         } else if (localName.equals("ellipse")) {
@@ -368,7 +367,7 @@ class SVGHandler extends DefaultHandler {
             Float radiusX = getFloatAttr("rx", atts);
             Float radiusY = getFloatAttr("ry", atts);
             if (centerX != null && centerY != null && radiusX != null && radiusY != null) {
-            	SVGParser.Layers.get(SVGParser.Layers.size()-1).objs.add(new PaliEllipse(localName,centerX-radiusX,centerY-radiusY,centerX+radiusX,centerY+radiusY));
+            	SVGParser.Layers.get(PaliCanvas.currentLayer).objs.add(new PaliEllipse("",centerX-radiusX,centerY-radiusY,centerX+radiusX,centerY+radiusY));
             	PaliCanvas.currentObject++;
             }
         } else if (localName.equals("rect")) {
@@ -377,13 +376,13 @@ class SVGHandler extends DefaultHandler {
         	Float width = getFloatAttr("width", atts);
         	Float height = getFloatAttr("height", atts);
         	if (centerX != null && centerY != null && width!= null && height != null) {
-        		SVGParser.Layers.get(SVGParser.Layers.size()-1).objs.add(new PaliRectangle(localName,centerX,centerY,centerX + width,centerY + height));
+        		SVGParser.Layers.get(PaliCanvas.currentLayer).objs.add(new PaliRectangle("",centerX,centerY,centerX + width,centerY + height));
         		PaliCanvas.currentObject++;
         	}
         } else if (localName.equals("path")) {
         	Path path = doPath(getStringAttr("d", atts));
         	if (path != null) {
-        		SVGParser.Layers.get(SVGParser.Layers.size()-1).objs.add(new PaliPencil(localName,path));
+        		SVGParser.Layers.get(SVGParser.Layers.size()-1).objs.add(new PaliPencil("",path));
         		PaliCanvas.currentObject++;
         	}
         }
