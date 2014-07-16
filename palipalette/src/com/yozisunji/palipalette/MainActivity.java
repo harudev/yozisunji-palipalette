@@ -141,15 +141,18 @@ public class MainActivity extends Activity {
 	}
 
 	public void newActivity() {
-		/*
-		 * for(int i=0; i<SVGParser.Layers.size(); i++) {
-		 * SVGParser.Layers.get(i).objs.clear(); } SVGParser.Layers.clear();
-		 * SVGParser.Layersize = 1;
-		 * PaliCanvas.currentLayer=SVGParser.Layersize-1;
-		 * PaliCanvas.currentObject = -1;
-		 * 
-		 * customview.DrawScreen();
-		 */
+
+		for (int i = 0; i < SVGParser.Layers.size(); i++) {
+			SVGParser.Layers.get(i).objs.clear();
+		}
+		SVGParser.Layers.clear();
+		svg.addLayer();
+		SVGParser.Layersize = 1;
+		PaliCanvas.currentLayer = SVGParser.Layersize - 1;
+		PaliCanvas.currentObject = -1;
+
+		customview.DrawScreen();
+
 	}
 
 	public void saveSVG() {
@@ -164,17 +167,17 @@ public class MainActivity extends Activity {
 			}
 		}
 		SVGTag += "</svg>";
-		
+
 		String path = "/mnt/sdcard/PaliPalette/";
 		String fileName = "PaliSVG.svg";
-		
+
 		File file_path = new File(path);
-		File file = new File(path+fileName);
-		
-		if(!file_path.exists()) {
+		File file = new File(path + fileName);
+
+		if (!file_path.exists()) {
 			file_path.mkdirs();
-		}		
-		
+		}
+
 		FileOutputStream fos = null;
 		try {
 			fos = new FileOutputStream(file);
@@ -183,8 +186,10 @@ public class MainActivity extends Activity {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
-		
+
+	}
+	
+	public void exportPNG() {
 		
 	}
 }
