@@ -86,7 +86,6 @@ public class PaliCanvas extends SurfaceView implements SurfaceHolder.Callback {
 					cnvs.drawPaint(p);
 					cnvs.scale(zoom, zoom);
 					cnvs.translate(canvasX, canvasY);
-
                     
 					for(int i = 0; i<SVGParser.Layers.size();i++)
 					 {
@@ -109,18 +108,15 @@ public class PaliCanvas extends SurfaceView implements SurfaceHolder.Callback {
 				//saveBuffer.recycle();
 			}
 			else
-			{
-				
+			{				
 				synchronized(getHolder())
-				{
-					
+				{					
 					cnvs.drawBitmap(saveBuffer,0,0,new Paint());
 					Log.w("presave Width,height", Integer.toString(saveBuffer.getWidth())+" : "+Integer.toString(saveBuffer.getHeight()));
 					temp = SVGParser.Layers.get(this.currentLayer).objs.get(this.currentObject);
 					temp.setStrokeColor(strokeColor);
 					temp.setFillColor(fillColor);
-					temp.drawObject(cnvs);
-					
+					temp.drawObject(cnvs);					
 				}
 				
 				//presaveBuffer.recycle();

@@ -85,10 +85,10 @@ public class PaliPencil extends PaliObject {
 	}
 	public void Scale(float dx, float dy)
 	{
-		float width = 1f+(dx/100.0f);
-		float height = 1f+(dy/100.0f);		
-		if(width < 0) width = 0.1f;
-		if(height < 0) height = 0.1f;		
+		float width = 1f+(dx/this.rect.width());
+		float height = 1f+(dy/this.rect.height());	
+		if(width < 0) width = 0.001f;
+		if(height < 0) height = 0.001f;		
 
 		Matrix scaleMatrix = new Matrix();
 		scaleMatrix.setScale(width, height, this.rect.left, this.rect.top);

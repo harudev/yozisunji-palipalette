@@ -93,16 +93,18 @@ public class PaliCircle extends PaliObject {
 	}
 	public void Scale(float dx, float dy)
 	{
-		float s = (float) Math.sqrt(dx*dx + dy*dy);
+		float s = (float) Math.sqrt(dx*dx + dy*dy) / 2;
 		
 		if(dx+dy > 0) {
-			this.r += Math.sqrt(dx*dx + dy*dy);
+			this.r += s;
 			this.rect.left -= s; this.rect.right += s; this.rect.top -= s; this.rect.bottom += s;
 			
 		}
 		else {
-			this.r -= Math.sqrt(dx*dx + dy*dy);
+			this.r -= s;
 			this.rect.left += s; this.rect.right -= s; this.rect.top += s; this.rect.bottom -= s;
 		}
+		
+		Move(dx/2, dy/2);
 	}
 }

@@ -73,10 +73,10 @@ public class PaliBrush extends PaliObject {
 	}
 
 	public void Scale(float dx, float dy) {
-		float width = 1f+(dx/100.0f);
-		float height = 1f+(dy/100.0f);		
-		if(width < 0) width = 0.1f;
-		if(height < 0) height = 0.1f;		
+		float width = 1f+(dx/this.bitmap.getWidth());
+		float height = 1f+(dy/this.bitmap.getHeight());		
+		if(width < 0) width = 0.001f;
+		if(height < 0) height = 0.001f;		
 		
 		this.bitmap = Bitmap.createScaledBitmap(this.bitmap, (int)(this.bitmap.getWidth()*width), (int)(this.bitmap.getHeight()*height), true);
 

@@ -51,7 +51,8 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.main);
 
 		svg = new SVGParser();
-		svg.parse(getResources().openRawResource(R.drawable.test));
+		svg.parse(getResources().openRawResource(R.drawable.bin));
+		//svg.parse(getResources().openRawResource(R.drawable.test));
 		customview = (PaliCanvas) findViewById(R.id.paliCanvas);
 		customview.setBound(800, 600);
 		touchview = (PaliTouchCanvas) findViewById(R.id.paliTouch);
@@ -122,6 +123,7 @@ public class MainActivity extends Activity {
 			break;
 		case R.id.deletBtn:
 			dialog.dismiss();
+			newActivity();
 			touchview.deleteObject();
 			break;
 		}
@@ -138,5 +140,19 @@ public class MainActivity extends Activity {
 
 	public void changeTool() {
 		touchview.selectedClear();
+	}
+	
+	public void newActivity() {
+		/*
+		for(int i=0; i<SVGParser.Layers.size(); i++) {
+			SVGParser.Layers.get(i).objs.clear();
+		}
+		SVGParser.Layers.clear();
+		SVGParser.Layersize = 1;
+		PaliCanvas.currentLayer=SVGParser.Layersize-1;
+		PaliCanvas.currentObject = -1;
+		
+		customview.DrawScreen();
+		*/	
 	}
 }
