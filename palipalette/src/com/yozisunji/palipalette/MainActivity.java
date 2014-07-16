@@ -1,8 +1,10 @@
 package com.yozisunji.palipalette;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -10,8 +12,9 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +22,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.samsung.android.example.helloaccessoryprovider.R;
 //import com.samsung.android.example.helloaccessoryprovider.service.HelloAccessoryProviderService;
@@ -190,6 +194,41 @@ public class MainActivity extends Activity {
 	}
 	
 	public void exportPNG() {
+		Bitmap bm = Bitmap.createBitmap(1080, 1920, Bitmap.Config.ARGB_8888);
+		Canvas c = new Canvas(bm);
 		
+		PaliObject temp;
+		for (int i = 0; i < SVGParser.Layers.size(); i++) {
+			if (SVGParser.Layers.get(i).visibility == true) {
+				for (int j = 0; j < SVGParser.Layers.get(i).objs.size(); j++) {
+					temp = SVGParser.Layers.get(i).objs.get(j);
+					temp.drawObject(c);
+				}
+			}
+		}
+		
+		String path = "/mnt/sdcard/PaliPalette/";
+		String fileName = "PaliPNG.png";			
+		
+		OutputStream outStream = null; 
+		File file = new File(path, fileName); 
+		File file_path = new File(path);
+
+		if (!file_path.exists()) {
+			file_path.mkdirs();
+		}
+		
+		try {
+			outStream = new FileOutputStream(file); 
+			bm.compress(Bitmap.CompressFormat.PNG, 100, outStream); 
+			outStream.flush(); 
+			outStream.close(); 
+
+		} catch (FileNotFoundException e) { 
+			e.printStackTrace(); 
+
+		} catch (IOException e) { 
+			e.printStackTrace(); 
+		} 			
 	}
 }
