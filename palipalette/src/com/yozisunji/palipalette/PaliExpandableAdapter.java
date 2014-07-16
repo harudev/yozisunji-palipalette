@@ -5,10 +5,13 @@ import java.util.ArrayList;
 import com.samsung.android.example.helloaccessoryprovider.R;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -16,10 +19,13 @@ public class PaliExpandableAdapter extends BaseExpandableListAdapter {
 	Context context;
 	ArrayList<PaliItemList> list;
 	
+	View.OnTouchListener touch = null;
 	
-	public PaliExpandableAdapter(Context context, ArrayList<PaliItemList> list) {
+	
+	public PaliExpandableAdapter(Context context, ArrayList<PaliItemList> list, View.OnTouchListener t) {
         this.context = context;
         this.list = list; 
+        touch = t;
     }
 	@Override
 	public int getGroupCount() {
@@ -76,6 +82,9 @@ public class PaliExpandableAdapter extends BaseExpandableListAdapter {
                
         TextView text = (TextView)view.findViewById(R.id.categoryName);
         text.setText(list.get(groupPosition).FuncName);
+        
+        ExpandableListView eLV = (ExpandableListView)parent;
+        eLV.expandGroup(groupPosition);
         return view;
 	}
 
@@ -97,6 +106,10 @@ public class PaliExpandableAdapter extends BaseExpandableListAdapter {
         text2.setText(" - " + list.get(groupPosition).items.get(childPosition).itemTypeName);
         ImageView imgview = (ImageView)view.findViewById(R.id.itemImageView);
 		imgview.setImageResource(list.get(groupPosition).items.get(childPosition).imageid);
+		
+		
+		view.setOnTouchListener(touch);
+		view.setTag(list.get(groupPosition).items.get(childPosition));
 		
         return view;
 	}
