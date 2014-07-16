@@ -49,6 +49,8 @@ public class PaliSelector extends View {
 	Drawable scaleButton;
 	Drawable rotateButton;
 
+	int screenWidth = 0, screenHeight = 0;
+
 	public PaliSelector(Context context, RectF r, PaliCanvas c,
 			PaliTouchCanvas tc) {
 		super(context);
@@ -75,6 +77,9 @@ public class PaliSelector extends View {
 
 		canvas = c;
 		touchCanvas = tc;
+
+		screenWidth = MainActivity.screenWidth;
+		screenHeight = MainActivity.screenHeight;
 	}
 
 	public void setRect(RectF r) {
@@ -152,8 +157,8 @@ public class PaliSelector extends View {
 				rect = this.getRect();
 				LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) this
 						.getLayoutParams();
-				params.leftMargin = (int) ((rect.left + PaliCanvas.canvasX) * PaliCanvas.zoom);
-				params.topMargin = (int) ((rect.top + PaliCanvas.canvasY) * PaliCanvas.zoom);
+				params.leftMargin = (int) ((rect.left + PaliCanvas.canvasX - screenWidth) * PaliCanvas.zoom);
+				params.topMargin = (int) ((rect.top + PaliCanvas.canvasY - screenHeight) * PaliCanvas.zoom);
 				params.width = (int) ((rect.right - rect.left + movingX) * PaliCanvas.zoom);
 				params.height = (int) ((rect.bottom - rect.top + movingY) * PaliCanvas.zoom);
 				this.setLayoutParams(params);
@@ -200,15 +205,16 @@ public class PaliSelector extends View {
 			if (mMovePressed) {
 				for (int i = selObjArr.size() - 1; i >= 0; i--) {
 					SVGParser.Layers.get(selObjArr.get(i).x).objs.get(
-							selObjArr.get(i).y).Move(upX - downX, upY - downY);
+							selObjArr.get(i).y).Move(upX - downX - screenWidth,
+							upY - downY - screenHeight);
 				}
 				touchCanvas.selectedClear();
 			} else if (mRotatePressed) {
 				for (int i = selObjArr.size() - 1; i >= 0; i--) {
 					float theta = (upX - downX) + (upY - downY);
 					SVGParser.Layers.get(selObjArr.get(i).x).objs.get(
-							selObjArr.get(i).y).Rotate(theta);					
-					
+							selObjArr.get(i).y).Rotate(theta);
+
 				}
 				touchCanvas.selectedClear();
 			} else if (mScalePressed) {

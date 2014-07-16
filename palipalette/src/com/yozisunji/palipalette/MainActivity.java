@@ -42,8 +42,8 @@ public class MainActivity extends Activity {
 	static SubMenuDialog dialog;
 	public static HelloAccessoryProviderService hs;
 
-	int screenHeight;
-	int screenWidth;
+	public static int screenHeight;
+	public static int screenWidth;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

@@ -432,7 +432,6 @@ public class PaliTouchCanvas extends View {
 						params.height = (int) ((rect.bottom - rect.top) * PaliCanvas.zoom);
 						selector.setLayoutParams(params);
 						selector.setVisibility(View.VISIBLE);
-
 					}
 				}
 				if (!selected && !this.prepinch) {
