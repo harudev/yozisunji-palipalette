@@ -456,6 +456,7 @@ public class PaliTouchCanvas extends View {
 							.add(new PaliPencil(html, pencilPath, rect));
 					tempObj = null;
 					pencilPath = null;
+					movement = "";
 					PaliCanvas.currentObject++;
 					PaliCanvas.drawMode = false;
 					canvas.DrawScreen();
@@ -547,8 +548,7 @@ public class PaliTouchCanvas extends View {
 					x = Math.min(downX, upX);
 					y = Math.min(downY, upY);
 					width = (float) Math.sqrt((float) Math.pow(upX - downX, 2));
-					height = (float) Math
-							.sqrt((float) Math.pow(upY - downY, 2));
+					height = (float) Math.sqrt((float) Math.pow(upY - downY, 2));
 
 					cx = x + (width / 2);
 					cy = y + (height / 2);
@@ -560,7 +560,7 @@ public class PaliTouchCanvas extends View {
 					bottom = upY;
 
 					html = "<ellipse cx=\"" + cx + "\" cy=\"" + cy + "\" rx=\""
-							+ width + "\" ry=\"" + height + "\" stroke=\"#"
+							+ width/2 + "\" ry=\"" + height/2 + "\" stroke=\"#"
 							+ strokeColor + "\" stroke-width=\"" + strokeWidth
 							+ "\" fill=\"#" + fillColor
 							+ "\" stroke-opacity=\"" + opacity
@@ -579,8 +579,7 @@ public class PaliTouchCanvas extends View {
 					x = Math.min(downX, upX);
 					y = Math.min(downY, upY);
 					width = (float) Math.sqrt((float) Math.pow(upX - downX, 2));
-					height = (float) Math
-							.sqrt((float) Math.pow(upY - downY, 2));
+					height = (float) Math.sqrt((float) Math.pow(upY - downY, 2));
 					opacity = PaliCanvas.alpha / 255.0f;
 
 					left = downX;

@@ -1,5 +1,9 @@
 package com.yozisunji.palipalette;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -19,11 +23,6 @@ import android.widget.LinearLayout;
 import com.samsung.android.example.helloaccessoryprovider.R;
 //import com.samsung.android.example.helloaccessoryprovider.service.HelloAccessoryProviderService;
 import com.samsung.android.example.helloaccessoryprovider.service.HelloAccessoryProviderService;
-import com.samsung.android.sdk.SsdkUnsupportedException;
-import com.samsung.android.sdk.look.Slook;
-import com.samsung.android.sdk.look.airbutton.SlookAirButton;
-import com.samsung.android.sdk.look.airbutton.SlookAirButton.ItemSelectListener;
-import com.samsung.android.sdk.look.airbutton.SlookAirButtonAdapter;
 
 public class MainActivity extends Activity {
 
@@ -52,7 +51,7 @@ public class MainActivity extends Activity {
 
 		svg = new SVGParser();
 		svg.parse(getResources().openRawResource(R.drawable.bin));
-		//svg.parse(getResources().openRawResource(R.drawable.test));
+		// svg.parse(getResources().openRawResource(R.drawable.test));
 		customview = (PaliCanvas) findViewById(R.id.paliCanvas);
 		customview.setBound(800, 600);
 		touchview = (PaliTouchCanvas) findViewById(R.id.paliTouch);
@@ -65,8 +64,7 @@ public class MainActivity extends Activity {
 		Button copyBtn = (Button) findViewById(R.id.copyBtn);
 		Button pasteBtn = (Button) findViewById(R.id.pasteBtn);
 		Button deletBtn = (Button) findViewById(R.id.deletBtn);
-						
-		
+
 	}
 
 	@Override
@@ -78,6 +76,7 @@ public class MainActivity extends Activity {
 				return true;
 			case KeyEvent.KEYCODE_MENU:
 				// launchCustomizing();
+				saveSVG();
 
 				PaliCanvas.selectedTool++;
 				if (PaliCanvas.selectedTool > 5)
@@ -123,7 +122,6 @@ public class MainActivity extends Activity {
 			break;
 		case R.id.deletBtn:
 			dialog.dismiss();
-			newActivity();
 			touchview.deleteObject();
 			break;
 		}
@@ -141,18 +139,52 @@ public class MainActivity extends Activity {
 	public void changeTool() {
 		touchview.selectedClear();
 	}
-	
+
 	public void newActivity() {
 		/*
-		for(int i=0; i<SVGParser.Layers.size(); i++) {
-			SVGParser.Layers.get(i).objs.clear();
+		 * for(int i=0; i<SVGParser.Layers.size(); i++) {
+		 * SVGParser.Layers.get(i).objs.clear(); } SVGParser.Layers.clear();
+		 * SVGParser.Layersize = 1;
+		 * PaliCanvas.currentLayer=SVGParser.Layersize-1;
+		 * PaliCanvas.currentObject = -1;
+		 * 
+		 * customview.DrawScreen();
+		 */
+	}
+
+	public void saveSVG() {
+		String SVGTag = "<svg>";
+		PaliObject temp;
+		for (int i = 0; i < SVGParser.Layers.size(); i++) {
+			if (SVGParser.Layers.get(i).visibility == true) {
+				for (int j = 0; j < SVGParser.Layers.get(i).objs.size(); j++) {
+					temp = SVGParser.Layers.get(i).objs.get(j);
+					SVGTag += temp.svgtag;
+				}
+			}
 		}
-		SVGParser.Layers.clear();
-		SVGParser.Layersize = 1;
-		PaliCanvas.currentLayer=SVGParser.Layersize-1;
-		PaliCanvas.currentObject = -1;
+		SVGTag += "</svg>";
 		
-		customview.DrawScreen();
-		*/	
+		String path = "/mnt/sdcard/PaliPalette/";
+		String fileName = "PaliSVG.svg";
+		
+		File file_path = new File(path);
+		File file = new File(path+fileName);
+		
+		if(!file_path.exists()) {
+			file_path.mkdirs();
+		}		
+		
+		FileOutputStream fos = null;
+		try {
+			fos = new FileOutputStream(file);
+			fos.write((SVGTag).getBytes());
+			fos.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		
+		
 	}
 }
