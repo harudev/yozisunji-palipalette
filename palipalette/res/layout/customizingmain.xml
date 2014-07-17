@@ -3,12 +3,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@drawable/custom_screen_background" >
+    android:background="#FFFFFF">
     <LinearLayout
          android:layout_width="match_parent"
     	android:layout_height="wrap_content"
     	android:orientation="vertical"
-    	android:padding="2dip"
+    	android:paddingTop="2dip"
     	>
 
         <ImageView
@@ -24,8 +24,8 @@
     	android:layout_height="match_parent"
     	android:rowCount="2"
     	android:columnCount="4"
+    	android:orientation="horizontal"
     	android:alignmentMode="alignBounds"
-    	android:padding="10dip"
     	android:id="@+id/screensLayout"
         >
     </GridLayout>
