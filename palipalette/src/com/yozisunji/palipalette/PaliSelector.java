@@ -35,7 +35,7 @@ public class PaliSelector extends View {
 	private Handler mHandler = new Handler();
 	private LongPressCheckRunnable mLongPressCheckRunnable = new LongPressCheckRunnable();
 
-	private int mLongPressTimeout;
+	private int mLongPressTimeout=700;
 
 	public ArrayList<PaliPoint> selObjArr;
 
@@ -245,7 +245,7 @@ public class PaliSelector extends View {
 
 	public void startTimeout() {
 		mLongPressed = false;
-		mHandler.postDelayed(mLongPressCheckRunnable, 700);
+		mHandler.postDelayed(mLongPressCheckRunnable, mLongPressTimeout);
 	}
 
 	public void stopTimeout() {

@@ -1,15 +1,5 @@
 package com.yozisunji.palipalette;
 
-import java.io.Serializable;
-import android.R;
-import android.annotation.SuppressLint;
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
-import android.widget.GridLayout;
-import android.widget.ImageView;
-
 public class PaliItem 
 {
 	public static final int TYPE_ICON = 0;

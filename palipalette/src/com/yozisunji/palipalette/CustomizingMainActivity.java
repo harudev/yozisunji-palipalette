@@ -15,15 +15,12 @@ import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.os.Bundle;
-import android.os.Handler;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.GridLayout;
-import android.widget.GridLayout.LayoutParams;
 import android.widget.LinearLayout;
 import android.widget.GridLayout.Spec;
 
@@ -33,6 +30,7 @@ public class CustomizingMainActivity extends Activity {
 	public static ArrayList<PaliItemList> GearUIList;
 	public static ArrayList<PaliScreen> screens;
 	public static Integer selectedScreen=0;
+	public PaliScreen addScreen;
 	
 	public static final int ICON_WIDTH = 1;
 	public static final int ICON_HEIGHT = 1;
@@ -42,18 +40,28 @@ public class CustomizingMainActivity extends Activity {
 	public boolean mPressed = true;
 	
 	GridLayout grid;
+	int addX = 0, addY = 0;
 	int indexX=0, indexY=0;
 	int homeX, homeY;
 	float preX, preY;
 	
 	Point activitySize = new Point();
 	Point marginSize = new Point();
-	int screenSize;
+	public static int screenSize;
 	
 	public static int BackgroundColor;
 	
 	private int selected;
 	Rect r;
+	
+	public static final int Select 	= 0;
+	public static final int Drawing	= 1;
+	public static final int Shape	= 2;
+	public static final int Style	= 3;
+	public static final int History	= 4;
+	public static final int File	= 5;
+	public static final int Config	= 6;
+	public static final int Common	= 7;
 	
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -92,9 +100,12 @@ public class CustomizingMainActivity extends Activity {
 		screens = new ArrayList<PaliScreen>();
 		
 		screens.add(new PaliScreen(this));
-		screens.get(0).putItem(PaliCanvas.TOOL_PICKOBJECT, 0, 0, 0);
-		screens.get(0).putItem(PaliCanvas.TOOL_PENCIL, 0, 1, 0);
-		screens.get(0).putItem(PaliCanvas.TOOL_BRUSH, 0, 2, 0);
+		screens.get(0).putItem(Drawing, 0, 0, 0);
+		screens.get(0).putItem(Drawing, 1, 0, 1);
+		screens.get(0).putItem(Select, 1, 1, 0);
+		screens.get(0).putItem(Select, 0, 1, 1);
+		//screens.get(0).putItem(Shape, 3, 2, 0);
+		//screens.get(0).putItem(Style, 1, 0, 2);
 		Spec row = GridLayout.spec(0, 1); 
         Spec col = GridLayout.spec(0, 1);
         GridLayout.LayoutParams gridLayoutParam = new GridLayout.LayoutParams(row, col);
@@ -107,11 +118,7 @@ public class CustomizingMainActivity extends Activity {
 		screens.get(0).setBackgroundColor(BackgroundColor);
 		
 		screens.add(new PaliScreen(this));
-		screens.get(1).putItem(PaliCanvas.TOOL_PICKOBJECT, 0, 0, 0);
-		screens.get(1).items.get(0).setVisibility(View.INVISIBLE);
-		screens.get(1).putItem(PaliCanvas.TOOL_PICKOBJECT, 0, 0, 1);
-		screens.get(1).putItem(PaliCanvas.TOOL_PENCIL, 0, 1, 1);
-		screens.get(1).putItem(PaliCanvas.TOOL_BRUSH, 0, 2, 1);
+		screens.get(1).putItem(Style, 0, 0, 0);
 		row = GridLayout.spec(0, 1); 
         col = GridLayout.spec(1, 1);
         gridLayoutParam = new GridLayout.LayoutParams(row, col);
@@ -124,9 +131,11 @@ public class CustomizingMainActivity extends Activity {
 		screens.get(1).setBackgroundColor(BackgroundColor);
 		
 		screens.add(new PaliScreen(this));
-		screens.get(2).putItem(PaliCanvas.TOOL_PICKOBJECT, 0, 0, 2);
-		screens.get(2).putItem(PaliCanvas.TOOL_PENCIL, 0, 1, 2);
-		screens.get(2).putItem(PaliCanvas.TOOL_BRUSH, 0, 2, 2);
+		screens.get(2).putItem(History, 0, 0, 0);
+		screens.get(2).putItem(History, 1, 0, 1);
+		screens.get(2).putItem(Config, 1, 0, 2);
+		screens.get(2).putItem(File, 2, 1, 0);
+		screens.get(2).putItem(Config, 0, 1, 1);
 		row = GridLayout.spec(0, 1); 
         col = GridLayout.spec(2, 1);
         gridLayoutParam = new GridLayout.LayoutParams(row, col);
@@ -137,52 +146,27 @@ public class CustomizingMainActivity extends Activity {
 		grid.addView(screens.get(2),gridLayoutParam);
 		screens.get(2).setSize(screenSize,screenSize);
 		screens.get(2).setBackgroundColor(BackgroundColor);
+			
 		
-		screens.add(new PaliScreen(this));
-		screens.get(3).putItem(PaliCanvas.TOOL_PICKOBJECT, 0, 0, 0);
-		screens.get(3).putItem(PaliCanvas.TOOL_PENCIL, 0, 1, 1);
-		screens.get(3).putItem(PaliCanvas.TOOL_BRUSH, 0, 2, 2);
-		row = GridLayout.spec(0, 1); 
-        col = GridLayout.spec(3, 1);
-        gridLayoutParam = new GridLayout.LayoutParams(row, col);
-        gridLayoutParam.leftMargin=this.marginSize.x ;
-        gridLayoutParam.rightMargin=this.marginSize.x ;
-        gridLayoutParam.topMargin=this.marginSize.y;
-        gridLayoutParam.bottomMargin=this.marginSize.y;
-		grid.addView(screens.get(3),gridLayoutParam);
-		screens.get(3).setSize(screenSize,screenSize);
-		screens.get(3).setBackgroundColor(BackgroundColor);
-		
-		screens.add(new PaliScreen(this));
-		screens.get(4).putItem(PaliCanvas.TOOL_PICKOBJECT, 0, 0, 0);
-		screens.get(4).putItem(PaliCanvas.TOOL_PENCIL, 0, 0, 1);
-		screens.get(4).putItem(PaliCanvas.TOOL_BRUSH, 0, 0, 2);
-		row = GridLayout.spec(1, 1); 
-        col = GridLayout.spec(0, 1);
-        gridLayoutParam = new GridLayout.LayoutParams(row, col);
-        gridLayoutParam.leftMargin=this.marginSize.x ;
-        gridLayoutParam.rightMargin=this.marginSize.x ;
-        gridLayoutParam.topMargin=this.marginSize.y;
-        gridLayoutParam.bottomMargin=this.marginSize.y;
-		grid.addView(screens.get(4),gridLayoutParam);
-		screens.get(4).setSize(screenSize,screenSize);
-		screens.get(4).setBackgroundColor(BackgroundColor);
-		
-		screens.add(new PaliScreen(this));
-		screens.get(5).putItem(PaliCanvas.TOOL_PICKOBJECT, 0, 0, 0);
-		screens.get(5).putItem(PaliCanvas.TOOL_PENCIL, 0, 1, 1);
-		screens.get(5).putItem(PaliCanvas.TOOL_BRUSH, 0, 1, 2);
-		row = GridLayout.spec(1, 1); 
-        col = GridLayout.spec(1, 1);
-        gridLayoutParam = new GridLayout.LayoutParams(row, col);
-        gridLayoutParam.leftMargin=this.marginSize.x ;
-        gridLayoutParam.rightMargin=this.marginSize.x ;
-        gridLayoutParam.topMargin=this.marginSize.y;
-        gridLayoutParam.bottomMargin=this.marginSize.y;
-		grid.addView(screens.get(5),gridLayoutParam);
-		screens.get(5).setSize(screenSize,screenSize);
-		screens.get(5).setBackgroundColor(BackgroundColor);
-		
+		if(screens.size()<8)
+		{
+			addScreen = new PaliScreen(this);
+			addScreen.setBackgroundColor(Color.argb(90, 3, 74, 132));
+			//addScreen.setAlpha(Color.alpha(70));
+			addScreen.putItem(Common, 0, 0, 0);
+			addScreen.putItem(Common,1,1,1);
+			addX = 3;
+			addY = 0;
+			row = GridLayout.spec(addY, 1); 
+	        col = GridLayout.spec(addX, 1);
+	        gridLayoutParam = new GridLayout.LayoutParams(row, col);
+	        gridLayoutParam.leftMargin=this.marginSize.x ;
+	        gridLayoutParam.rightMargin=this.marginSize.x ;
+	        gridLayoutParam.topMargin=this.marginSize.y;
+	        gridLayoutParam.bottomMargin=this.marginSize.y;
+			grid.addView(addScreen,gridLayoutParam);
+			addScreen.setSize(screenSize, screenSize);
+		}
 		
 		LinearLayout.LayoutParams gridParm = (LinearLayout.LayoutParams) grid.getLayoutParams();
 		gridParm.width = activitySize.x;
@@ -201,7 +185,7 @@ public class CustomizingMainActivity extends Activity {
 			{
 				screens.add(new PaliScreen(this));
 				obj = jarr.getJSONArray(i);
-				
+				screens.add(new PaliScreen(mContext));
 				for( int j = 0; j < obj.length(); j++)
 				{
 					item = obj.getJSONObject(j);
@@ -216,39 +200,134 @@ public class CustomizingMainActivity extends Activity {
 
 	private void InitializeGearUIList()
 	{
+		
 		GearUIList = new ArrayList<PaliItemList>();
 
 		GearUIList.add(new PaliItemList("Select Object"));
-		GearUIList.add(new PaliItemList("Pencil"));
-		GearUIList.add(new PaliItemList("Brush"));
-		GearUIList.add(new PaliItemList("Circle"));
-		GearUIList.add(new PaliItemList("Ellipse"));
-		GearUIList.add(new PaliItemList("Rectangle"));
+		GearUIList.add(new PaliItemList("Drawing Tool"));
+		GearUIList.add(new PaliItemList("Shape"));
+		GearUIList.add(new PaliItemList("Style"));
+		GearUIList.add(new PaliItemList("History"));
+		GearUIList.add(new PaliItemList("File"));
+		GearUIList.add(new PaliItemList("Config"));
+		GearUIList.add(new PaliItemList("Common"));
 		
-		GearUIList.get(0).putItem(PaliCanvas.TOOL_PICKOBJECT, 0, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_pickobject_icon);
-		GearUIList.get(1).putItem(PaliCanvas.TOOL_PENCIL, 0, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_pencil_icon);
-		GearUIList.get(2).putItem(PaliCanvas.TOOL_BRUSH, 0, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_brush_icon);
-		GearUIList.get(3).putItem(PaliCanvas.TOOL_CIRCLE, 0, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_circle_icon);
-		GearUIList.get(4).putItem(PaliCanvas.TOOL_ELLIPSE, 0, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_ellipse_icon);
-		GearUIList.get(5).putItem(PaliCanvas.TOOL_RECTANGLE, 0, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_rect_icon);
+		// Pick Object Icon
+		GearUIList.get(Select).putItem(Select, 0, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_pickobject_icon);
+		// Layer Icon
+		GearUIList.get(Select).putItem(Select, 1, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_layer_icon);
+		
+		// Pencil Icon
+		GearUIList.get(Drawing).putItem(Drawing, 0, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_pencil_icon);
+		// Brush Icon
+		GearUIList.get(Drawing).putItem(Drawing, 1, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_brush_icon);
+		
+		// Circle Icon
+		GearUIList.get(Shape).putItem(Shape, 0, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_circle_icon);
+		// Ellipse Icon
+		GearUIList.get(Shape).putItem(Shape, 1, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_ellipse_icon);
+		// Rectangle Icon
+		GearUIList.get(Shape).putItem(Shape, 2, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_rect_icon);
+		// Change Icon
+		GearUIList.get(Shape).putItem(Shape, 3, PaliItem.TYPE_ICON, 2, 1, R.drawable.tool_shape_2x1_widget);
+		
+		// Stroke Color Icon
+		GearUIList.get(Style).putItem(Style, 0, PaliItem.TYPE_ICON, 3, 3, R.drawable.tool_color_3x3_widget);
+		// Fill Color Icon
+		GearUIList.get(Style).putItem(Style, 1, PaliItem.TYPE_ICON, 1, 3, R.drawable.tool_stroke_1x3_widget);
+		
+		
+		// New File Icon
+		GearUIList.get(File).putItem(File, 0, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_new_icon);
+		// Open File Icon
+		GearUIList.get(File).putItem(File, 1, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_open_icon);
+		// Save File Icon
+		GearUIList.get(File).putItem(File, 2, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_save_icon);
+		// Export File Icon
+		GearUIList.get(File).putItem(File, 3, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_export_icon);
+		
+		
+		// Undo Icon
+		GearUIList.get(History).putItem(History, 0, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_undo_icon);
+		// Redo Icon
+		GearUIList.get(History).putItem(History, 1, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_redo_icon);
+		
+		
+		GearUIList.get(Config).putItem(Config, 0, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_allmenu_icon);
+		GearUIList.get(Config).putItem(Config, 1, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_config_icon);
+		
+		// Null Icon
+		GearUIList.get(Common).putItem(PaliCanvas.TOOL_COMMON, 0, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.null_item);
+		// Screen Add Icon
+		GearUIList.get(Common).putItem(PaliCanvas.TOOL_COMMON, 1, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.custom_screen_add);
 		
 		/*
-		 *public static final int TOOL_PICKOBJECT=0;
-		 *public static final int TOOL_PENCIL=1;
-		 *public static final int TOOL_BRUSH=2;
-		 *public static final int TOOL_CIRCLE=3;
-		 *public static final int TOOL_ELLIPSE=4;
-		 *public static final int TOOL_RECTANGLE=5;
+		 public static final int Select 	= 0;
+	public static final int Drawing	= 1;
+	public static final int Shape	= 2;
+	public static final int Style	= 3;
+	public static final int History	= 4;
+	public static final int File	= 5;
+	public static final int Config	= 6;
+	public static final int Common	= 7;
 		 */
 	}
 
+	
+	private void addScreen()
+	{
+		int screenN = screens.size();
+		if(screenN<7)
+		{
+			screens.add(new PaliScreen(mContext));
+		       
+	        Spec row = GridLayout.spec(addY, 1); 
+	        Spec col = GridLayout.spec(addX, 1);
+	        GridLayout.LayoutParams  gridLayoutParam = new GridLayout.LayoutParams(row, col);
+	        gridLayoutParam.leftMargin=this.marginSize.x ;
+	        gridLayoutParam.rightMargin=this.marginSize.x ;
+	        gridLayoutParam.topMargin=this.marginSize.y;
+	        gridLayoutParam.bottomMargin=this.marginSize.y;
+			grid.addView(screens.get(screenN),gridLayoutParam);
+			screens.get(screenN).setSize(screenSize,screenSize);
+			screens.get(screenN).setBackgroundColor(BackgroundColor);
+			
+			if(addX<3)
+				addX++;
+			else
+			{
+				addY++;
+				addX=0;
+			}
+			
+			row = GridLayout.spec(addY, 1); 
+			col = GridLayout.spec(addX, 1);
+			gridLayoutParam = (GridLayout.LayoutParams) addScreen.getLayoutParams();
+	        gridLayoutParam.leftMargin=this.marginSize.x ;
+	        gridLayoutParam.rightMargin=this.marginSize.x ;
+	        gridLayoutParam.topMargin=this.marginSize.y;
+	        gridLayoutParam.bottomMargin=this.marginSize.y;
+	        gridLayoutParam.rowSpec = row;
+	        gridLayoutParam.columnSpec = col;
+	        addScreen.setLayoutParams(gridLayoutParam);
+	        
+	        
+		}
+		else if(screenN==7)
+		{
+				
+			
+		}
+	}
+	
 	@Override
 	public boolean dispatchKeyEvent(KeyEvent event) {
 		if (event.getAction() == KeyEvent.ACTION_DOWN) {
 			switch (event.getKeyCode()) {
 			case KeyEvent.KEYCODE_BACK:
-				android.os.Process.killProcess(android.os.Process.myPid());
-				return true;
+				
+				//android.os.Process.killProcess(android.os.Process.myPid());
+				return super.dispatchKeyEvent(event);
 			case KeyEvent.KEYCODE_MENU:
 				Intent intent = new Intent(this, CustomizingActivity.class);
 				startActivity(intent);
@@ -267,17 +346,22 @@ public class CustomizingMainActivity extends Activity {
 		 switch(e.getAction() & MotionEvent.ACTION_MASK)
 		 {		 
 		 case MotionEvent.ACTION_DOWN:
-			 
+			r= new Rect();
+			addScreen.getGlobalVisibleRect(r);
+			if(r.contains((int)e.getX(),(int)e.getY())) 
+			{
+				this.addScreen();
+				break;
+			}
 			for(int i=0;i<screens.size();i++)
 			{
-				r= new Rect();
+				
 				screens.get(i).getGlobalVisibleRect(r);
 				if(r.contains((int)e.getX(),(int)e.getY()))
 				{
 					
 					selected=i;
 					screens.get(selected).setBackgroundColor(Color.argb(60, 3, 74, 132));
-					Log.w("LonPress","selected" + Integer.toString(i));
 					mPressed=true;
 					//startTimeout();
 					break;
@@ -295,15 +379,76 @@ public class CustomizingMainActivity extends Activity {
 		        	indexY=0;
 		        
 			    int index = (indexY * 4) + indexX;
+			    
+			    
+			    
 			    if((index < screens.size()) && index!=selected)
 			    {
-			    	GridLayout.LayoutParams gridLayoutParam = (GridLayout.LayoutParams)screens.get(index).getLayoutParams();
-			    	PaliScreen temp = screens.get(index);
-			    	screens.get(index).setLayoutParams(screens.get(selected).getLayoutParams());
-			    	screens.get(selected).setLayoutParams(gridLayoutParam);
-			    	screens.set(index,screens.get(selected));
-			    	screens.set(selected, temp);
+			    	PaliScreen selScreen = screens.get(selected);
+			    	GridLayout.LayoutParams gridLayoutParam = (GridLayout.LayoutParams)selScreen.getLayoutParams();
+			    	screens.remove(selScreen);
+			    	PaliScreen temp;
+			    	GridLayout.LayoutParams tempLayoutParam;
 			    	
+			    	int dx, dy;
+			    	
+				    if(index<selected)
+				    {
+				    	
+				    	
+				    	for(int i=index;i<selected;i++) {
+				    		temp=screens.get(i);
+				    		tempLayoutParam = (GridLayout.LayoutParams) screens.get(i).getLayoutParams();
+			    			
+				    		if(i>3)
+				    		{
+				    			dx=i%4 + 1;
+				    			dy=1;
+				    		}
+				    		else if(i==3)
+				    		{
+				    			dx = 0;
+				    			dy = 1;
+				    		}
+				    		else
+				    		{
+				    			dx=i%4+1;
+				    			dy=0;
+				    		}
+				    		tempLayoutParam.rowSpec = GridLayout.spec(dy,1);
+				    		tempLayoutParam.columnSpec = GridLayout.spec(dx,1);
+				    		temp.setLayoutParams(tempLayoutParam);
+				    	}
+				    }
+				    else // index>selected
+				    {
+				    	for(int i=selected;i<index;i++) {
+				    		temp=screens.get(i);
+				    		tempLayoutParam = (GridLayout.LayoutParams) screens.get(i).getLayoutParams();
+			    			if(i>3)
+				    		{
+				    			dx=i%4;
+				    			dy=1;
+				    		}
+				    		else if(i==3)
+				    		{
+				    			dx = 3;
+				    			dy = 0;
+				    		}
+				    		else
+				    		{
+				    			dx = i%4;
+				    			dy=0;
+				    		}
+				    		tempLayoutParam.rowSpec = GridLayout.spec(dy,1);
+				    		tempLayoutParam.columnSpec = GridLayout.spec(dx,1);
+				    		temp.setLayoutParams(tempLayoutParam);;
+				    	}
+				    }
+				    gridLayoutParam.rowSpec = GridLayout.spec(indexY,1);
+			    	gridLayoutParam.columnSpec = GridLayout.spec(indexX,1);
+			    	selScreen.setLayoutParams(gridLayoutParam);
+			    	screens.add(index,selScreen);
 			    	selected = index;
 			    }
 			 }

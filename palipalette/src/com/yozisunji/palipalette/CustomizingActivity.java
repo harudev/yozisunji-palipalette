@@ -2,9 +2,9 @@ package com.yozisunji.palipalette;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Color;
+import android.content.Intent;
+import android.graphics.Rect;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -54,6 +54,7 @@ public class CustomizingActivity extends Activity {
 		listview.expandGroup(4);
 		listview.expandGroup(5);
 		//listview.setOnChildClickListener(listClickListener);
+		this.screen.setTouchable(true);
 	}
 	
 	@Override
@@ -61,7 +62,9 @@ public class CustomizingActivity extends Activity {
 		if (event.getAction() == KeyEvent.ACTION_DOWN) {
 			switch (event.getKeyCode()) {
 			case KeyEvent.KEYCODE_BACK:
-				android.os.Process.killProcess(android.os.Process.myPid());
+				CustomizingMainActivity.screens.get(0).copy(this.screen, CustomizingMainActivity.screenSize, CustomizingMainActivity.screenSize);
+				Intent intent = new Intent(this, CustomizingMainActivity.class);
+				startActivity(intent);
 				return true;
 			case KeyEvent.KEYCODE_MENU:
 				return true;
@@ -70,14 +73,26 @@ public class CustomizingActivity extends Activity {
 		return super.dispatchKeyEvent(event);
 	}
 	
+	@Override
+	public boolean dispatchTouchEvent(MotionEvent e)
+	{
+		Rect r = new Rect();;
+		screen.dispatchTouchEvent(e);
+		listview.getGlobalVisibleRect(r);
+		if(r.contains((int)e.getX(),(int)e.getY()))
+			listview.dispatchTouchEvent(e);
+		this.onTouchEvent(e);
+		return true;
+	}
+	
 	View.OnTouchListener vl= new View.OnTouchListener() {
+
 		@Override
 		public boolean onTouch(View v, MotionEvent event) {
 			// TODO Auto-generated method stub
 			switch(event.getAction())
 			{
 			case MotionEvent.ACTION_DOWN:
-				//v.setBackgroundColor(Color.argb(80, 100, 255, 100));
 				selectedItem = (PaliItem)v.getTag();
 				dragItem.setImageResource(selectedItem.imageid);
 				LinearLayout.LayoutParams dl = (LinearLayout.LayoutParams) dragItem.getLayoutParams();
@@ -87,25 +102,12 @@ public class CustomizingActivity extends Activity {
 				dragItem.setVisibility(View.VISIBLE);
 				mPressed=true;
 				return false;
-			case MotionEvent.ACTION_MOVE:
-				//v.setBackgroundColor(Color.argb(80, 255, 255, 255));
-				return false;
-			case MotionEvent.ACTION_UP:
-				//v.setBackgroundColor(Color.argb(80, 255, 255, 255));
-				return false;
 			}
-			
 			return true;
 		}
 	};
-	@Override
-	public boolean dispatchTouchEvent(MotionEvent e)
-	{
-		listview.dispatchTouchEvent(e);
-		
-		this.onTouchEvent(e);
-		return true;
-	}
+	
+	
 	@Override
 	public boolean onTouchEvent(MotionEvent e)
 	{

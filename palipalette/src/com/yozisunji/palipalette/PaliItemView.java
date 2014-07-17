@@ -2,7 +2,6 @@ package com.yozisunji.palipalette;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 
@@ -28,7 +27,7 @@ public class PaliItemView extends ImageView {
 		this.x = x;
 		this.y = y;
 		this.context = context;
-		gl = new GridLayout.LayoutParams(GridLayout.spec(x,iteminfo.width), GridLayout.spec(y,iteminfo.height));
+		gl = new GridLayout.LayoutParams(GridLayout.spec(y,iteminfo.height), GridLayout.spec(x,iteminfo.width));
 		this.setImageResource(iteminfo.imageid);
 	}
 	
@@ -36,8 +35,8 @@ public class PaliItemView extends ImageView {
 	{
 		gl = (GridLayout.LayoutParams)this.getLayoutParams();
 		
-		gl.width = w;
-		gl.height = h;
+		gl.width = w * iteminfo.width;
+		gl.height = h * iteminfo.height;
 		
 		this.setLayoutParams(gl);
 	}

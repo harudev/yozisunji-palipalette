@@ -88,13 +88,9 @@ public class MainActivity extends Activity {
 				android.os.Process.killProcess(android.os.Process.myPid());
 				return true;
 			case KeyEvent.KEYCODE_MENU:
-				// launchCustomizing();
-				
-				PaliCanvas.selectedTool++;
-				if (PaliCanvas.selectedTool > 5)
-					PaliCanvas.selectedTool = 0;
+				launchCustomizing();
 
-				changeTool();
+				//changeTool();
 				return true;
 			}
 		}

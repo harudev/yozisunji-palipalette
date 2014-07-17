@@ -15,14 +15,12 @@ import android.graphics.RectF;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.FloatMath;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
 
-import com.samsung.android.sdk.look.Slook;
 import com.samsung.android.sdk.look.airbutton.SlookAirButton;
 import com.samsung.android.sdk.look.airbutton.SlookAirButton.ItemSelectListener;
 import com.samsung.android.sdk.look.airbutton.SlookAirButtonAdapter;
@@ -154,13 +152,6 @@ public class PaliTouchCanvas extends View {
 	public interface SPenHoverListener {
 		boolean onHoverEvent(View v, MotionEvent e);
 	}
-
-	/*
-	 * public boolean onHoverEvent(View v, MotionEvent e) {
-	 * Log.i("debug","hover"); return true;
-	 * 
-	 * }
-	 */
 
 	public boolean onTouchEvent(MotionEvent e) {
 
@@ -502,7 +493,6 @@ public class PaliTouchCanvas extends View {
 
 				} else
 					this.prepinch = false;
-				// Log.i("debug", ""+html);
 				break;
 
 			/*
