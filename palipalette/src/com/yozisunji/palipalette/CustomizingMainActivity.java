@@ -15,6 +15,7 @@ import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -81,6 +82,7 @@ public class CustomizingMainActivity extends Activity {
 		int tempX, tempY;
 		tempY = (this.activitySize.y -100 - 80) / 2;
 		tempX = (this.activitySize.x - 160 )/ 4;
+		Log.w("LonPress",Integer.toString(this.activitySize.x)+" : "+ Integer.toString(this.activitySize.y));
 		this.screenSize = (tempY<tempX)?tempY:tempX;
 		if(screenSize==tempY)
 		{

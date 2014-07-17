@@ -16,13 +16,16 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.DisplayMetrics;
+import android.view.HapticFeedbackConstants;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.samsung.android.example.helloaccessoryprovider.R;
@@ -45,6 +48,9 @@ public class MainActivity extends Activity {
 	public static int screenHeight;
 	public static int screenWidth;
 	
+	ImageView intro;
+	private Handler mHandler = new Handler();
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -57,10 +63,14 @@ public class MainActivity extends Activity {
 				WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
 		setContentView(R.layout.main);
 		
+		
 		DisplayMetrics displaymetrics = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
 		screenHeight = displaymetrics.heightPixels;
 		screenWidth = displaymetrics.widthPixels;
+		
+		intro = (ImageView)findViewById(R.id.introImage);
+		mHandler.postDelayed(new IntroRunnable(), 2400);
 
 		svg = new SVGParser();
 		svg.addLayer();
@@ -255,5 +265,13 @@ public class MainActivity extends Activity {
 		} catch (IOException e) { 
 			e.printStackTrace(); 
 		} 			
+	}
+	
+	
+	private class IntroRunnable implements Runnable {
+		@Override
+		public void run() {
+			intro.setVisibility(View.GONE);
+		}
 	}
 }
