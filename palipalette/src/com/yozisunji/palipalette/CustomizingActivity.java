@@ -19,7 +19,7 @@ import com.samsung.android.example.helloaccessoryprovider.R;
 
 public class CustomizingActivity extends Activity {
 	Context ctx = this;
-	PaliScreen screen;
+	public PaliScreen screen;
 	GridLayout.LayoutParams layout;
 	
 	public boolean mPressed = false;
@@ -63,9 +63,9 @@ public class CustomizingActivity extends Activity {
 			switch (event.getKeyCode()) {
 			case KeyEvent.KEYCODE_BACK:
 				CustomizingMainActivity.screens.get(0).copy(this.screen, CustomizingMainActivity.screenSize, CustomizingMainActivity.screenSize);
-				Intent intent = new Intent(this, CustomizingMainActivity.class);
-				startActivity(intent);
-				return true;
+				//Intent intent = new Intent(this, CustomizingMainActivity.class);
+				//startActivity(intent);
+				return super.dispatchKeyEvent(event);
 			case KeyEvent.KEYCODE_MENU:
 				return true;
 			}

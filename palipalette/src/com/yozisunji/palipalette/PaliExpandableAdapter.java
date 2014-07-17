@@ -24,7 +24,8 @@ public class PaliExpandableAdapter extends BaseExpandableListAdapter {
 	
 	public PaliExpandableAdapter(Context context, ArrayList<PaliItemList> list, View.OnTouchListener t) {
         this.context = context;
-        this.list = list; 
+        this.list = (ArrayList<PaliItemList>)list.clone(); 
+        this.list.remove(CustomizingMainActivity.Common);
         touch = t;
     }
 	@Override
@@ -72,7 +73,7 @@ public class PaliExpandableAdapter extends BaseExpandableListAdapter {
 	@Override
 	public View getGroupView(int groupPosition, boolean isExpanded,
 			View convertView, ViewGroup parent) {
-		// TODO Auto-generated method stub
+		// TODO Auto-generated method stub			
 		View view;
         if(convertView == null) {
             view = getParentGenericView();

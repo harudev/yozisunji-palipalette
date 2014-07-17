@@ -21,6 +21,11 @@ public class PaliItemList {
 	{
 		items.add(new PaliItem(func, item, itemType, width, height,d,FuncName));
 	}
+	
+	public void putItem(int func, int item, int itemType, int width, int height, int d, String f)
+	{
+		items.add(new PaliItem(func, item, itemType, width, height,d,f));
+	}
 	/*
 	public PaliItem getItem(int func, int item)
 	{

@@ -104,8 +104,8 @@ public class CustomizingMainActivity extends Activity {
 		screens.get(0).putItem(Drawing, 1, 0, 1);
 		screens.get(0).putItem(Select, 1, 1, 0);
 		screens.get(0).putItem(Select, 0, 1, 1);
-		//screens.get(0).putItem(Shape, 3, 2, 0);
-		//screens.get(0).putItem(Style, 1, 0, 2);
+		screens.get(0).putItem(Shape, 3, 2, 0);
+		screens.get(0).putItem(Style, 1, 0, 2);
 		Spec row = GridLayout.spec(0, 1); 
         Spec col = GridLayout.spec(0, 1);
         GridLayout.LayoutParams gridLayoutParam = new GridLayout.LayoutParams(row, col);
@@ -213,53 +213,53 @@ public class CustomizingMainActivity extends Activity {
 		GearUIList.add(new PaliItemList("Common"));
 		
 		// Pick Object Icon
-		GearUIList.get(Select).putItem(Select, 0, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_pickobject_icon);
+		GearUIList.get(Select).putItem(Select, 0, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_pickobject_icon, "Pick Object");
 		// Layer Icon
-		GearUIList.get(Select).putItem(Select, 1, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_layer_icon);
+		GearUIList.get(Select).putItem(Select, 1, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_layer_icon,"Layer");
 		
 		// Pencil Icon
-		GearUIList.get(Drawing).putItem(Drawing, 0, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_pencil_icon);
+		GearUIList.get(Drawing).putItem(Drawing, 0, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_pencil_icon,"Pencil");
 		// Brush Icon
-		GearUIList.get(Drawing).putItem(Drawing, 1, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_brush_icon);
+		GearUIList.get(Drawing).putItem(Drawing, 1, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_brush_icon,"Brush");
 		
 		// Circle Icon
-		GearUIList.get(Shape).putItem(Shape, 0, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_circle_icon);
+		GearUIList.get(Shape).putItem(Shape, 0, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_circle_icon,"Circle");
 		// Ellipse Icon
-		GearUIList.get(Shape).putItem(Shape, 1, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_ellipse_icon);
+		GearUIList.get(Shape).putItem(Shape, 1, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_ellipse_icon,"Ellipse");
 		// Rectangle Icon
-		GearUIList.get(Shape).putItem(Shape, 2, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_rect_icon);
+		GearUIList.get(Shape).putItem(Shape, 2, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_rect_icon,"Rectangle");
 		// Change Icon
-		GearUIList.get(Shape).putItem(Shape, 3, PaliItem.TYPE_ICON, 2, 1, R.drawable.tool_shape_2x1_widget);
+		GearUIList.get(Shape).putItem(Shape, 3, PaliItem.TYPE_WIDGET, 2, 1, R.drawable.tool_shape_2x1_widget,"Shape Change");
 		
 		// Stroke Color Icon
-		GearUIList.get(Style).putItem(Style, 0, PaliItem.TYPE_ICON, 3, 3, R.drawable.tool_color_3x3_widget);
+		GearUIList.get(Style).putItem(Style, 0, PaliItem.TYPE_WIDGET, 3, 3, R.drawable.tool_color_3x3_widget, "Color");
 		// Fill Color Icon
-		GearUIList.get(Style).putItem(Style, 1, PaliItem.TYPE_ICON, 1, 3, R.drawable.tool_stroke_1x3_widget);
+		GearUIList.get(Style).putItem(Style, 1, PaliItem.TYPE_WIDGET, 1, 3, R.drawable.tool_stroke_1x3_widget, "Stroke Width");
 		
 		
 		// New File Icon
-		GearUIList.get(File).putItem(File, 0, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_new_icon);
+		GearUIList.get(File).putItem(File, 0, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_new_icon, "New File");
 		// Open File Icon
-		GearUIList.get(File).putItem(File, 1, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_open_icon);
+		GearUIList.get(File).putItem(File, 1, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_open_icon, "Open File");
 		// Save File Icon
-		GearUIList.get(File).putItem(File, 2, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_save_icon);
+		GearUIList.get(File).putItem(File, 2, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_save_icon, "Save File");
 		// Export File Icon
-		GearUIList.get(File).putItem(File, 3, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_export_icon);
+		GearUIList.get(File).putItem(File, 3, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_export_icon, "Export File");
 		
 		
 		// Undo Icon
-		GearUIList.get(History).putItem(History, 0, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_undo_icon);
+		GearUIList.get(History).putItem(History, 0, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_undo_icon, "Undo");
 		// Redo Icon
-		GearUIList.get(History).putItem(History, 1, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_redo_icon);
+		GearUIList.get(History).putItem(History, 1, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_redo_icon, "Redo");
 		
 		
-		GearUIList.get(Config).putItem(Config, 0, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_allmenu_icon);
-		GearUIList.get(Config).putItem(Config, 1, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_config_icon);
+		GearUIList.get(Config).putItem(Config, 0, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_allmenu_icon, "All Menu");
+		GearUIList.get(Config).putItem(Config, 1, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_config_icon, "Configuration");
 		
 		// Null Icon
-		GearUIList.get(Common).putItem(PaliCanvas.TOOL_COMMON, 0, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.null_item);
+		GearUIList.get(Common).putItem(Common, 0, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.null_item);
 		// Screen Add Icon
-		GearUIList.get(Common).putItem(PaliCanvas.TOOL_COMMON, 1, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.custom_screen_add);
+		GearUIList.get(Common).putItem(Common, 1, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.custom_screen_add);
 		
 		/*
 		 public static final int Select 	= 0;

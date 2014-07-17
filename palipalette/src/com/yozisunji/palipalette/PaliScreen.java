@@ -90,43 +90,26 @@ public class PaliScreen extends GridLayout{
 		
 		temp.iteminfo = CustomizingMainActivity.GearUIList.get(func).items.get(item);
 		temp.setImageResource(temp.iteminfo.imageid);
-		//this.items.add(temp);
 		
-		if(temp.iteminfo.width>1)
-		{
-			for(int i=1;i<temp.iteminfo.width;i++)
-			{
-				this.items.remove(posY*3+posX+i);
-			}
-		}
-		if(temp.iteminfo.height>1)
-		{
-			for(int i=1;i<temp.iteminfo.height;i++)
-			{
-				this.items.remove((posY+i)*3+posX);
-			}
-			
-		}
 		temp.gl = (GridLayout.LayoutParams)temp.getLayoutParams();
-		temp.gl.rowSpec = GridLayout.spec(posX,temp.iteminfo.width);
-		temp.gl.columnSpec = GridLayout.spec(posY,temp.iteminfo.height);
+		temp.gl.rowSpec = GridLayout.spec(posX,temp.iteminfo.height);
+		temp.gl.columnSpec = GridLayout.spec(posY,temp.iteminfo.width);
 		temp.setLayoutParams(temp.gl);
 	}
-	
 	public void copy(PaliScreen p, int width, int height)
-	{		
+	{	
 		PaliItemView temp;
 		PaliItemView get;
 		
 		this.removeAllViews();
 		this.items.clear();
-		
+				
 		for(int i = 0; i<p.items.size();i++)
 		{
 			get = p.items.get(i);
-			temp = new PaliItemView(get.iteminfo.funcNum, get.iteminfo.itemNum, get.x, get.y, mContext);
+			temp = new PaliItemView(get.iteminfo.funcNum, get.iteminfo.itemNum, get.x , get.y, mContext);
 			this.items.add(i,temp);
-			this.addView(temp , temp.gl);
+			this.addView(temp , get.gl);
 		}
 		
 		this.setSize(width, height);
@@ -168,7 +151,7 @@ public class PaliScreen extends GridLayout{
 				{
 					
 					selected=i;
-					items.get(selected).setBackgroundColor(Color.argb(80, 255, 200, 200));
+					items.get(selected).setBackgroundColor(Color.argb(80, 255, 255, 255));
 					mPressed=true;
 					break;
 				}
@@ -177,41 +160,44 @@ public class PaliScreen extends GridLayout{
 		 case MotionEvent.ACTION_MOVE:
 			 if(mPressed)
 			 {	
-				this.getGlobalVisibleRect(r);
-				int index = 10;
-				if(r.contains((int)e.getX(),(int)e.getY()))
+				for(int i=0;i<items.size();i++)
 				{
-					for(int i=0;i<items.size();i++)
-					{
-						 if(i!=selected)
-						 {
-								items.get(i).getGlobalVisibleRect(r);
-								if(r.contains((int)e.getX(),(int)e.getY()))
-								{	
-									
-									if(items.get(i).iteminfo.imageid==R.drawable.null_item)
-									{
-										index  = i;
-										break;
-										
-									}
-									
-								}
-						 }
-					}
-					if(index!=10)
-					{						
-				    	PaliItemView temp = items.get(selected);
-				    	PaliItemView change = items.get(index);
-				    	GridLayout.LayoutParams gridLayoutParam = (GridLayout.LayoutParams)temp.getLayoutParams();
-				    	GridLayout.LayoutParams changeLayoutParam = (GridLayout.LayoutParams)change.getLayoutParams();
-				    	temp.setLayoutParams(changeLayoutParam);
-				    	change.setLayoutParams(gridLayoutParam);
-				    	selected = index;
-					}
+					 if(i!=selected)
+					 {
+							items.get(i).getGlobalVisibleRect(r);
+							if(r.contains((int)e.getX(),(int)e.getY()))
+							{	
+								PaliItemView temp = items.get(selected);
+						    	PaliItemView change = items.get(i);
+						    	
+						    	GridLayout.LayoutParams gridLayoutParam = (GridLayout.LayoutParams)temp.getLayoutParams();
+						    	GridLayout.LayoutParams changeLayoutParam = (GridLayout.LayoutParams)change.getLayoutParams();
+						    	temp.setLayoutParams(changeLayoutParam);
+						    	change.setLayoutParams(gridLayoutParam);
+						    	
+						    	items.remove(temp);
+						    	items.remove(change);
+						    	
+						    	if(selected<i)
+						    	{
+						    		items.add(selected,change);
+							    	items.add(i,temp);
+						    	}
+						    	else
+						    	{
+						    		items.add(i,temp);
+						    		items.add(selected,change);
+						    	}
+						    	
+						    	
+						    	selected = i;
+						    	break;
+						    
+							}
+					 }
 				}
 			 }
-			 return false;
+			 return true;
 		 case MotionEvent.ACTION_UP:
 			 if(mPressed)
 			 {
