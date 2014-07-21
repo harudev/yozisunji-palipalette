@@ -515,16 +515,9 @@ public class PaliTouchCanvas extends View {
 							+ (float) Math.pow(upY - downY, 2));
 					cx = downX;
 					cy = downY;
-					opacity = PaliCanvas.alpha / 255.0f;
-
-					html = "<circle cx=\"" + cx + "\" cy=\"" + cy + "\" r=\""
-							+ r + "\" stroke=\"#" + strokeColor
-							+ "\" stroke-width=\"" + strokeWidth
-							+ "\" fill=\"#" + fillColor
-							+ "\" stroke-opacity=\"" + opacity
-							+ "\" fill-opacity=\"" + opacity + "\" />";
+					
 					SVGParser.Layers.get(PaliCanvas.currentLayer).objs
-							.add(new PaliCircle(html, cx, cy, r));
+							.add(new PaliCircle(cx, cy, r));
 					tempObj = null;
 					PaliCanvas.currentObject++;
 					PaliCanvas.drawMode = false;
@@ -534,28 +527,13 @@ public class PaliTouchCanvas extends View {
 				break;
 			case PaliCanvas.TOOL_ELLIPSE:
 				if (!this.prepinch) {
-					x = Math.min(downX, upX);
-					y = Math.min(downY, upY);
-					width = (float) Math.sqrt((float) Math.pow(upX - downX, 2));
-					height = (float) Math.sqrt((float) Math.pow(upY - downY, 2));
+					left = Math.min(downX, upX);
+					top = Math.min(downY, upY);
+					right = Math.max(downX, upX);
+					bottom = Math.max(downY, upY);
 
-					cx = x + (width / 2);
-					cy = y + (height / 2);
-					opacity = PaliCanvas.alpha / 255.0f;
-
-					left = downX;
-					top = downY;
-					right = upX;
-					bottom = upY;
-
-					html = "<ellipse cx=\"" + cx + "\" cy=\"" + cy + "\" rx=\""
-							+ width/2 + "\" ry=\"" + height/2 + "\" stroke=\"#"
-							+ strokeColor + "\" stroke-width=\"" + strokeWidth
-							+ "\" fill=\"#" + fillColor
-							+ "\" stroke-opacity=\"" + opacity
-							+ "\" fill-opacity=\"" + opacity + "\" />";
 					SVGParser.Layers.get(canvas.currentLayer).objs
-							.add(new PaliEllipse(html, left, top, right, bottom));
+							.add(new PaliEllipse(left, top, right, bottom));
 					tempObj = null;
 					PaliCanvas.currentObject++;
 					PaliCanvas.drawMode = false;
@@ -564,26 +542,14 @@ public class PaliTouchCanvas extends View {
 					this.prepinch = false;
 				break;
 			case PaliCanvas.TOOL_RECTANGLE:
-				if (!this.prepinch) {
-					x = Math.min(downX, upX);
-					y = Math.min(downY, upY);
-					width = (float) Math.sqrt((float) Math.pow(upX - downX, 2));
-					height = (float) Math.sqrt((float) Math.pow(upY - downY, 2));
-					opacity = PaliCanvas.alpha / 255.0f;
-
-					left = downX;
-					top = downY;
-					right = upX;
-					bottom = upY;
-
-					html = "<rect x=\"" + x + "\" y=\"" + y + "\" width=\""
-							+ width + "\" height=\"" + height + "\" stroke=\"#"
-							+ strokeColor + "\" stroke-width=\"" + strokeWidth
-							+ "\" fill=\"#" + fillColor
-							+ "\" stroke-opacity=\"" + opacity
-							+ "\" fill-opacity=\"" + opacity + "\" />";
+				if (!this.prepinch) {										
+					left = Math.min(downX, upX);
+					top = Math.min(downY, upY);
+					right = Math.max(downX, upX);
+					bottom = Math.max(downY, upY);
+					
 					SVGParser.Layers.get(canvas.currentLayer).objs
-							.add(new PaliRectangle(html, left, top, right,
+							.add(new PaliRectangle(left, top, right,
 									bottom));
 					tempObj = null;
 					PaliCanvas.currentObject++;

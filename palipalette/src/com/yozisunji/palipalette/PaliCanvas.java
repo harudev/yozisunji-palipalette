@@ -30,7 +30,7 @@ public class PaliCanvas extends SurfaceView implements SurfaceHolder.Callback {
 	public static int width, height;
 	public static int currentLayer;
 	public static int currentObject;
-	public static int selectedTool=1;
+	public static int selectedTool=3;
 	
 	public static boolean drawMode = true;
 	public static float canvasX=0, canvasY=0;
@@ -44,10 +44,10 @@ public class PaliCanvas extends SurfaceView implements SurfaceHolder.Callback {
 	public PaliCanvas(Context c, AttributeSet attrs)
 	{
 		super(c, attrs);
-		strokeColor = Color.BLUE;
-		fillColor = Color.YELLOW;
+		strokeColor = Color.RED;
+		fillColor = Color.BLUE;
 		alpha = 255;
-		strokeWidth = 3;
+		strokeWidth = 10;
 		currentLayer=SVGParser.Layersize-1;
 		currentObject=-1;
 		SurfaceHolder holder = getHolder();

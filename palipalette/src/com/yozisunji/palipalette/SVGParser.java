@@ -358,7 +358,7 @@ class SVGHandler extends DefaultHandler {
             Float centerY = getFloatAttr("cy", atts);
             Float radius = getFloatAttr("r", atts);
             if (centerX != null && centerY != null && radius != null) {
-            	SVGParser.Layers.get(PaliCanvas.currentLayer).objs.add(new PaliCircle("",centerX,centerY,radius));
+            	SVGParser.Layers.get(PaliCanvas.currentLayer).objs.add(new PaliCircle(centerX,centerY,radius));
             	PaliCanvas.currentObject++;
             }
         } else if (localName.equals("ellipse")) {
@@ -367,7 +367,7 @@ class SVGHandler extends DefaultHandler {
             Float radiusX = getFloatAttr("rx", atts);
             Float radiusY = getFloatAttr("ry", atts);
             if (centerX != null && centerY != null && radiusX != null && radiusY != null) {
-            	SVGParser.Layers.get(PaliCanvas.currentLayer).objs.add(new PaliEllipse("",centerX-radiusX,centerY-radiusY,centerX+radiusX,centerY+radiusY));
+            	SVGParser.Layers.get(PaliCanvas.currentLayer).objs.add(new PaliEllipse(centerX-radiusX,centerY-radiusY,centerX+radiusX,centerY+radiusY));
             	PaliCanvas.currentObject++;
             }
         } else if (localName.equals("rect")) {
@@ -376,7 +376,7 @@ class SVGHandler extends DefaultHandler {
         	Float width = getFloatAttr("width", atts);
         	Float height = getFloatAttr("height", atts);
         	if (centerX != null && centerY != null && width!= null && height != null) {
-        		SVGParser.Layers.get(PaliCanvas.currentLayer).objs.add(new PaliRectangle("",centerX,centerY,centerX + width,centerY + height));
+        		SVGParser.Layers.get(PaliCanvas.currentLayer).objs.add(new PaliRectangle(centerX,centerY,centerX + width,centerY + height));
         		PaliCanvas.currentObject++;
         	}
         } else if (localName.equals("path")) {

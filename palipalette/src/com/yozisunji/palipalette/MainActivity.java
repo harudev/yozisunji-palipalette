@@ -98,9 +98,9 @@ public class MainActivity extends Activity {
 				android.os.Process.killProcess(android.os.Process.myPid());
 				return true;
 			case KeyEvent.KEYCODE_MENU:
-				launchCustomizing();
+				//launchCustomizing();
 
-				//changeTool();
+				changeTool();
 				return true;
 			}
 		}
@@ -223,8 +223,6 @@ public class MainActivity extends Activity {
             e.printStackTrace();
         }		
 		
-		
-		//svg.parse(getResources().openRawResource(R.drawable.test));
 		customview.DrawScreen();
 	}
 	

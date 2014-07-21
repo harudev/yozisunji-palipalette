@@ -6,6 +6,7 @@ import android.graphics.ColorFilter;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
+import android.util.Log;
 
 public abstract class PaliObject {
 	Paint f_paint;
@@ -94,6 +95,53 @@ public abstract class PaliObject {
 		}		
 		this.theta += theta;
 		this.theta %= 360;
+	}
+	public void tagSet() 
+	{
+		float width = 0;
+		float height = 0;
+		
+		String fillColor = Integer.toHexString(f_paint.getColor()).substring(2);
+		String strokeColor = Integer.toHexString(s_paint.getColor()).substring(2);
+		Log.i("debug","fill: "+fillColor);
+		Log.i("debug","stroke: "+strokeColor);
+		
+		switch(this.type) {
+		case PaliCanvas.TOOL_CIRCLE:
+			svgtag = "<circle cx=\"" + x + "\" cy=\"" + y + "\" r=\""
+					+ r + "\" stroke=\"#" + strokeColor
+					+ "\" stroke-width=\"" + s_paint.getStrokeWidth()
+					+ "\" fill=\"#" + fillColor
+					+ "\" stroke-opacity=\"" + s_paint.getAlpha()
+					+ "\" fill-opacity=\"" + f_paint.getAlpha() + "\" />";
+			break;
+		case PaliCanvas.TOOL_ELLIPSE:				
+			width = this.right - this.left;
+			height = this.bottom - this.top;
+			x = left + width/2;
+			y = top + height/2;
+			svgtag = "<ellipse cx=\"" + x + "\" cy=\"" + y + "\" rx=\""
+					+ width/2 + "\" ry=\"" + height/2 + "\" stroke=\"#"
+					+ strokeColor + "\" stroke-width=\"" + s_paint.getStrokeWidth()
+					+ "\" fill=\"#" + fillColor
+					+ "\" stroke-opacity=\"" + s_paint.getAlpha()
+					+ "\" fill-opacity=\"" + f_paint.getAlpha() + "\" />";
+			break;
+		case PaliCanvas.TOOL_RECTANGLE:
+			width = this.right - this.left;
+			height = this.bottom - this.top;
+			x = left;
+			y = top;
+			svgtag = "<rect x=\"" + x + "\" y=\"" + y + "\" width=\""
+					+ width + "\" height=\"" + height + "\" stroke=\"#"
+					+ strokeColor + "\" stroke-width=\"" + s_paint.getStrokeWidth()
+					+ "\" fill=\"#" + fillColor
+					+ "\" stroke-opacity=\"" + s_paint.getAlpha()
+					+ "\" fill-opacity=\"" + f_paint.getAlpha() + "\" />";
+			break;
+		
+			
+		}
 	}
 	public abstract void drawObject(Canvas c);
 	public abstract void Move(float dx, float dy);
