@@ -95,6 +95,8 @@ public abstract class PaliObject {
 		}		
 		this.theta += theta;
 		this.theta %= 360;
+		
+		tagSet();
 	}
 	public void tagSet() 
 	{
@@ -125,7 +127,8 @@ public abstract class PaliObject {
 					+ strokeColor + "\" stroke-width=\"" + s_paint.getStrokeWidth()
 					+ "\" fill=\"#" + fillColor
 					+ "\" stroke-opacity=\"" + s_paint.getAlpha()
-					+ "\" fill-opacity=\"" + f_paint.getAlpha() + "\" />";
+					+ "\" fill-opacity=\"" + f_paint.getAlpha()
+					+ "\" transform=\"rotate("+theta+","+x+","+y+")\" />";
 			break;
 		case PaliCanvas.TOOL_RECTANGLE:
 			width = this.right - this.left;
@@ -137,10 +140,9 @@ public abstract class PaliObject {
 					+ strokeColor + "\" stroke-width=\"" + s_paint.getStrokeWidth()
 					+ "\" fill=\"#" + fillColor
 					+ "\" stroke-opacity=\"" + s_paint.getAlpha()
-					+ "\" fill-opacity=\"" + f_paint.getAlpha() + "\" />";
-			break;
-		
-			
+					+ "\" fill-opacity=\"" + f_paint.getAlpha()
+					+ "\" transform=\"rotate("+theta+","+(x+width/2)+","+(y+height/2)+")\" />";
+			break;			
 		}
 	}
 	public abstract void drawObject(Canvas c);
