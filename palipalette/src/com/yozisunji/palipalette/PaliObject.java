@@ -105,8 +105,6 @@ public abstract class PaliObject {
 		
 		String fillColor = Integer.toHexString(f_paint.getColor()).substring(2);
 		String strokeColor = Integer.toHexString(s_paint.getColor()).substring(2);
-		Log.i("debug","fill: "+fillColor);
-		Log.i("debug","stroke: "+strokeColor);
 		
 		switch(this.type) {
 		case PaliCanvas.TOOL_CIRCLE:

@@ -325,10 +325,18 @@ public class PaliTouchCanvas extends View {
 					tempObj = new PaliCircle(downX, downY,(float) Math.sqrt((float) Math.pow(moveX - downX, 2) + (float) Math.pow(moveY - downY, 2)));
 					break;
 				case PaliCanvas.TOOL_ELLIPSE:
-					tempObj = new PaliEllipse(downX, downY, moveX, moveY);
+					left = Math.min(downX, moveX);
+					top = Math.min(downY, moveY);
+					right = Math.max(downX, moveX);
+					bottom = Math.max(downY, moveY);
+					tempObj = new PaliEllipse(left, top, right, bottom);
 					break;
 				case PaliCanvas.TOOL_RECTANGLE:
-					tempObj = new PaliRectangle(downX, downY, moveX, moveY);
+					left = Math.min(downX, moveX);
+					top = Math.min(downY, moveY);
+					right = Math.max(downX, moveX);
+					bottom = Math.max(downY, moveY);
+					tempObj = new PaliRectangle(left, top, right, bottom);
 
 				}
 			}
