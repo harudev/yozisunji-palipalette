@@ -2,8 +2,6 @@ package com.yozisunji.palipalette;
 
 import java.util.ArrayList;
 
-import com.samsung.android.example.helloaccessoryprovider.R;
-
 import android.content.Context;
 import android.graphics.Color;
 import android.view.LayoutInflater;

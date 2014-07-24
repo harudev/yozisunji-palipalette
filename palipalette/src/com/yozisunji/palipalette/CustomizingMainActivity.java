@@ -6,7 +6,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.samsung.android.example.helloaccessoryprovider.R;
 
 import android.app.Activity;
 import android.content.Context;

@@ -19,8 +19,6 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.widget.LinearLayout;
 
-import com.samsung.android.example.helloaccessoryprovider.R;
-
 public class PaliSelector extends View {
 	RectF rect;
 	Rect recti;

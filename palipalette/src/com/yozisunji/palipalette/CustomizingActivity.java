@@ -15,8 +15,6 @@ import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.samsung.android.example.helloaccessoryprovider.R;
-
 public class CustomizingActivity extends Activity {
 	Context ctx = this;
 	public PaliScreen screen;

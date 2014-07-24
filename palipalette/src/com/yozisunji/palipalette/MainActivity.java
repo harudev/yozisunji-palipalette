@@ -27,10 +27,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-
-import com.samsung.android.example.helloaccessoryprovider.R;
 //import com.samsung.android.example.helloaccessoryprovider.service.HelloAccessoryProviderService;
-import com.samsung.android.example.helloaccessoryprovider.service.HelloAccessoryProviderService;
 
 public class MainActivity extends Activity {
 
