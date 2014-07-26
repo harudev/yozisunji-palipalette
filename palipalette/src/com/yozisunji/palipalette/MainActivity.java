@@ -52,8 +52,10 @@ public class MainActivity extends Activity {
 	ImageView intro;
 	private Handler mHandler = new Handler();
 		
-	private Dialog mDialog = null;
+	private Dialog saveDialog = null;
+	private Dialog exportDialog = null;
 	EditText save_name;
+	EditText export_name;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -86,7 +88,7 @@ public class MainActivity extends Activity {
 		touchview.setCanvasAddr(customview,
 				(LinearLayout) findViewById(R.id.selectLayout));
 
-		hs = new HelloAccessoryProviderService(this);
+		hs = new HelloAccessoryProviderService();
 
 		dialog_sub = new SubMenuDialog();
 		Button copyBtn = (Button) findViewById(R.id.copyBtn);
@@ -94,8 +96,8 @@ public class MainActivity extends Activity {
 		Button deletBtn = (Button) findViewById(R.id.deletBtn);		
 		
 		createSaveDialog();	
+		createExportDialog();
 	}
-	
 
 	@Override
 	public boolean dispatchKeyEvent(KeyEvent event) {
@@ -105,7 +107,8 @@ public class MainActivity extends Activity {
 				android.os.Process.killProcess(android.os.Process.myPid());
 				return true;
 			case KeyEvent.KEYCODE_MENU:
-				launchCustomizing();
+				popUpExportMenu();
+				//launchCustomizing();
 				//changeTool();
 				return true;
 			}
@@ -133,27 +136,45 @@ public class MainActivity extends Activity {
 	private void createSaveDialog() {
 		final View innerView = getLayoutInflater().inflate(R.layout.save_menu, null);
 		
-		mDialog = new Dialog(this);
-		mDialog.setContentView(innerView);
+		saveDialog = new Dialog(this);
+		saveDialog.setContentView(innerView);
 		
-		mDialog.setTitle("Save SVG");
-		mDialog.setCancelable(true);
-		mDialog.setCanceledOnTouchOutside(true);
+		saveDialog.setTitle("Save SVG");
+		saveDialog.setCancelable(true);
+		saveDialog.setCanceledOnTouchOutside(true);
 		
-		Button save_okBtn = (Button) mDialog.findViewById(R.id.save_okBtn);
-		Button save_cancleBtn = (Button) mDialog.findViewById(R.id.save_cancleBtn);	
-		save_name = (EditText) mDialog.findViewById(R.id.save_editText);
+		Button save_okBtn = (Button) saveDialog.findViewById(R.id.save_okBtn);
+		Button save_cancleBtn = (Button) saveDialog.findViewById(R.id.save_cancleBtn);	
+		save_name = (EditText) saveDialog.findViewById(R.id.save_editText);
+	}
+	private void createExportDialog() {
+		final View innerView = getLayoutInflater().inflate(R.layout.export_menu, null);
 		
+		exportDialog = new Dialog(this);
+		exportDialog.setContentView(innerView);
+		
+		exportDialog.setTitle("Save PNG");
+		exportDialog.setCancelable(true);
+		exportDialog.setCanceledOnTouchOutside(true);
+		
+		Button export_okBtn = (Button) exportDialog.findViewById(R.id.export_okBtn);
+		Button export_cancleBtn = (Button) exportDialog.findViewById(R.id.export_cancleBtn);	
+		export_name = (EditText) exportDialog.findViewById(R.id.export_editText);
 	}
 
 	public void popUpSubMenu() {
 		dialog_sub.show(getFragmentManager(), "SubMenu");
 	}
 	public void popUpSaveMenu() {		
-		mDialog.show();
+		saveDialog.show();
+	}
+	public void popUpExportMenu() {
+		exportDialog.show();
 	}
 
 	public void OnClick(View v) {
+		String s;
+		
 		switch (v.getId()) {
 		case R.id.copyBtn:
 			touchview.copyObject();
@@ -168,12 +189,21 @@ public class MainActivity extends Activity {
 			touchview.deleteObject();
 			break;
 		case R.id.save_okBtn:
-			String s = save_name.getText().toString();
-			Log.i("debug", s);
-			saveSVG(s);
-			
+			s = save_name.getText().toString();
+			saveSVG(s);	
+			exportDialog.cancel();
+			break;
 		case R.id.save_cancleBtn:
-			mDialog.cancel();
+			saveDialog.cancel();
+			break;
+		case R.id.export_okBtn:
+			s = export_name.getText().toString();
+			exportPNG(s);	
+			exportDialog.cancel();
+			break;
+		case R.id.export_cancleBtn:
+			exportDialog.cancel();
+			break;
 		}
 	}
 
@@ -258,7 +288,7 @@ public class MainActivity extends Activity {
 		customview.DrawScreen();
 	}
 	
-	public void exportPNG() {
+	public void exportPNG(String name) {
 		Bitmap bm = Bitmap.createBitmap(1080, 1920, Bitmap.Config.ARGB_8888);
 		Canvas c = new Canvas(bm);
 		
@@ -273,7 +303,7 @@ public class MainActivity extends Activity {
 		}
 		
 		String path = "/mnt/sdcard/PaliPalette/";
-		String fileName = "PaliPNG.png";			
+		String fileName = name+".png";			
 		
 		OutputStream outStream = null; 
 		File file = new File(path, fileName); 
