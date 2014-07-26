@@ -7,26 +7,29 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import com.yozisunji.palipalette.HelloAccessoryProviderService.HelloAccessoryProviderConnection;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.DisplayMetrics;
-import android.view.HapticFeedbackConstants;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+//import com.samsung.android.example.helloaccessoryprovider.service.HelloAccessoryProviderService;
 //import com.samsung.android.example.helloaccessoryprovider.service.HelloAccessoryProviderService;
 
 public class MainActivity extends Activity {
@@ -38,8 +41,9 @@ public class MainActivity extends Activity {
 	static SVGParser svg;
 	public PaliCanvas customview;
 	PaliTouchCanvas touchview;
-	private Context mContext;
-	static SubMenuDialog dialog;
+		
+	SubMenuDialog dialog_sub;
+
 	public static HelloAccessoryProviderService hs;
 
 	public static int screenHeight;
@@ -47,11 +51,14 @@ public class MainActivity extends Activity {
 	
 	ImageView intro;
 	private Handler mHandler = new Handler();
+		
+	private Dialog mDialog = null;
+	EditText save_name;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -59,6 +66,7 @@ public class MainActivity extends Activity {
 				WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
 				WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
 		setContentView(R.layout.main);
+		
 		
 		
 		DisplayMetrics displaymetrics = new DisplayMetrics();
@@ -80,12 +88,14 @@ public class MainActivity extends Activity {
 
 		hs = new HelloAccessoryProviderService(this);
 
-		dialog = new SubMenuDialog();
+		dialog_sub = new SubMenuDialog();
 		Button copyBtn = (Button) findViewById(R.id.copyBtn);
 		Button pasteBtn = (Button) findViewById(R.id.pasteBtn);
-		Button deletBtn = (Button) findViewById(R.id.deletBtn);
-
+		Button deletBtn = (Button) findViewById(R.id.deletBtn);		
+		
+		createSaveDialog();	
 	}
+	
 
 	@Override
 	public boolean dispatchKeyEvent(KeyEvent event) {
@@ -96,7 +106,6 @@ public class MainActivity extends Activity {
 				return true;
 			case KeyEvent.KEYCODE_MENU:
 				launchCustomizing();
-
 				//changeTool();
 				return true;
 			}
@@ -120,25 +129,51 @@ public class MainActivity extends Activity {
 			super.onStop();
 		}
 	}
+	
+	private void createSaveDialog() {
+		final View innerView = getLayoutInflater().inflate(R.layout.save_menu, null);
+		
+		mDialog = new Dialog(this);
+		mDialog.setContentView(innerView);
+		
+		mDialog.setTitle("Save SVG");
+		mDialog.setCancelable(true);
+		mDialog.setCanceledOnTouchOutside(true);
+		
+		Button save_okBtn = (Button) mDialog.findViewById(R.id.save_okBtn);
+		Button save_cancleBtn = (Button) mDialog.findViewById(R.id.save_cancleBtn);	
+		save_name = (EditText) mDialog.findViewById(R.id.save_editText);
+		
+	}
 
 	public void popUpSubMenu() {
-		dialog.show(getFragmentManager(), "SubMenu");
+		dialog_sub.show(getFragmentManager(), "SubMenu");
+	}
+	public void popUpSaveMenu() {		
+		mDialog.show();
 	}
 
 	public void OnClick(View v) {
 		switch (v.getId()) {
 		case R.id.copyBtn:
 			touchview.copyObject();
-			dialog.dismiss();
+			dialog_sub.dismiss();
 			break;
 		case R.id.pasteBtn:
 			touchview.pasteObject();
-			dialog.dismiss();
+			dialog_sub.dismiss();
 			break;
 		case R.id.deletBtn:
-			dialog.dismiss();
+			dialog_sub.dismiss();
 			touchview.deleteObject();
 			break;
+		case R.id.save_okBtn:
+			String s = save_name.getText().toString();
+			Log.i("debug", s);
+			saveSVG(s);
+			
+		case R.id.save_cancleBtn:
+			mDialog.cancel();
 		}
 	}
 
@@ -169,7 +204,7 @@ public class MainActivity extends Activity {
 		customview.DrawScreen();
 	}
 
-	public void saveSVG() {
+	public void saveSVG(String name) {
 		String SVGTag = "<svg width=\""+screenWidth+"\" height=\""+screenHeight+"\">";
 		PaliObject temp;
 		for (int i = 0; i < SVGParser.Layers.size(); i++) {
@@ -183,7 +218,7 @@ public class MainActivity extends Activity {
 		SVGTag += "</svg>";
 
 		String path = "/mnt/sdcard/PaliPalette/";
-		String fileName = "PaliSVG.svg";
+		String fileName = name+".svg";
 
 		File file_path = new File(path);
 		File file = new File(path + fileName);
