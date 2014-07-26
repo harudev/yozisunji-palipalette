@@ -27,7 +27,7 @@
 ]>
 <resources>
 
-    <application name="HelloAccessoryProvider" >
+    <application name="PaliPalette" >
         <serviceProfile
             id="/system/helloaccessory"
             name="helloaccessory"

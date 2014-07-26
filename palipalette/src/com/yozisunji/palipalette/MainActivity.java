@@ -100,6 +100,12 @@ public class MainActivity extends Activity {
 	}
 
 	@Override
+	public void onResume()
+	{
+		super.onResume();
+		HelloAccessoryProviderService.setActivity(this);
+	}
+	@Override
 	public boolean dispatchKeyEvent(KeyEvent event) {
 		if (event.getAction() == KeyEvent.ACTION_DOWN) {
 			switch (event.getKeyCode()) {
@@ -107,8 +113,8 @@ public class MainActivity extends Activity {
 				android.os.Process.killProcess(android.os.Process.myPid());
 				return true;
 			case KeyEvent.KEYCODE_MENU:
-				popUpExportMenu();
-				//launchCustomizing();
+				//popUpExportMenu();
+				launchCustomizing();
 				//changeTool();
 				return true;
 			}
