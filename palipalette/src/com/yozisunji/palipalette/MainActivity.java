@@ -6,8 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-
-import com.yozisunji.palipalette.HelloAccessoryProviderService.HelloAccessoryProviderConnection;
+import java.util.ArrayList;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -25,10 +24,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 //import com.samsung.android.example.helloaccessoryprovider.service.HelloAccessoryProviderService;
 //import com.samsung.android.example.helloaccessoryprovider.service.HelloAccessoryProviderService;
 
@@ -54,8 +57,10 @@ public class MainActivity extends Activity {
 		
 	private Dialog saveDialog = null;
 	private Dialog exportDialog = null;
+	private Dialog openDialog = null;
 	EditText save_name;
 	EditText export_name;
+	ListView open_list;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -97,6 +102,7 @@ public class MainActivity extends Activity {
 		
 		createSaveDialog();	
 		createExportDialog();
+		createOpenDialog();
 	}
 
 	@Override
@@ -113,8 +119,8 @@ public class MainActivity extends Activity {
 				android.os.Process.killProcess(android.os.Process.myPid());
 				return true;
 			case KeyEvent.KEYCODE_MENU:
-				//popUpExportMenu();
-				launchCustomizing();
+				popUpOpenMenu();
+				//launchCustomizing();
 				//changeTool();
 				return true;
 			}
@@ -167,6 +173,18 @@ public class MainActivity extends Activity {
 		Button export_cancleBtn = (Button) exportDialog.findViewById(R.id.export_cancleBtn);	
 		export_name = (EditText) exportDialog.findViewById(R.id.export_editText);
 	}
+	private void createOpenDialog() {
+		final View innerView = getLayoutInflater().inflate(R.layout.open_menu, null);
+		
+		openDialog = new Dialog(this);
+		openDialog.setContentView(innerView);
+		
+		openDialog.setTitle("Open SVG");
+		openDialog.setCancelable(true);
+		openDialog.setCanceledOnTouchOutside(true);
+			
+		open_list = (ListView) openDialog.findViewById(R.id.open_list);
+	}
 
 	public void popUpSubMenu() {
 		dialog_sub.show(getFragmentManager(), "SubMenu");
@@ -176,6 +194,34 @@ public class MainActivity extends Activity {
 	}
 	public void popUpExportMenu() {
 		exportDialog.show();
+	}
+	public void popUpOpenMenu() {
+		ArrayList<String> openFileName = new ArrayList<String>();
+		String path = "/mnt/sdcard/PaliPalette/";
+		File files = new File(path);
+		final ArrayAdapter<String> fileList = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, openFileName);
+		if(files.listFiles().length>0) {
+			for(File file : files.listFiles()){
+				if(file.getName().toLowerCase().endsWith(".svg")) {
+					openFileName.add(file.getName());
+				}				
+			}
+		}
+		files = null;
+		open_list.setAdapter(fileList);
+		openDialog.show();
+		
+		open_list.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+					long arg3) {
+				// TODO Auto-generated method stub
+				String s = fileList.getItem(arg2);
+				openSVG(s);
+				openDialog.cancel();
+			}
+		});
 	}
 
 	public void OnClick(View v) {
@@ -197,7 +243,7 @@ public class MainActivity extends Activity {
 		case R.id.save_okBtn:
 			s = save_name.getText().toString();
 			saveSVG(s);	
-			exportDialog.cancel();
+			saveDialog.cancel();
 			break;
 		case R.id.save_cancleBtn:
 			saveDialog.cancel();
@@ -274,11 +320,11 @@ public class MainActivity extends Activity {
 
 	}
 	
-	public void openSVG() {
+	public void openSVG(String name) {
 		newActivity();
 		
 		String path = "/mnt/sdcard/PaliPalette/";
-		String fileName = "PaliSVG.svg";
+		String fileName = name;
 		
 		File file = new File(path+fileName);
 
