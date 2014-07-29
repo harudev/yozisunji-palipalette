@@ -29,6 +29,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -44,8 +45,6 @@ public class MainActivity extends Activity {
 	static SVGParser svg;
 	public PaliCanvas customview;
 	PaliTouchCanvas touchview;
-		
-	SubMenuDialog dialog_sub;
 
 	public static HelloAccessoryProviderService hs;
 
@@ -55,6 +54,7 @@ public class MainActivity extends Activity {
 	ImageView intro;
 	private Handler mHandler = new Handler();
 		
+	private Dialog subDialog = null;
 	private Dialog saveDialog = null;
 	private Dialog exportDialog = null;
 	private Dialog openDialog = null;
@@ -72,9 +72,7 @@ public class MainActivity extends Activity {
 		getWindow().setFlags(
 				WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
 				WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
-		setContentView(R.layout.main);
-		
-		
+		setContentView(R.layout.main);		
 		
 		DisplayMetrics displaymetrics = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
@@ -86,7 +84,7 @@ public class MainActivity extends Activity {
 
 		svg = new SVGParser();
 		svg.addLayer();
-		//svg.parse(getResources().openRawResource(R.drawable.test));
+
 		customview = (PaliCanvas) findViewById(R.id.paliCanvas);
 		customview.setBound(800, 600);
 		touchview = (PaliTouchCanvas) findViewById(R.id.paliTouch);
@@ -94,12 +92,8 @@ public class MainActivity extends Activity {
 				(LinearLayout) findViewById(R.id.selectLayout));
 
 		hs = new HelloAccessoryProviderService();
-
-		dialog_sub = new SubMenuDialog();
-		Button copyBtn = (Button) findViewById(R.id.copyBtn);
-		Button pasteBtn = (Button) findViewById(R.id.pasteBtn);
-		Button deletBtn = (Button) findViewById(R.id.deletBtn);		
 		
+		createSubDialog();
 		createSaveDialog();	
 		createExportDialog();
 		createOpenDialog();
@@ -119,30 +113,27 @@ public class MainActivity extends Activity {
 				android.os.Process.killProcess(android.os.Process.myPid());
 				return true;
 			case KeyEvent.KEYCODE_MENU:
-				popUpOpenMenu();
+				//popUpOpenMenu();
 				//launchCustomizing();
-				//changeTool();
+				changeTool();
 				return true;
 			}
 		}
 		return super.dispatchKeyEvent(event);
 	}
 
-	public static class SubMenuDialog extends DialogFragment {
-
-		@Override
-		public Dialog onCreateDialog(Bundle savedInstanceState) {
-			AlertDialog.Builder mBuilder = new AlertDialog.Builder(
-					getActivity());
-			LayoutInflater mLayoutInflater = getActivity().getLayoutInflater();
-			mBuilder.setView(mLayoutInflater.inflate(R.layout.sub_menu, null));
-			return mBuilder.create();
-		}
-
-		@Override
-		public void onStop() {
-			super.onStop();
-		}
+	private void createSubDialog() {
+		final View innerView = getLayoutInflater().inflate(R.layout.sub_menu, null);
+		
+		subDialog = new Dialog(this);
+		subDialog.setContentView(innerView);
+		
+		subDialog.setCancelable(true);
+		subDialog.setCanceledOnTouchOutside(true);		
+		
+		ImageButton copyBtn = (ImageButton) subDialog.findViewById(R.id.copyBtn);
+		ImageButton pasteBtn = (ImageButton) subDialog.findViewById(R.id.pasteBtn);
+		ImageButton deletBtn = (ImageButton) subDialog.findViewById(R.id.deletBtn);	
 	}
 	
 	private void createSaveDialog() {
@@ -187,7 +178,7 @@ public class MainActivity extends Activity {
 	}
 
 	public void popUpSubMenu() {
-		dialog_sub.show(getFragmentManager(), "SubMenu");
+		subDialog.show();
 	}
 	public void popUpSaveMenu() {		
 		saveDialog.show();
@@ -230,14 +221,14 @@ public class MainActivity extends Activity {
 		switch (v.getId()) {
 		case R.id.copyBtn:
 			touchview.copyObject();
-			dialog_sub.dismiss();
+			subDialog.cancel();
 			break;
 		case R.id.pasteBtn:
 			touchview.pasteObject();
-			dialog_sub.dismiss();
+			subDialog.cancel();
 			break;
 		case R.id.deletBtn:
-			dialog_sub.dismiss();
+			subDialog.cancel();
 			touchview.deleteObject();
 			break;
 		case R.id.save_okBtn:
