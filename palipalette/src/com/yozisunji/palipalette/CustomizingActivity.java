@@ -1,5 +1,9 @@
 package com.yozisunji.palipalette;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -41,7 +45,15 @@ public class CustomizingActivity extends Activity {
 		this.screen =(PaliScreen) findViewById(R.id.screen_edit);
 		LinearLayout.LayoutParams lilayout = (LinearLayout.LayoutParams)this.screen.getLayoutParams();
 		
-		this.screen.copy(CustomizingMainActivity.screens.get(0),lilayout.width,lilayout.height);
+		Intent intent = getIntent();
+		JSONArray json;
+		try {
+			json = new JSONArray(intent.getExtras().getString("json"));
+			screen.putJSON(json);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		listview = (ExpandableListView)this.findViewById(R.id.itemmainlistview);
 		listview.setAdapter(new PaliExpandableAdapter(this,CustomizingMainActivity.GearUIList,vl));
@@ -61,8 +73,14 @@ public class CustomizingActivity extends Activity {
 			switch (event.getKeyCode()) {
 			case KeyEvent.KEYCODE_BACK:
 				CustomizingMainActivity.screens.get(0).copy(this.screen, CustomizingMainActivity.screenSize, CustomizingMainActivity.screenSize);
-				//Intent intent = new Intent(this, CustomizingMainActivity.class);
-				//startActivity(intent);
+				Intent intent = new Intent(this, CustomizingMainActivity.class);
+				try {
+					intent.putExtra("json", this.screen.getJSON().toString());
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				startActivity(intent);
 				return super.dispatchKeyEvent(event);
 			case KeyEvent.KEYCODE_MENU:
 				return true;

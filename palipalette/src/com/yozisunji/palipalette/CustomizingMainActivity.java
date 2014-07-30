@@ -25,8 +25,6 @@ import android.widget.LinearLayout;
 import android.widget.GridLayout.Spec;
 
 public class CustomizingMainActivity extends Activity {
-	public static JSONObject json;
-	private JSONArray jarr;
 	public static ArrayList<PaliItemList> GearUIList;
 	public static ArrayList<PaliScreen> screens;
 	public static Integer selectedScreen=0;
@@ -99,55 +97,29 @@ public class CustomizingMainActivity extends Activity {
 		
 		grid = (GridLayout) findViewById(R.id.screensLayout);
 		screens = new ArrayList<PaliScreen>();
+		Intent intent = getIntent();
 		
-		screens.add(new PaliScreen(this));
-		screens.get(0).putItem(Drawing, 0, 0, 0);
-		screens.get(0).putItem(Drawing, 1, 0, 1);
-		screens.get(0).putItem(Select, 1, 1, 0);
-		screens.get(0).putItem(Select, 0, 1, 1);
-		screens.get(0).putItem(Shape, 3, 2, 0);
-		screens.get(0).putItem(Style, 1, 0, 2);
-		Spec row = GridLayout.spec(0, 1); 
-        Spec col = GridLayout.spec(0, 1);
-        GridLayout.LayoutParams gridLayoutParam = new GridLayout.LayoutParams(row, col);
-        gridLayoutParam.leftMargin=this.marginSize.x ;
-        gridLayoutParam.rightMargin=this.marginSize.x ;
-        gridLayoutParam.topMargin=this.marginSize.y;
-        gridLayoutParam.bottomMargin=this.marginSize.y;
-		grid.addView(screens.get(0),gridLayoutParam);
-		screens.get(0).setSize(screenSize,screenSize);
-		screens.get(0).setBackgroundColor(BackgroundColor);
+		if(intent.getExtras().containsKey("json_screen"))
+		{
+			try {
+				JSONObject json = new JSONObject(intent.getExtras().getString("json_screen"));
+				this.ParseJSON(json);
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		else if(intent.getExtras().containsKey("json"))
+		{
+			try {
+				JSONArray json = new JSONArray(intent.getExtras().getString("json_screen"));
+				this.screens.get(0).putJSON(json);
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		
-		screens.add(new PaliScreen(this));
-		screens.get(1).putItem(Style, 0, 0, 0);
-		row = GridLayout.spec(0, 1); 
-        col = GridLayout.spec(1, 1);
-        gridLayoutParam = new GridLayout.LayoutParams(row, col);
-        gridLayoutParam.leftMargin=this.marginSize.x ;
-        gridLayoutParam.rightMargin=this.marginSize.x ;
-        gridLayoutParam.topMargin=this.marginSize.y;
-        gridLayoutParam.bottomMargin=this.marginSize.y;
-		grid.addView(screens.get(1),gridLayoutParam);
-		screens.get(1).setSize(screenSize,screenSize);
-		screens.get(1).setBackgroundColor(BackgroundColor);
-		
-		screens.add(new PaliScreen(this));
-		screens.get(2).putItem(History, 0, 0, 0);
-		screens.get(2).putItem(History, 1, 0, 1);
-		screens.get(2).putItem(Config, 1, 0, 2);
-		screens.get(2).putItem(File, 2, 1, 0);
-		screens.get(2).putItem(Config, 0, 1, 1);
-		row = GridLayout.spec(0, 1); 
-        col = GridLayout.spec(2, 1);
-        gridLayoutParam = new GridLayout.LayoutParams(row, col);
-        gridLayoutParam.leftMargin=this.marginSize.x ;
-        gridLayoutParam.rightMargin=this.marginSize.x ;
-        gridLayoutParam.topMargin=this.marginSize.y;
-        gridLayoutParam.bottomMargin=this.marginSize.y;
-		grid.addView(screens.get(2),gridLayoutParam);
-		screens.get(2).setSize(screenSize,screenSize);
-		screens.get(2).setBackgroundColor(BackgroundColor);
-			
 		
 		if(screens.size()<8)
 		{
@@ -158,8 +130,9 @@ public class CustomizingMainActivity extends Activity {
 			addScreen.putItem(Common,1,1,1);
 			addX = 3;
 			addY = 0;
-			row = GridLayout.spec(addY, 1); 
-	        col = GridLayout.spec(addX, 1);
+			Spec row = GridLayout.spec(addY, 1); 
+	        Spec col = GridLayout.spec(addX, 1);
+	        GridLayout.LayoutParams gridLayoutParam;
 	        gridLayoutParam = new GridLayout.LayoutParams(row, col);
 	        gridLayoutParam.leftMargin=this.marginSize.x ;
 	        gridLayoutParam.rightMargin=this.marginSize.x ;
@@ -175,28 +148,35 @@ public class CustomizingMainActivity extends Activity {
 		grid.setLayoutParams(gridParm);		
 	}
 	
-	private void ParseJSON()
+	private void ParseJSON(JSONObject json)
 	{
 		try {
-			JSONArray obj;
-			JSONObject item;
+			JSONArray jarr, screen;
 			jarr = json.getJSONArray("customize");
 			
 			for( int i = 0 ; i<jarr.length() ; i++ )
 			{
 				screens.add(new PaliScreen(this));
-				obj = jarr.getJSONArray(i);
+				screen = jarr.getJSONArray(i);
 				screens.add(new PaliScreen(mContext));
-				for( int j = 0; j < obj.length(); j++)
-				{
-					item = obj.getJSONObject(j);
-					screens.get(i).putItem(item.getInt("Function"), item.getInt("Num"), item.getInt("PosX"), item.getInt("PosY"));
-				}
+				screens.get(i).putJSON(screen);
 			}
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	private JSONObject PackJSON() throws JSONException
+	{
+		JSONObject json = new JSONObject();
+		JSONArray jarr = new JSONArray();
+		for(int i=0 ; i<screens.size(); i++)
+		{
+			jarr.put(screens.get(i).getJSON());
+		}
+		json.put("Customize", jarr);
+		return json;
 	}
 
 	private void InitializeGearUIList()
@@ -316,7 +296,20 @@ public class CustomizingMainActivity extends Activity {
 		}
 		else if(screenN==7)
 		{
-				
+			screens.add(new PaliScreen(mContext));
+		       
+	        Spec row = GridLayout.spec(addY, 1); 
+	        Spec col = GridLayout.spec(addX, 1);
+	        GridLayout.LayoutParams  gridLayoutParam = new GridLayout.LayoutParams(row, col);
+	        gridLayoutParam.leftMargin=this.marginSize.x ;
+	        gridLayoutParam.rightMargin=this.marginSize.x ;
+	        gridLayoutParam.topMargin=this.marginSize.y;
+	        gridLayoutParam.bottomMargin=this.marginSize.y;
+			grid.addView(screens.get(screenN),gridLayoutParam);
+			screens.get(screenN).setSize(screenSize,screenSize);
+			screens.get(screenN).setBackgroundColor(BackgroundColor);
+			
+			addScreen.setVisibility(View.GONE);
 			
 		}
 	}
@@ -324,13 +317,27 @@ public class CustomizingMainActivity extends Activity {
 	@Override
 	public boolean dispatchKeyEvent(KeyEvent event) {
 		if (event.getAction() == KeyEvent.ACTION_DOWN) {
+			Intent intent;
 			switch (event.getKeyCode()) {
 			case KeyEvent.KEYCODE_BACK:
-				
+				intent = new Intent(this, MainActivity.class);
+				try {
+					intent.putExtra("json", this.PackJSON().toString());
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				startActivity(intent);
 				//android.os.Process.killProcess(android.os.Process.myPid());
 				return super.dispatchKeyEvent(event);
 			case KeyEvent.KEYCODE_MENU:
-				Intent intent = new Intent(this, CustomizingActivity.class);
+				intent = new Intent(this, CustomizingActivity.class);
+				try {
+					intent.putExtra("json_screen", this.screens.get(0).getJSON().toString());
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				startActivity(intent);
 				return true;
 			}

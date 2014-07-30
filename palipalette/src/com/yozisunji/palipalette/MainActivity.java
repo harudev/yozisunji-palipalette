@@ -8,6 +8,9 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -93,6 +96,17 @@ public class MainActivity extends Activity {
 
 		hs = new HelloAccessoryProviderService();
 		
+		Intent intent = getIntent();
+		if(intent.getExtras().containsKey("json_screen"))
+		{
+			try {
+				hs.send(new JSONObject(intent.getExtras().getString("json_screen")));
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
 		createSubDialog();
 		createSaveDialog();	
 		createExportDialog();
@@ -103,6 +117,16 @@ public class MainActivity extends Activity {
 	public void onResume()
 	{
 		super.onResume();
+		Intent intent = getIntent();
+		if(intent.getExtras().containsKey("json_screen"))
+		{
+			try {
+				hs.send(new JSONObject(intent.getExtras().getString("json_screen")));
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		HelloAccessoryProviderService.setActivity(this);
 	}
 	@Override
@@ -113,9 +137,7 @@ public class MainActivity extends Activity {
 				android.os.Process.killProcess(android.os.Process.myPid());
 				return true;
 			case KeyEvent.KEYCODE_MENU:
-				//popUpOpenMenu();
-				//launchCustomizing();
-				changeTool();
+				popUpOpenMenu();
 				return true;
 			}
 		}
@@ -250,8 +272,9 @@ public class MainActivity extends Activity {
 		}
 	}
 
-	public void launchCustomizing() {
+	public void launchCustomizing(JSONObject json) {
 		Intent intent = new Intent(this, CustomizingMainActivity.class);
+		intent.putExtra("json_screens", json.toString());
 		startActivity(intent);
 	}
 
