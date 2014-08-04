@@ -1,11 +1,12 @@
 package com.yozisunji.palipalette;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.LightingColorFilter;
-import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.util.Log;
@@ -24,23 +25,28 @@ public class PaliBrush extends PaliObject {
 		this.rect = new RectF(100, 100, 500, 500);
 	}
 
-	PaliBrush(String tag, Bitmap bitmap, RectF rect) {
+	PaliBrush(Bitmap bitmap, List<Float> brushX, List<Float> brushY, List<Float> brushP, RectF rect) {
 		f_paint = new Paint();
 		f_paint.setAntiAlias(true);
-		svgtag = tag;
+
+		this.type = PaliCanvas.TOOL_BRUSH;
 		this.bitmap = bitmap;
+		this.brushX = new ArrayList<Float>(brushX);
+		this.brushY = new ArrayList<Float>(brushY);
+		this.brushP = new ArrayList<Float>(brushP);
 		this.rect = rect;
 		filter = new LightingColorFilter(PaliCanvas.fillColor, 1);
+		tagSet();
 	}
 	
-	PaliBrush(String tag, Bitmap bitmap, RectF rect, float theta, Paint f_p, ColorFilter filter) {
+	PaliBrush(Bitmap bitmap, RectF rect, float theta, Paint f_p, ColorFilter filter) {
 		f_paint = new Paint(f_p);		
-		svgtag = tag;
 		this.bitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true);
 		this.rect = new RectF(rect);
 		this.theta = theta;
 		this.filter = filter;
 		this.Move(PaliTouchCanvas.translateX, PaliTouchCanvas.translateY);
+		tagSet();
 	}
 
 	PaliBrush(String tag, Bitmap bitmap, RectF rect, int scolor, int fcolor) {
@@ -70,6 +76,11 @@ public class PaliBrush extends PaliObject {
 
 	public void Move(float dx, float dy) {
 		this.rect.left += dx; this.rect.right += dx; this.rect.top += dy; this.rect.bottom += dy;		
+		for(int i=0; i<brushX.size(); i++) {
+			brushX.set(i, brushX.get(i)+dx);
+			brushY.set(i, brushY.get(i)+dy);
+		}
+		tagSet();
 	}
 
 	public void Scale(float dx, float dy) {

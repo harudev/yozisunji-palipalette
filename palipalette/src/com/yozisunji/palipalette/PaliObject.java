@@ -1,5 +1,8 @@
 package com.yozisunji.palipalette;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.ColorFilter;
@@ -27,6 +30,13 @@ public abstract class PaliObject {
 
 	boolean rotFlag = false;
 	RectF rotRect;
+
+	List<Float> movingX = new ArrayList<Float>();
+	List<Float> movingY = new ArrayList<Float>();
+
+	List<Float> brushX = new ArrayList<Float>();
+	List<Float> brushY = new ArrayList<Float>();
+	List<Float> brushP = new ArrayList<Float>();
 
 	PaliObject() {
 		f_paint = new Paint();
@@ -100,6 +110,27 @@ public abstract class PaliObject {
 				2);
 
 		switch (this.type) {
+		case PaliCanvas.TOOL_PENCIL:
+			String movement = "";
+			for (int i = 0; i < movingX.size(); i++) {
+				movement += " " + movingX.get(i) + " " + movingY.get(i);
+			}
+			svgtag = "<path fill=\"none\" stroke=\"#" + strokeColor
+					+ "\" stroke-width=\"" + s_paint.getStrokeWidth()
+					+ "\" stroke-opacity=\"" + s_paint.getAlpha() + "\" d=\"M"
+					+ movement + "\" transform=\"rotate(" + theta + "," + x
+					+ "," + y + ")\" />";
+			break;
+		case PaliCanvas.TOOL_BRUSH:
+			svgtag = "<g>";
+			for (int i = 0; i < brushX.size(); i++) {
+				svgtag += "<circle cx=\"" + brushX.get(i) + "\" cy=\""
+						+ brushY.get(i) + "\" r=\"" + 30 + "\" fill=\"#"
+						+ fillColor + "\" fill-opacity=\"" + brushP.get(i)
+						+ "\" />";
+			}
+			svgtag += "</g>";
+			break;
 		case PaliCanvas.TOOL_CIRCLE:
 			svgtag = "<circle cx=\"" + x + "\" cy=\"" + y + "\" r=\"" + r
 					+ "\" stroke=\"#" + strokeColor + "\" stroke-width=\""
@@ -139,13 +170,11 @@ public abstract class PaliObject {
 					+ s_paint.getStrokeWidth() + "\" fill=\"#" + fillColor
 					+ "\" stroke-opacity=\"" + s_paint.getAlpha()
 					+ "\" fill-opacity=\"" + f_paint.getAlpha() + "\" "
-					+ "d=\"M" + (x-r) + " " + (y-r*0.25f)
-					+ " L " + (x+r) + " " + (y-r*0.25f)
-					+ " " + (x-r*0.75f) + " " + (y+r) 
-					+ " " + x + " " + (y-r) 
-					+ " " + (x+r*0.75f) + " " + (y+r) 
-					+ " " + (x-r) + " " + (y-r*0.25f) 
-					+ "\" />";
+					+ "d=\"M" + (x - r) + " " + (y - r * 0.25f) + " L "
+					+ (x + r) + " " + (y - r * 0.25f) + " " + (x - r * 0.75f)
+					+ " " + (y + r) + " " + x + " " + (y - r) + " "
+					+ (x + r * 0.75f) + " " + (y + r) + " " + (x - r) + " "
+					+ (y - r * 0.25f) + "\" />";
 			break;
 		}
 	}

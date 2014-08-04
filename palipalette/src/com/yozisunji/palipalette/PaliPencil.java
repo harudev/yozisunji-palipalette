@@ -1,11 +1,13 @@
 package com.yozisunji.palipalette;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
-import android.util.Log;
 
 public class PaliPencil extends PaliObject {
 
@@ -13,16 +15,15 @@ public class PaliPencil extends PaliObject {
 	{
 		super(tag,scolor,fcolor);
 	}
-	PaliPencil(String tag, Path path)
+	PaliPencil(Path path)
 	{
 		s_paint = new Paint();
 		s_paint.setAntiAlias(true);
 		s_paint.setColor(PaliCanvas.strokeColor);
-		svgtag = tag;
 		this.path = path;
 		this.rect = new RectF(100, 100, 500, 500);
 	}
-	PaliPencil(String tag, Path path, RectF rect)
+	PaliPencil(Path path, List<Float> movingX, List<Float> movingY, RectF rect)
 	{
 		s_paint = new Paint();
 		s_paint.setAntiAlias(true);
@@ -30,13 +31,16 @@ public class PaliPencil extends PaliObject {
 		s_paint.setStyle(Paint.Style.STROKE);
 		s_paint.setAlpha(PaliCanvas.alpha);
 		s_paint.setStrokeWidth(PaliCanvas.strokeWidth);
-		svgtag = tag;
+		
+		this.type = PaliCanvas.TOOL_PENCIL;
 		this.path = path;
+		this.movingX = new ArrayList<Float>(movingX);
+		this.movingY = new ArrayList<Float>(movingY);
 		this.rect = rect;
+		tagSet();
 	}
-	PaliPencil(String tag, Path path, RectF rect, float theta, Paint s_p)
+	PaliPencil(Path path, RectF rect, float theta, Paint s_p)
 	{
-		svgtag = tag;
 		this.path = new Path(path);
 		this.rect = new RectF(rect);
 		this.theta = theta;
@@ -79,8 +83,13 @@ public class PaliPencil extends PaliObject {
 	{
 		Matrix moveMatrix = new Matrix();
 		moveMatrix.setTranslate(dx,dy);
-		this.path.transform(moveMatrix); 
+		this.path.transform(moveMatrix);
 		this.rect.left += dx; this.rect.right += dx; this.rect.top += dy; this.rect.bottom += dy;
+		for(int i=0; i<movingX.size(); i++) {
+			movingX.set(i, movingX.get(i)+dx);
+			movingY.set(i, movingY.get(i)+dy);
+		}
+		tagSet();
 	
 	}
 	public void Scale(float dx, float dy)
@@ -96,6 +105,5 @@ public class PaliPencil extends PaliObject {
 		
 		this.rect.right = this.rect.left + ((this.rect.right - this.rect.left) * width);
 		this.rect.bottom = this.rect.top + ((this.rect.bottom - this.rect.top) * height);
-
 	}
 }

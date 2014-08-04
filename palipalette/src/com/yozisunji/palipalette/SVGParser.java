@@ -381,8 +381,10 @@ class SVGHandler extends DefaultHandler {
         	}
         } else if (localName.equals("path")) {
         	Path path = doPath(getStringAttr("d", atts));
+        	String moving = getStringAttr("d", atts);
+        	Log.i("debug", moving);
         	if (path != null) {
-        		SVGParser.Layers.get(SVGParser.Layers.size()-1).objs.add(new PaliPencil("",path));
+        		SVGParser.Layers.get(SVGParser.Layers.size()-1).objs.add(new PaliPencil(path));
         		PaliCanvas.currentObject++;
         	}
         }

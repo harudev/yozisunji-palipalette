@@ -43,8 +43,9 @@ public class PaliTouchCanvas extends View {
 	List<Float> brushX = new ArrayList<Float>();
 	List<Float> brushY = new ArrayList<Float>();
 	List<Float> brushP = new ArrayList<Float>();
+	List<Float> movingX = new ArrayList<Float>();
+	List<Float> movingY = new ArrayList<Float>();
 	float brushR = 0;
-	String movement = "";
 	String html = "";
 	String fillColor;
 	String strokeColor;
@@ -76,7 +77,7 @@ public class PaliTouchCanvas extends View {
 	long time;
 
 	public static Context mContext;
-	
+
 	public int style;
 	Handler handler = new Handler();
 
@@ -175,6 +176,8 @@ public class PaliTouchCanvas extends View {
 				maxX = downX;
 				maxY = downY;
 				pencilPath.moveTo(downX, downY);
+				movingX.add(downX);
+				movingY.add(downY);
 				tempObj = new PaliFreeDraw();
 				((PaliFreeDraw) tempObj).getPath().moveTo(downX, downY);
 				break;
@@ -294,7 +297,8 @@ public class PaliTouchCanvas extends View {
 					minY = min(minY, moveY);
 					maxX = max(maxX, moveX);
 					maxY = max(maxY, moveY);
-					movement = movement + " " + moveX + " " + moveY;
+					movingX.add(moveX);
+					movingY.add(moveY);
 					pencilPath.lineTo(moveX, moveY);
 					((PaliFreeDraw) tempObj).getPath().lineTo(moveX, moveY);
 					break;
@@ -312,6 +316,7 @@ public class PaliTouchCanvas extends View {
 					html += "<circle cx=\"" + moveX + "\" cy=\"" + moveY
 							+ "\" r=\"" + brushR + "\" fill=\"#" + fillColor
 							+ "\" fill-opacity=\"" + pressure + "\" />";
+							
 					((PaliFreeDraw) tempObj).getPath().lineTo(moveX, moveY);
 					break;
 				/*
@@ -322,7 +327,10 @@ public class PaliTouchCanvas extends View {
 				 * ((PaliBrush)tempObj).getPath().lineTo(moveX,moveY); break;
 				 */
 				case PaliCanvas.TOOL_CIRCLE:
-					tempObj = new PaliCircle(downX, downY,(float) Math.sqrt((float) Math.pow(moveX - downX, 2) + (float) Math.pow(moveY - downY, 2)));
+					tempObj = new PaliCircle(downX, downY,
+							(float) Math.sqrt((float) Math
+									.pow(moveX - downX, 2)
+									+ (float) Math.pow(moveY - downY, 2)));
 					break;
 				case PaliCanvas.TOOL_ELLIPSE:
 					left = Math.min(downX, moveX);
@@ -339,11 +347,13 @@ public class PaliTouchCanvas extends View {
 					tempObj = new PaliRectangle(left, top, right, bottom);
 					break;
 				case PaliCanvas.TOOL_STAR:
-					tempObj = new PaliStar(downX, downY,(float) Math.sqrt((float) Math.pow(moveX - downX, 2) + (float) Math.pow(moveY - downY, 2)));
+					tempObj = new PaliStar(downX, downY,
+							(float) Math.sqrt((float) Math
+									.pow(moveX - downX, 2)
+									+ (float) Math.pow(moveY - downY, 2)));
 				}
 			}
 
-			// this.DrawScreen();
 			this.invalidate();
 			return true;
 
@@ -407,7 +417,8 @@ public class PaliTouchCanvas extends View {
 												j));
 										rect_left = min(rect_left,
 												temp.rotRect.left);
-										rect_top = min(rect_top, temp.rotRect.top);
+										rect_top = min(rect_top,
+												temp.rotRect.top);
 										rect_right = max(rect_right,
 												temp.rotRect.right);
 										rect_bottom = max(rect_bottom,
@@ -447,19 +458,19 @@ public class PaliTouchCanvas extends View {
 					maxX = max(maxX, upX);
 					maxY = max(maxY, upY);
 					rect = new RectF(minX, minY, maxX, maxY);
-					opacity = PaliCanvas.alpha / 255.0f;
-					html = "<path fill=\"none\" stroke=\"#" + strokeColor
-							+ "\" stroke-width=\"" + strokeWidth
-							+ "\" stroke-opacity=\"" + opacity + "\" d=\"M"
-							+ downX + " " + downY + "" + movement + "\" />";
+					opacity = PaliCanvas.alpha / 255.0f;					 
+					 
 					SVGParser.Layers.get(canvas.currentLayer).objs
-							.add(new PaliPencil(html, pencilPath, rect));
+							.add(new PaliPencil(pencilPath, movingX, movingY,
+									rect));
 					tempObj = null;
 					pencilPath = null;
-					movement = "";
 					PaliCanvas.currentObject++;
 					PaliCanvas.drawMode = false;
 					canvas.DrawScreen();
+					
+					movingX.clear();
+					movingY.clear();
 				} else
 					this.prepinch = false;
 				break;
@@ -488,7 +499,7 @@ public class PaliTouchCanvas extends View {
 					}
 
 					SVGParser.Layers.get(PaliCanvas.currentLayer).objs
-							.add(new PaliBrush(html, bm, rect));
+							.add(new PaliBrush(bm, brushX, brushY, brushP, rect));
 
 					tempObj = null;
 					bm = null;
@@ -525,7 +536,7 @@ public class PaliTouchCanvas extends View {
 							+ (float) Math.pow(upY - downY, 2));
 					cx = downX;
 					cy = downY;
-					
+
 					SVGParser.Layers.get(PaliCanvas.currentLayer).objs
 							.add(new PaliCircle(cx, cy, r));
 					tempObj = null;
@@ -552,15 +563,14 @@ public class PaliTouchCanvas extends View {
 					this.prepinch = false;
 				break;
 			case PaliCanvas.TOOL_RECTANGLE:
-				if (!this.prepinch) {										
+				if (!this.prepinch) {
 					left = Math.min(downX, upX);
 					top = Math.min(downY, upY);
 					right = Math.max(downX, upX);
 					bottom = Math.max(downY, upY);
-					
+
 					SVGParser.Layers.get(canvas.currentLayer).objs
-							.add(new PaliRectangle(left, top, right,
-									bottom));
+							.add(new PaliRectangle(left, top, right, bottom));
 					tempObj = null;
 					PaliCanvas.currentObject++;
 					PaliCanvas.drawMode = false;
@@ -568,13 +578,13 @@ public class PaliTouchCanvas extends View {
 				} else
 					this.prepinch = false;
 				break;
-			case PaliCanvas.TOOL_STAR: 
+			case PaliCanvas.TOOL_STAR:
 				if (!this.prepinch) {
 					r = (float) Math.sqrt((float) Math.pow(upX - downX, 2)
 							+ (float) Math.pow(upY - downY, 2));
 					cx = downX;
 					cy = downY;
-					
+
 					SVGParser.Layers.get(PaliCanvas.currentLayer).objs
 							.add(new PaliStar(cx, cy, r));
 					tempObj = null;
@@ -650,34 +660,39 @@ public class PaliTouchCanvas extends View {
 			switch (obj.type) {
 			case PaliCanvas.TOOL_PENCIL:
 				SVGParser.Layers.get(PaliCanvas.currentLayer).objs
-						.add(new PaliPencil(obj.svgtag, obj.path, obj.rect,
-								obj.theta, obj.s_paint));
+						.add(new PaliPencil(obj.path, obj.rect, obj.theta,
+								obj.s_paint));
 				break;
 			case PaliCanvas.TOOL_BRUSH:
 				SVGParser.Layers.get(PaliCanvas.currentLayer).objs
-						.add(new PaliBrush(obj.svgtag, obj.bitmap, obj.rect,
-								obj.theta, obj.f_paint, obj.filter));
+						.add(new PaliBrush(obj.bitmap, obj.rect, obj.theta,
+								obj.f_paint, obj.filter));
 				break;
 			case PaliCanvas.TOOL_CIRCLE:
 				SVGParser.Layers.get(PaliCanvas.currentLayer).objs
-						.add(new PaliCircle(obj.svgtag, obj.x + translateX,
-								obj.y + translateY, obj.r, obj.theta,
-								obj.s_paint, obj.f_paint));
+						.add(new PaliCircle(obj.x + translateX, obj.y
+								+ translateY, obj.r, obj.theta, obj.s_paint,
+								obj.f_paint));
 				break;
 			case PaliCanvas.TOOL_ELLIPSE:
 				SVGParser.Layers.get(PaliCanvas.currentLayer).objs
-						.add(new PaliEllipse(obj.svgtag, obj.left + translateX,
-								obj.top + translateY, obj.right + translateX,
+						.add(new PaliEllipse(obj.left + translateX, obj.top
+								+ translateY, obj.right + translateX,
 								obj.bottom + translateY, obj.theta,
 								obj.s_paint, obj.f_paint));
 				break;
 			case PaliCanvas.TOOL_RECTANGLE:
 				SVGParser.Layers.get(PaliCanvas.currentLayer).objs
-						.add(new PaliRectangle(obj.svgtag, obj.left
-								+ translateX, obj.top + translateY, obj.right
-								+ translateX, obj.bottom + translateY,
-								obj.theta, obj.s_paint, obj.f_paint));
+						.add(new PaliRectangle(obj.left + translateX, obj.top
+								+ translateY, obj.right + translateX,
+								obj.bottom + translateY, obj.theta,
+								obj.s_paint, obj.f_paint));
 				break;
+			case PaliCanvas.TOOL_STAR:
+				SVGParser.Layers.get(PaliCanvas.currentLayer).objs
+						.add(new PaliStar(obj.x + translateX, obj.y
+								+ translateY, obj.r, obj.theta, obj.s_paint,
+								obj.f_paint));
 			}
 		}
 		PaliCanvas.currentObject++;
@@ -703,7 +718,7 @@ public class PaliTouchCanvas extends View {
 		this.style = style;
 		handler.post(changeStyleThread);
 	}
-	
+
 	Runnable changeStyleThread = new Runnable() {
 
 		@Override

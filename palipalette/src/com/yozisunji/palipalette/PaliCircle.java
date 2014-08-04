@@ -56,9 +56,8 @@ public class PaliCircle extends PaliObject {
 		this.rect = new RectF(x-r, y-r, x+r, y+r);
 	}
 	
-	PaliCircle(String tag, float x, float y, float r, float theta, Paint s_p, Paint f_p)
+	PaliCircle(float x, float y, float r, float theta, Paint s_p, Paint f_p)
 	{   
-		svgtag=tag;
 		this.x = x;
 		this.y = y;
 		this.r = r;
@@ -66,6 +65,7 @@ public class PaliCircle extends PaliObject {
 		this.theta = theta;
 		s_paint = new Paint(s_p);       
         f_paint = new Paint(f_p);
+        tagSet();
 	}
 		
 	PaliCircle(String tag, float x, float y, float r, int scolor, int fcolor)

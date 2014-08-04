@@ -58,9 +58,8 @@ public class PaliStar extends PaliObject {
 		this.rect = new RectF(x-r, y-r, x+r, y+r);
 	}
 	
-	PaliStar(String tag, float x, float y, float r, float theta, Paint s_p, Paint f_p)
+	PaliStar(float x, float y, float r, float theta, Paint s_p, Paint f_p)
 	{   
-		svgtag=tag;
 		this.x = x;
 		this.y = y;
 		this.r = r;
@@ -68,6 +67,8 @@ public class PaliStar extends PaliObject {
 		this.theta = theta;
 		s_paint = new Paint(s_p);       
         f_paint = new Paint(f_p);
+        pathSet();
+        tagSet();
 	}
 		
 	PaliStar(String tag, float x, float y, float r, int scolor, int fcolor)

@@ -87,6 +87,7 @@ public class MainActivity extends Activity {
 
                 svg = new SVGParser();
                 svg.addLayer();
+                //svg.parse(getResources().openRawResource(R.drawable.test));
 
                 customview = (PaliCanvas) findViewById(R.id.paliCanvas);
                 customview.setBound(800, 600);

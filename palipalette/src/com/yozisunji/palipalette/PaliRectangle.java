@@ -70,9 +70,8 @@ public class PaliRectangle extends PaliObject {;
 		this.rect = new RectF(left, top, right, bottom);
 	}
 	
-	PaliRectangle(String tag, float left, float top, float right, float bottom, float theta, Paint s_p, Paint f_p)
+	PaliRectangle(float left, float top, float right, float bottom, float theta, Paint s_p, Paint f_p)
 	{       
-		svgtag = tag;
 		this.left = left;
 		this.top = top;
 		this.right = right;
@@ -81,6 +80,7 @@ public class PaliRectangle extends PaliObject {;
 		this.rect = new RectF(left, top, right, bottom);
 		s_paint = new Paint(s_p);       
         f_paint = new Paint(f_p);
+        tagSet();
 	}
 	
 	PaliRectangle(String tag, float left, float top, float right, float bottom, int scolor, int fcolor)
