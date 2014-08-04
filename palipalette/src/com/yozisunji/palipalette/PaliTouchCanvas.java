@@ -337,7 +337,9 @@ public class PaliTouchCanvas extends View {
 					right = Math.max(downX, moveX);
 					bottom = Math.max(downY, moveY);
 					tempObj = new PaliRectangle(left, top, right, bottom);
-
+					break;
+				case PaliCanvas.TOOL_STAR:
+					tempObj = new PaliStar(downX, downY,(float) Math.sqrt((float) Math.pow(moveX - downX, 2) + (float) Math.pow(moveY - downY, 2)));
 				}
 			}
 
@@ -559,6 +561,22 @@ public class PaliTouchCanvas extends View {
 					SVGParser.Layers.get(canvas.currentLayer).objs
 							.add(new PaliRectangle(left, top, right,
 									bottom));
+					tempObj = null;
+					PaliCanvas.currentObject++;
+					PaliCanvas.drawMode = false;
+					canvas.DrawScreen();
+				} else
+					this.prepinch = false;
+				break;
+			case PaliCanvas.TOOL_STAR: 
+				if (!this.prepinch) {
+					r = (float) Math.sqrt((float) Math.pow(upX - downX, 2)
+							+ (float) Math.pow(upY - downY, 2));
+					cx = downX;
+					cy = downY;
+					
+					SVGParser.Layers.get(PaliCanvas.currentLayer).objs
+							.add(new PaliStar(cx, cy, r));
 					tempObj = null;
 					PaliCanvas.currentObject++;
 					PaliCanvas.drawMode = false;

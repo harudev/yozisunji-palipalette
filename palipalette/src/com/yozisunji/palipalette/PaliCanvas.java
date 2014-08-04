@@ -21,7 +21,8 @@ public class PaliCanvas extends SurfaceView implements SurfaceHolder.Callback {
 	public static final int TOOL_CIRCLE=3;
 	public static final int TOOL_ELLIPSE=4;
 	public static final int TOOL_RECTANGLE=5;
-	public static final int TOOL_COMMON=6;
+	public static final int TOOL_STAR=6;
+	public static final int TOOL_COMMON=7;
 	
 	public static int strokeColor;
 	public static int fillColor;
