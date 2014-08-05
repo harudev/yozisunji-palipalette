@@ -96,13 +96,6 @@ public class MainActivity extends Activity {
 				(LinearLayout) findViewById(R.id.selectLayout));
 
 		hs = new HelloAccessoryProviderService();
-		/*
-		 * Intent intent = getIntent();
-		 * if(intent.getExtras().containsKey("json_screen")) { try { hs.send(new
-		 * JSONObject(intent.getExtras().getString("json_screen"))); } catch
-		 * (JSONException e) { // TODO Auto-generated catch block
-		 * e.printStackTrace(); } }
-		 */
 		createSubDialog();
 		createSaveDialog();
 		createExportDialog();
@@ -110,16 +103,34 @@ public class MainActivity extends Activity {
 	}
 
 	@Override
+	protected void onNewIntent(Intent intent)
+	{
+		super.onNewIntent(intent);
+		
+		if(null!= intent)
+		{
+			setIntent(intent);
+		}
+	}
+	@Override
 	public void onResume() {
 		super.onResume();
-		/*
-		 * Intent intent = getIntent();
-		 * if(intent.getExtras().containsKey("json_screen")) { try { hs.send(new
-		 * JSONObject(intent.getExtras().getString("json_screen"))); } catch
-		 * (JSONException e) { // TODO Auto-generated catch block
-		 * e.printStackTrace(); } }
-		 */
 		HelloAccessoryProviderService.setActivity(this);
+		
+		 if(this.getIntent()==null)
+			 return;
+		
+		 Intent intent = getIntent();
+		 if(intent.getExtras().containsKey("json_screen"))
+		 {
+			 try {
+				 hs.send(new JSONObject(intent.getExtras().getString("json_screen")));
+				 }
+			 catch (JSONException e)
+			 { // TODO Auto-generated catch block
+				 e.printStackTrace();
+			 }
+		 }
 	}
 
 	@Override

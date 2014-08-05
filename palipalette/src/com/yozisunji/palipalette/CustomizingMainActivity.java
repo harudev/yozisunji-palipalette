@@ -26,6 +26,7 @@ import android.widget.GridLayout.Spec;
 
 public class CustomizingMainActivity extends Activity {
 	public static ArrayList<PaliItemList> GearUIList;
+	public ArrayList<PaliItemList> GearUIViewList;
 	public static ArrayList<PaliScreen> screens;
 	public static Integer selectedScreen=0;
 	public PaliScreen addScreen;
@@ -97,8 +98,6 @@ public class CustomizingMainActivity extends Activity {
 		
 		grid = (GridLayout) findViewById(R.id.screensLayout);
 		screens = new ArrayList<PaliScreen>();
-		
-		
 	}
 	
 	@Override
@@ -114,6 +113,7 @@ public class CustomizingMainActivity extends Activity {
 	@Override
 	public void onResume()
 	{
+		InitializeGearViewUIList();
 		this.grid.removeAllViews();
 		this.screens.clear();
 		
@@ -204,7 +204,7 @@ public class CustomizingMainActivity extends Activity {
 	{
 		
 		GearUIList = new ArrayList<PaliItemList>();
-
+		
 		GearUIList.add(new PaliItemList("Select Object"));
 		GearUIList.add(new PaliItemList("Drawing Tool"));
 		GearUIList.add(new PaliItemList("Shape"));
@@ -263,18 +263,65 @@ public class CustomizingMainActivity extends Activity {
 		// Screen Add Icon
 		GearUIList.get(Common).putItem(Common, 1, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.custom_screen_add);
 		
-		/*
-		 public static final int Select 	= 0;
-	public static final int Drawing	= 1;
-	public static final int Shape	= 2;
-	public static final int Style	= 3;
-	public static final int History	= 4;
-	public static final int File	= 5;
-	public static final int Config	= 6;
-	public static final int Common	= 7;
-		 */
 	}
 
+	
+	private void InitializeGearViewUIList()
+	{
+		GearUIViewList = new ArrayList<PaliItemList>();
+				
+		GearUIViewList.add(new PaliItemList("Select Object"));
+		GearUIViewList.add(new PaliItemList("Drawing Tool"));
+		GearUIViewList.add(new PaliItemList("Shape"));
+		GearUIViewList.add(new PaliItemList("Style"));
+		GearUIViewList.add(new PaliItemList("History"));
+		GearUIViewList.add(new PaliItemList("File"));
+		GearUIViewList.add(new PaliItemList("Config"));
+		
+		// Pick Object Icon
+		GearUIViewList.get(Select).putItem(Select, 0, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_pickobject_icon, "Pick Object");
+		// Layer Icon
+		GearUIViewList.get(Select).putItem(Select, 1, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_layer_icon,"Layer");
+		
+		// Pencil Icon
+		GearUIViewList.get(Drawing).putItem(Drawing, 0, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_pencil_icon,"Pencil");
+		// Brush Icon
+		GearUIViewList.get(Drawing).putItem(Drawing, 1, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_brush_icon,"Brush");
+		
+		// Circle Icon
+		GearUIViewList.get(Shape).putItem(Shape, 0, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_circle_icon,"Circle");
+		// Ellipse Icon
+		GearUIViewList.get(Shape).putItem(Shape, 1, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_ellipse_icon,"Ellipse");
+		// Rectangle Icon
+		GearUIViewList.get(Shape).putItem(Shape, 2, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_rect_icon,"Rectangle");
+		// Change Icon
+		GearUIViewList.get(Shape).putItem(Shape, 3, PaliItem.TYPE_WIDGET, 2, 1, R.drawable.tool_shape_2x1_widget,"Shape Change");
+		
+		// Stroke Color Icon
+		GearUIViewList.get(Style).putItem(Style, 0, PaliItem.TYPE_WIDGET, 3, 3, R.drawable.tool_color_3x3_widget, "Color");
+		// Fill Color Icon
+		GearUIViewList.get(Style).putItem(Style, 1, PaliItem.TYPE_WIDGET, 1, 3, R.drawable.tool_stroke_1x3_widget, "Stroke Width");
+		
+		
+		// New File Icon
+		GearUIViewList.get(File).putItem(File, 0, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_new_icon, "New File");
+		// Open File Icon
+		GearUIViewList.get(File).putItem(File, 1, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_open_icon, "Open File");
+		// Save File Icon
+		GearUIViewList.get(File).putItem(File, 2, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_save_icon, "Save File");
+		// Export File Icon
+		GearUIViewList.get(File).putItem(File, 3, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_export_icon, "Export File");
+		
+		
+		// Undo Icon
+		GearUIViewList.get(History).putItem(History, 0, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_undo_icon, "Undo");
+		// Redo Icon
+		GearUIViewList.get(History).putItem(History, 1, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_redo_icon, "Redo");
+		
+		
+		GearUIViewList.get(Config).putItem(Config, 0, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_allmenu_icon, "All Menu");
+		GearUIViewList.get(Config).putItem(Config, 1, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_config_icon, "Configuration");
+	}
 	
 	private void addScreen()
 	{
