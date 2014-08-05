@@ -221,18 +221,30 @@ public class PaliTouchCanvas extends View {
 
 			newDist = spacing(e);
 			oldDist = spacing(e);
+			this.prepinch = false;
 			this.pinch = true;
 			return true;
 		case MotionEvent.ACTION_POINTER_UP:
-			this.pinch = false;
-			this.zoom = false;
-			this.prepinch = true;
+			
+			//this.pinch = false;
+			//this.zoom = false;
+			//this.prepinch = false;
+			
 			return true;
 		case MotionEvent.ACTION_MOVE:
-			if (pinch == true) {
+			if (pinch) {
 				selector.stopTimeout();
-				if (directing(e, Point0, Point1)) {
-					zoom = false;
+				if(!prepinch)
+				{
+					if (directing(e, Point0, Point1))
+						zoom = false;
+					else
+						zoom = true;
+					
+					prepinch = true;
+				}
+				
+				if(!zoom) {
 					float dx = e.getX(0) - Point0.fx;
 					float dy = e.getY(0) - Point0.fy;
 
@@ -263,11 +275,11 @@ public class PaliTouchCanvas extends View {
 					if (newDist - oldDist > 20) { // zoom in
 						oldDist = newDist;
 						if (PaliCanvas.zoom < 1000)
-							PaliCanvas.zoom *= 1.1;
+							PaliCanvas.zoom *= 1.04;
 					} else if (oldDist - newDist > 20) { // zoom out
 						oldDist = newDist;
 						if (PaliCanvas.zoom > 1)
-							PaliCanvas.zoom /= 1.1;
+							PaliCanvas.zoom /= 1.04;
 					}
 					if (selected) {
 						rect = selector.getRect();
@@ -315,13 +327,6 @@ public class PaliTouchCanvas extends View {
 							
 					((PaliFreeDraw) tempObj).getPath().lineTo(moveX, moveY);
 					break;
-				/*
-				 * minX=min(minX,moveX); minY=min(minY,moveY);
-				 * maxX=max(maxX,moveX); maxY=max(maxY,moveY); movement =
-				 * movement + " " + moveX + " " + moveY; brushPath.lineTo(moveX,
-				 * moveY); brushPath.addCircle(moveX, moveY, 30, Direction.CW);
-				 * ((PaliBrush)tempObj).getPath().lineTo(moveX,moveY); break;
-				 */
 				case PaliCanvas.TOOL_CIRCLE:
 					tempObj = new PaliCircle(downX, downY,
 							(float) Math.sqrt((float) Math
@@ -355,19 +360,27 @@ public class PaliTouchCanvas extends View {
 
 		case MotionEvent.ACTION_UP:
 
-			upX = (e.getX() - PaliCanvas.canvasX) / PaliCanvas.zoom;
-			upY = (e.getY() - PaliCanvas.canvasY) / PaliCanvas.zoom;
-			float rect_left = 999999,
-			rect_right = 0,
-			rect_top = 999999,
-			rect_bottom = 0;
-			PaliObject temp;
-
-			switch (PaliCanvas.selectedTool) {
-			case PaliCanvas.TOOL_PICKOBJECT:
-				selector.stopTimeout();
-				if (this.selected) {
-					if (!this.prepinch) {
+			if(pinch)
+			{
+				this.pinch = false;
+				this.prepinch = false;
+				this.zoom = false;
+				return true;
+			}
+			else
+			{
+				upX = (e.getX() - PaliCanvas.canvasX) / PaliCanvas.zoom;
+				upY = (e.getY() - PaliCanvas.canvasY) / PaliCanvas.zoom;
+				float rect_left = 999999,
+				rect_right = 0,
+				rect_top = 999999,
+				rect_bottom = 0;
+				PaliObject temp;
+	
+				switch (PaliCanvas.selectedTool) {
+				case PaliCanvas.TOOL_PICKOBJECT:
+					selector.stopTimeout();
+					if (this.selected) {
 						if (selector.getRect().contains(upX, upY)) {
 							return true;
 						} else {
@@ -376,11 +389,9 @@ public class PaliTouchCanvas extends View {
 							selector.setVisibility(View.GONE);
 						}
 					}
-				}
-				if (!prepinch) {
 					this.selected = false;
 					selector.selObjArr.clear();
-
+	
 					if (upX == downX && upY == downY) {
 						for (int i = SVGParser.Layers.size() - 1; i >= 0; i--) {
 							if (SVGParser.Layers.get(i).visibility == true) {
@@ -391,18 +402,18 @@ public class PaliTouchCanvas extends View {
 										selector.selObjArr.add(new PaliPoint(i,
 												j));
 										rect = temp.rotRect;
-
+	
 										this.selected = true;
 										break;
 									}
 								}
 							}
 						}
-
+	
 					} else {
 						this.rect = new RectF(min(downX, upX), min(downY, upY),
 								max(downX, upX), max(downY, upY));
-
+	
 						for (int i = SVGParser.Layers.size() - 1; i >= 0; i--) {
 							if (SVGParser.Layers.get(i).visibility == true) {
 								for (int j = SVGParser.Layers.get(i).objs
@@ -429,7 +440,7 @@ public class PaliTouchCanvas extends View {
 							}
 						}
 					}
-
+	
 					if (selected) {
 						selector.setRect(rect);
 						LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) selector
@@ -441,14 +452,12 @@ public class PaliTouchCanvas extends View {
 						selector.setLayoutParams(params);
 						selector.setVisibility(View.VISIBLE);
 					}
-				}
-				if (!selected && !this.prepinch) {
-					selector.setVisibility(android.view.View.GONE);
-				}
-				this.prepinch = false;
-				return true;
-			case PaliCanvas.TOOL_PENCIL:
-				if (!this.prepinch) {
+					if (!selected) {
+						selector.setVisibility(android.view.View.GONE);
+					}
+					this.prepinch = false;
+					return true;
+				case PaliCanvas.TOOL_PENCIL:
 					minX = min(minX, upX);
 					minY = min(minY, upY);
 					maxX = max(maxX, upX);
@@ -467,135 +476,108 @@ public class PaliTouchCanvas extends View {
 					
 					movingX.clear();
 					movingY.clear();
-				} else
-					this.prepinch = false;
-				break;
-			case PaliCanvas.TOOL_BRUSH:
-				if (!this.prepinch) {
+					break;
+				case PaliCanvas.TOOL_BRUSH:
 					html += "</g>";
-
+	
 					minX = min(minX, upX);
 					minY = min(minY, upY);
 					maxX = max(maxX, upX);
 					maxY = max(maxY, upY);
 					rect = new RectF(minX - brushR, minY - brushR, maxX
 							+ brushR, maxY + brushR);
-
+	
 					bm = Bitmap.createBitmap((int) (rect.right),
 							(int) (rect.bottom), Bitmap.Config.ARGB_8888);
 					c = new Canvas(bm);
 					p = new Paint();
 					p.setColor(Color.WHITE);
 					p.setStyle(Paint.Style.FILL);
-
+	
 					for (int i = 0; i < brushX.size(); i++) {
 						p.setAlpha((int) (PaliCanvas.alpha * brushP.get(i)));
 						c.drawCircle(brushX.get(i) - rect.left, brushY.get(i)
 								- rect.top, brushR, p);
 					}
-
+	
 					SVGParser.Layers.get(PaliCanvas.currentLayer).objs
 							.add(new PaliBrush(bm, brushX, brushY, brushP, rect));
-
+	
 					tempObj = null;
 					bm = null;
 					c = null;
 					PaliCanvas.currentObject++;
 					PaliCanvas.drawMode = false;
 					canvas.DrawScreen();
-
+	
 					brushX.clear();
 					brushY.clear();
 					brushP.clear();
-
-				} else
-					this.prepinch = false;
-				break;
-
-			/*
-			 * minX=min(minX,upX); minY=min(minY,upY); maxX=max(maxX,upX);
-			 * maxY=max(maxY,upY); rect = new RectF(minX, minY, maxX, maxY);
-			 * 
-			 * html =
-			 * "<path marker-mid=\"url(#marker_circle)\" fill=\"none\" stroke=\"#"
-			 * +
-			 * strokeColor+"\" stroke-width=\""+strokeWidth+"\" d=\"M"+downX+" "
-			 * +downY+""+movement+"\" />";
-			 * SVGParser.Layers.get(canvas.currentLayer).objs.add(new
-			 * PaliBrush(html, brushPath, rect)); tempObj=null; brushPath =
-			 * null; PaliCanvas.currentObject++; PaliCanvas.drawMode = false;
-			 * canvas.DrawScreen(); break;
-			 */
-			case PaliCanvas.TOOL_CIRCLE:
-
-				PaliCanvas.history.Do(SVGParser.Layers);
-				if (!this.prepinch) {
+	
+					break;
+	
+				case PaliCanvas.TOOL_CIRCLE:
+	
+					PaliCanvas.history.Do(SVGParser.Layers);
+					
 					r = (float) Math.sqrt((float) Math.pow(upX - downX, 2)
 							+ (float) Math.pow(upY - downY, 2));
 					cx = downX;
 					cy = downY;
-
+	
 					SVGParser.Layers.get(PaliCanvas.currentLayer).objs
 							.add(new PaliCircle(cx, cy, r));
 					tempObj = null;
 					PaliCanvas.currentObject++;
 					PaliCanvas.drawMode = false;
 					canvas.DrawScreen();
-				} else
-					this.prepinch = false;
-				break;
-			case PaliCanvas.TOOL_ELLIPSE:
-				if (!this.prepinch) {
+					break;
+				case PaliCanvas.TOOL_ELLIPSE:
+					
 					left = Math.min(downX, upX);
 					top = Math.min(downY, upY);
 					right = Math.max(downX, upX);
 					bottom = Math.max(downY, upY);
-
+	
 					SVGParser.Layers.get(canvas.currentLayer).objs
 							.add(new PaliEllipse(left, top, right, bottom));
 					tempObj = null;
 					PaliCanvas.currentObject++;
 					PaliCanvas.drawMode = false;
 					canvas.DrawScreen();
-				} else
-					this.prepinch = false;
-				break;
-			case PaliCanvas.TOOL_RECTANGLE:
-				if (!this.prepinch) {
+					
+					break;
+				case PaliCanvas.TOOL_RECTANGLE:
 					left = Math.min(downX, upX);
 					top = Math.min(downY, upY);
 					right = Math.max(downX, upX);
 					bottom = Math.max(downY, upY);
-
+	
 					SVGParser.Layers.get(canvas.currentLayer).objs
 							.add(new PaliRectangle(left, top, right, bottom));
 					tempObj = null;
 					PaliCanvas.currentObject++;
 					PaliCanvas.drawMode = false;
 					canvas.DrawScreen();
-				} else
-					this.prepinch = false;
-				break;
-			case PaliCanvas.TOOL_STAR:
-				if (!this.prepinch) {
+					break;
+				case PaliCanvas.TOOL_STAR:
 					r = (float) Math.sqrt((float) Math.pow(upX - downX, 2)
 							+ (float) Math.pow(upY - downY, 2));
 					cx = downX;
 					cy = downY;
-
+	
 					SVGParser.Layers.get(PaliCanvas.currentLayer).objs
 							.add(new PaliStar(cx, cy, r));
 					tempObj = null;
 					PaliCanvas.currentObject++;
 					PaliCanvas.drawMode = false;
 					canvas.DrawScreen();
-				} else
-					this.prepinch = false;
-				break;
+					break;
+				}
+				this.invalidate();
+	
+				return true;
 			}
-			this.invalidate();
-
-			return true;
 		}
 		return false;
 	}
