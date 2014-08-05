@@ -88,7 +88,7 @@ public class MainActivity extends Activity {
 
 		svg = new SVGParser();
 		svg.addLayer();
-		// svg.parse(getResources().openRawResource(R.drawable.test));
+		//svg.parse(getResources().openRawResource(R.drawable.test));
 		customview = (PaliCanvas) findViewById(R.id.paliCanvas);
 		customview.setBound(800, 600);
 		touchview = (PaliTouchCanvas) findViewById(R.id.paliTouch);
@@ -117,7 +117,7 @@ public class MainActivity extends Activity {
 		super.onResume();
 		HelloAccessoryProviderService.setActivity(this);
 		
-		 if(this.getIntent()==null)
+		 if(this.getIntent().getExtras()==null)
 			 return;
 		
 		 Intent intent = getIntent();
@@ -140,32 +140,36 @@ public class MainActivity extends Activity {
 			case KeyEvent.KEYCODE_BACK:
 				android.os.Process.killProcess(android.os.Process.myPid());
 				return true;
-			case KeyEvent.KEYCODE_MENU:				
-				PaliCanvas.selectedTool ++; if(PaliCanvas.selectedTool >
-				PaliCanvas.TOOL_COMMON) { PaliCanvas.selectedTool = 0; }
-				
+			case KeyEvent.KEYCODE_MENU:		
+				/*
+				PaliCanvas.selectedTool++;
+				if (PaliCanvas.selectedTool > PaliCanvas.TOOL_COMMON) {
+					PaliCanvas.selectedTool = 0;
+				}
+				*/
+
 				JSONObject json;
 				try {
-					String str = "{\"customize\":	[ " +
-							"[{\"Function\":0, \"Num\":0,\"PosX\":0,\"PosY\":0}," +
-							"{\"Function\":1, \"Num\":0,\"PosX\":0,\"PosY\":2},"  +
-							"{\"Function\":2, \"Num\":0,\"PosX\":1,\"PosY\":1}],"  +
-							"[{\"Function\":2, \"Num\":1,\"PosX\":0,\"PosY\":0},"  +
-							"{\"Function\":4, \"Num\":0,\"PosX\":1,\"PosY\":2},"  +
-							"{\"Function\":5, \"Num\":0,\"PosX\":2,\"PosY\":0}],"  +
-							"[{\"Function\":0, \"Num\":0,\"PosX\":0,\"PosY\":0},"  +
-							"{\"Function\":1, \"Num\":0,\"PosX\":0,\"PosY\":2},"  +
-							"{\"Function\":2, \"Num\":0,\"PosX\":1,\"PosY\":1}]"  +
-						"]}";
+					String str = "{\"customize\":	[ "
+							+ "[{\"Function\":0, \"Num\":0,\"PosX\":0,\"PosY\":0},"
+							+ "{\"Function\":1, \"Num\":0,\"PosX\":0,\"PosY\":2},"
+							+ "{\"Function\":2, \"Num\":0,\"PosX\":1,\"PosY\":1}],"
+							+ "[{\"Function\":2, \"Num\":1,\"PosX\":0,\"PosY\":0},"
+							+ "{\"Function\":4, \"Num\":0,\"PosX\":1,\"PosY\":2},"
+							+ "{\"Function\":5, \"Num\":0,\"PosX\":2,\"PosY\":0}],"
+							+ "[{\"Function\":0, \"Num\":0,\"PosX\":0,\"PosY\":0},"
+							+ "{\"Function\":1, \"Num\":0,\"PosX\":0,\"PosY\":2},"
+							+ "{\"Function\":2, \"Num\":0,\"PosX\":1,\"PosY\":1}]"
+							+ "]}";
 					json = new JSONObject(str);
-				
 
-                	launchCustomizing(json);
+					launchCustomizing(json);
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				return true;				
+				return true;
+				
 			}
 		}
 		return super.dispatchKeyEvent(event);
@@ -344,25 +348,25 @@ public class MainActivity extends Activity {
 		customview.DrawScreen();
 	}
 
-	public void saveSVG(final String name)
-	{
-		final ProgressDialog saveDialog = ProgressDialog.show(MainActivity.this, "Save", "saving...", true);
+	public void saveSVG(final String name) {
+		final ProgressDialog saveDialog = ProgressDialog.show(
+				MainActivity.this, "Save", "saving...", true);
 
 		final Handler mHandler = new Handler() {
 			public void handleMessage(Message msg) {
 				super.handleMessage(msg);
 				saveDialog.dismiss();
-				
-				if(msg.what == 0) {
-					Toast.makeText(ctx, "save success", Toast.LENGTH_SHORT).show();
-				}
-				else {
+
+				if (msg.what == 0) {
+					Toast.makeText(ctx, "save success", Toast.LENGTH_SHORT)
+							.show();
+				} else {
 					Toast.makeText(ctx, "save fail", Toast.LENGTH_SHORT).show();
 				}
-				
+
 			}
 		};
-		
+
 		new Thread() {
 			public void run() {
 				super.run();
@@ -406,23 +410,24 @@ public class MainActivity extends Activity {
 	}
 
 	public void openSVG(final String name) {
-		final ProgressDialog openDialog = ProgressDialog.show(MainActivity.this, "Open", "opening...", true);
+		final ProgressDialog openDialog = ProgressDialog.show(
+				MainActivity.this, "Open", "opening...", true);
 
 		final Handler mHandler = new Handler() {
 			public void handleMessage(Message msg) {
 				super.handleMessage(msg);
 				openDialog.dismiss();
-				
-				if(msg.what == 0) {
-					Toast.makeText(ctx, "open success", Toast.LENGTH_SHORT).show();
-				}
-				else {
+
+				if (msg.what == 0) {
+					Toast.makeText(ctx, "open success", Toast.LENGTH_SHORT)
+							.show();
+				} else {
 					Toast.makeText(ctx, "open fail", Toast.LENGTH_SHORT).show();
 				}
-				
+
 			}
 		};
-		
+
 		new Thread() {
 			public void run() {
 				super.run();
@@ -447,31 +452,34 @@ public class MainActivity extends Activity {
 				mHandler.sendEmptyMessage(0);
 			}
 		}.start();
-		
+
 	}
 
 	public void exportPNG(final String name) {
-		final ProgressDialog exportDialog = ProgressDialog.show(MainActivity.this, "Export", "exporting...", true);
-		
+		final ProgressDialog exportDialog = ProgressDialog.show(
+				MainActivity.this, "Export", "exporting...", true);
+
 		final Handler mHandler = new Handler() {
 			public void handleMessage(Message msg) {
 				super.handleMessage(msg);
 				exportDialog.dismiss();
-				
-				if(msg.what == 0) {
-					Toast.makeText(ctx, "export success", Toast.LENGTH_SHORT).show();
+
+				if (msg.what == 0) {
+					Toast.makeText(ctx, "export success", Toast.LENGTH_SHORT)
+							.show();
+				} else {
+					Toast.makeText(ctx, "export fail", Toast.LENGTH_SHORT)
+							.show();
 				}
-				else {
-					Toast.makeText(ctx, "export fail", Toast.LENGTH_SHORT).show();
-				}
-				
+
 			}
 		};
-		
+
 		new Thread() {
 			public void run() {
 				super.run();
-				Bitmap bm = Bitmap.createBitmap(1080, 1920, Bitmap.Config.ARGB_8888);
+				Bitmap bm = Bitmap.createBitmap(1080, 1920,
+						Bitmap.Config.ARGB_8888);
 				Canvas c = new Canvas(bm);
 
 				PaliObject temp;
@@ -512,7 +520,7 @@ public class MainActivity extends Activity {
 				mHandler.sendEmptyMessage(0);
 			}
 		}.start();
-		
+
 	}
 
 	private class IntroRunnable implements Runnable {

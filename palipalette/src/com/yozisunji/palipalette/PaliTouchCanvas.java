@@ -312,10 +312,6 @@ public class PaliTouchCanvas extends View {
 					brushY.add(moveY);
 					pressure = e.getPressure();
 					brushP.add(pressure);
-
-					html += "<circle cx=\"" + moveX + "\" cy=\"" + moveY
-							+ "\" r=\"" + brushR + "\" fill=\"#" + fillColor
-							+ "\" fill-opacity=\"" + pressure + "\" />";
 							
 					((PaliFreeDraw) tempObj).getPath().lineTo(moveX, moveY);
 					break;

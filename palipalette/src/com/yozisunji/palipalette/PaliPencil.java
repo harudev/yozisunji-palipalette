@@ -15,14 +15,6 @@ public class PaliPencil extends PaliObject {
 	{
 		super(tag,scolor,fcolor);
 	}
-	PaliPencil(Path path)
-	{
-		s_paint = new Paint();
-		s_paint.setAntiAlias(true);
-		s_paint.setColor(PaliCanvas.strokeColor);
-		this.path = path;
-		this.rect = new RectF(100, 100, 500, 500);
-	}
 	PaliPencil(Path path, List<Float> movingX, List<Float> movingY, RectF rect)
 	{
 		s_paint = new Paint();
@@ -39,6 +31,16 @@ public class PaliPencil extends PaliObject {
 		this.rect = rect;
 		tagSet();
 	}
+	PaliPencil(Path path, int strokeColor, float strokeWidth, float strokeOpacity)
+	{
+		s_paint = new Paint();
+		s_paint.setAntiAlias(true);
+		s_paint.setColor(strokeColor);
+		s_paint.setStrokeWidth(strokeWidth);
+		s_paint.setAlpha((int)strokeOpacity);
+		this.path = path;
+		this.rect = new RectF(100, 100, 500, 500);
+	}
 	PaliPencil(Path path, RectF rect, float theta, Paint s_p)
 	{
 		this.path = new Path(path);
@@ -46,18 +48,6 @@ public class PaliPencil extends PaliObject {
 		this.theta = theta;
 		s_paint = new Paint(s_p);
 		this.Move(PaliTouchCanvas.translateX, PaliTouchCanvas.translateY);
-	}
-	PaliPencil(String tag, Path path, RectF rect, int scolor)
-	{
-		svgtag = tag;		
-		this.path = path;		
-		s_paint = new Paint();        
-        s_paint.setAntiAlias(true);        
-        s_paint.setStyle(Paint.Style.STROKE);
-        s_paint.setColor(PaliCanvas.strokeColor);
-        s_paint.setAlpha(PaliCanvas.alpha);
-        s_paint.setStrokeWidth(PaliCanvas.strokeWidth);
-		this.rect = rect;
 	}
 
 	PaliPencil()

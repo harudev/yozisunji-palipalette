@@ -14,6 +14,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
+import android.graphics.Color;
 import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.RectF;
@@ -352,13 +353,24 @@ class SVGHandler extends DefaultHandler {
         } else if (localName.equals("g") && SVGParser.Layers.size()>1) {
         	SVGParser.Layers.add(new PaliLayer());
         	SVGParser.Layersize+=1;
-        	PaliCanvas.currentObject = -1;
+        	PaliCanvas.currentObject = -1; 
         } else if (localName.equals("circle")) {
             Float centerX = getFloatAttr("cx", atts);
             Float centerY = getFloatAttr("cy", atts);
             Float radius = getFloatAttr("r", atts);
+            Integer strokeColor = getHexAttr("stroke", atts);
+            if(strokeColor==null) strokeColor = Color.BLACK;
+            Integer fillColor = getHexAttr("fill", atts);
+            if(fillColor==null) fillColor = Color.RED;
+            Float strokeWidth = getFloatAttr("stroke-width", atts);
+            if(strokeWidth==null) strokeWidth = 0f;
+            Float strokeOpacity = getFloatAttr("stroke-opacity", atts);
+            if(strokeOpacity==null) strokeOpacity = 1f;
+            Float fillOpacity = getFloatAttr("fill-opacity", atts);
+            if(fillOpacity==null) fillOpacity = 1f;           
+            
             if (centerX != null && centerY != null && radius != null) {
-            	SVGParser.Layers.get(PaliCanvas.currentLayer).objs.add(new PaliCircle(centerX,centerY,radius));
+            	SVGParser.Layers.get(PaliCanvas.currentLayer).objs.add(new PaliCircle(centerX,centerY,radius,strokeColor,fillColor,strokeWidth,strokeOpacity*255,fillOpacity*255));
             	PaliCanvas.currentObject++;
             }
         } else if (localName.equals("ellipse")) {
@@ -366,8 +378,19 @@ class SVGHandler extends DefaultHandler {
             Float centerY = getFloatAttr("cy", atts);
             Float radiusX = getFloatAttr("rx", atts);
             Float radiusY = getFloatAttr("ry", atts);
+            Integer strokeColor = getHexAttr("stroke", atts);
+            if(strokeColor==null) strokeColor = Color.BLACK;
+            Integer fillColor = getHexAttr("fill", atts);
+            if(fillColor==null) fillColor = Color.RED;
+            Float strokeWidth = getFloatAttr("stroke-width", atts);
+            if(strokeWidth==null) strokeWidth = 0f;
+            Float strokeOpacity = getFloatAttr("stroke-opacity", atts);
+            if(strokeOpacity==null) strokeOpacity = 1f;
+            Float fillOpacity = getFloatAttr("fill-opacity", atts);
+            if(fillOpacity==null) fillOpacity = 1f; 
+            
             if (centerX != null && centerY != null && radiusX != null && radiusY != null) {
-            	SVGParser.Layers.get(PaliCanvas.currentLayer).objs.add(new PaliEllipse(centerX-radiusX,centerY-radiusY,centerX+radiusX,centerY+radiusY));
+            	SVGParser.Layers.get(PaliCanvas.currentLayer).objs.add(new PaliEllipse(centerX-radiusX,centerY-radiusY,centerX+radiusX,centerY+radiusY,strokeColor,fillColor,strokeWidth,strokeOpacity*255,fillOpacity*255));
             	PaliCanvas.currentObject++;
             }
         } else if (localName.equals("rect")) {
@@ -375,16 +398,35 @@ class SVGHandler extends DefaultHandler {
         	Float centerY = getFloatAttr("y", atts);
         	Float width = getFloatAttr("width", atts);
         	Float height = getFloatAttr("height", atts);
+        	Integer strokeColor = getHexAttr("stroke", atts);
+            if(strokeColor==null) strokeColor = Color.BLACK;
+            Integer fillColor = getHexAttr("fill", atts);
+            if(fillColor==null) fillColor = Color.RED;
+            Float strokeWidth = getFloatAttr("stroke-width", atts);
+            if(strokeWidth==null) strokeWidth = 0f;
+            Float strokeOpacity = getFloatAttr("stroke-opacity", atts);
+            if(strokeOpacity==null) strokeOpacity = 1f;
+            Float fillOpacity = getFloatAttr("fill-opacity", atts);
+            if(fillOpacity==null) fillOpacity = 1f; 
+            
         	if (centerX != null && centerY != null && width!= null && height != null) {
-        		SVGParser.Layers.get(PaliCanvas.currentLayer).objs.add(new PaliRectangle(centerX,centerY,centerX + width,centerY + height));
+        		SVGParser.Layers.get(PaliCanvas.currentLayer).objs.add(new PaliRectangle(centerX,centerY,centerX + width,centerY + height, strokeColor,fillColor,strokeWidth,strokeOpacity*255,fillOpacity*255));
         		PaliCanvas.currentObject++;
         	}
         } else if (localName.equals("path")) {
         	Path path = doPath(getStringAttr("d", atts));
         	String moving = getStringAttr("d", atts);
         	Log.i("debug", moving);
+        	
+        	Integer strokeColor = getHexAttr("stroke", atts);
+            if(strokeColor==null) strokeColor = Color.BLACK;
+            Float strokeWidth = getFloatAttr("stroke-width", atts);
+            if(strokeWidth==null) strokeWidth = 0f;
+            Float strokeOpacity = getFloatAttr("stroke-opacity", atts);
+            if(strokeOpacity==null) strokeOpacity = 1f;
+            
         	if (path != null) {
-        		SVGParser.Layers.get(SVGParser.Layers.size()-1).objs.add(new PaliPencil(path));
+        		SVGParser.Layers.get(SVGParser.Layers.size()-1).objs.add(new PaliPencil(path, strokeColor, strokeWidth, strokeOpacity*255));
         		PaliCanvas.currentObject++;
         	}
         }

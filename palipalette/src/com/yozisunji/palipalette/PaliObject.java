@@ -106,8 +106,9 @@ public abstract class PaliObject {
 		float height = 0;
 
 		String fillColor = Integer.toHexString(f_paint.getColor()).substring(2);
-		String strokeColor = Integer.toHexString(s_paint.getColor()).substring(
-				2);
+		String strokeColor = Integer.toHexString(s_paint.getColor()).substring(2);
+		float fillOpacity = (float)f_paint.getAlpha()/255;
+		float strokeOpacity = (float)s_paint.getAlpha()/255;
 
 		switch (this.type) {
 		case PaliCanvas.TOOL_PENCIL:
@@ -117,7 +118,7 @@ public abstract class PaliObject {
 			}
 			svgtag = "<path fill=\"none\" stroke=\"#" + strokeColor
 					+ "\" stroke-width=\"" + s_paint.getStrokeWidth()
-					+ "\" stroke-opacity=\"" + s_paint.getAlpha() + "\" d=\"M"
+					+ "\" stroke-opacity=\"" + strokeOpacity + "\" d=\"M"
 					+ movement + "\" transform=\"rotate(" + theta + "," + x
 					+ "," + y + ")\" />";
 			break;
@@ -135,8 +136,8 @@ public abstract class PaliObject {
 			svgtag = "<circle cx=\"" + x + "\" cy=\"" + y + "\" r=\"" + r
 					+ "\" stroke=\"#" + strokeColor + "\" stroke-width=\""
 					+ s_paint.getStrokeWidth() + "\" fill=\"#" + fillColor
-					+ "\" stroke-opacity=\"" + s_paint.getAlpha()
-					+ "\" fill-opacity=\"" + f_paint.getAlpha() + "\" />";
+					+ "\" stroke-opacity=\"" + strokeOpacity
+					+ "\" fill-opacity=\"" + fillOpacity + "\" />";
 			break;
 		case PaliCanvas.TOOL_ELLIPSE:
 			width = this.right - this.left;
@@ -147,8 +148,8 @@ public abstract class PaliObject {
 					+ width / 2 + "\" ry=\"" + height / 2 + "\" stroke=\"#"
 					+ strokeColor + "\" stroke-width=\""
 					+ s_paint.getStrokeWidth() + "\" fill=\"#" + fillColor
-					+ "\" stroke-opacity=\"" + s_paint.getAlpha()
-					+ "\" fill-opacity=\"" + f_paint.getAlpha()
+					+ "\" stroke-opacity=\"" + strokeOpacity
+					+ "\" fill-opacity=\"" + fillOpacity
 					+ "\" transform=\"rotate(" + theta + "," + x + "," + y
 					+ ")\" />";
 			break;
@@ -161,15 +162,15 @@ public abstract class PaliObject {
 					+ "\" height=\"" + height + "\" stroke=\"#" + strokeColor
 					+ "\" stroke-width=\"" + s_paint.getStrokeWidth()
 					+ "\" fill=\"#" + fillColor + "\" stroke-opacity=\""
-					+ s_paint.getAlpha() + "\" fill-opacity=\""
-					+ f_paint.getAlpha() + "\" transform=\"rotate(" + theta
+					+ strokeOpacity + "\" fill-opacity=\""
+					+ fillOpacity + "\" transform=\"rotate(" + theta
 					+ "," + (x + width / 2) + "," + (y + height / 2) + ")\" />";
 			break;
 		case PaliCanvas.TOOL_STAR:
 			svgtag = "<path stroke=\"#" + strokeColor + "\" stroke-width=\""
 					+ s_paint.getStrokeWidth() + "\" fill=\"#" + fillColor
-					+ "\" stroke-opacity=\"" + s_paint.getAlpha()
-					+ "\" fill-opacity=\"" + f_paint.getAlpha() + "\" "
+					+ "\" stroke-opacity=\"" + strokeOpacity
+					+ "\" fill-opacity=\"" + fillOpacity + "\" "
 					+ "d=\"M" + (x - r) + " " + (y - r * 0.25f) + " L "
 					+ (x + r) + " " + (y - r * 0.25f) + " " + (x - r * 0.75f)
 					+ " " + (y + r) + " " + x + " " + (y - r) + " "

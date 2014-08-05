@@ -7,17 +7,13 @@ import android.graphics.RectF;
 
 public class PaliRectangle extends PaliObject {;
 
-	PaliRectangle (RectF r)
+	PaliRectangle(RectF r)
 	{
 		this.rect = new RectF(r);
 		this.left = rect.left;
 		this.top = rect.top;
 		this.right = rect.right;
 		this.bottom = rect.bottom;
-	}
-	PaliRectangle(String tag, int scolor, int fcolor)
-	{
-		super(tag,scolor,fcolor);
 	}
 	
 	PaliRectangle(float left, float top, float right, float bottom)
@@ -44,31 +40,32 @@ public class PaliRectangle extends PaliObject {;
 		this.rect = new RectF(left, top, right, bottom);
 		
 		tagSet();
-	}
-	
-	PaliRectangle(String tag, float left, float top, float right, float bottom)
+	}	
+	PaliRectangle(float left, float top, float right, float bottom, int strokeColor, int fillColor, float strokeWidth, float strokeOpacity, float fillOpacity)
 	{
 		s_paint = new Paint();        
         s_paint.setAntiAlias(true);        
         s_paint.setStyle(Paint.Style.STROKE);
-        s_paint.setColor(PaliCanvas.strokeColor);
-        s_paint.setAlpha(PaliCanvas.alpha);
-        s_paint.setStrokeWidth(PaliCanvas.strokeWidth);
+        s_paint.setColor(strokeColor);
+        s_paint.setAlpha((int)strokeOpacity);
+        s_paint.setStrokeWidth(strokeWidth);
         
         f_paint = new Paint();        
         f_paint.setAntiAlias(true);
         f_paint.setStyle(Paint.Style.FILL);
-        f_paint.setColor(PaliCanvas.fillColor);
-        f_paint.setAlpha(PaliCanvas.alpha);  
+        f_paint.setColor(fillColor);
+        f_paint.setAlpha((int)fillOpacity);  
         
-		svgtag = tag;
+        this.type = PaliCanvas.TOOL_RECTANGLE;
 		this.left = left;
 		this.top = top;
 		this.right = right;
 		this.bottom = bottom;
 		
 		this.rect = new RectF(left, top, right, bottom);
-	}
+		
+		tagSet();
+	}	
 	
 	PaliRectangle(float left, float top, float right, float bottom, float theta, Paint s_p, Paint f_p)
 	{       
@@ -81,27 +78,6 @@ public class PaliRectangle extends PaliObject {;
 		s_paint = new Paint(s_p);       
         f_paint = new Paint(f_p);
         tagSet();
-	}
-	
-	PaliRectangle(String tag, float left, float top, float right, float bottom, int scolor, int fcolor)
-	{
-		svgtag = tag;
-		this.left = left;
-		this.top = top;
-		this.right = right;
-		this.bottom = bottom;
-		
-		s_paint = new Paint();        
-        s_paint.setAntiAlias(true);        
-        s_paint.setStyle(Paint.Style.STROKE);
-        s_paint.setColor(scolor);
-        
-        f_paint = new Paint();        
-        f_paint.setAntiAlias(true);
-        f_paint.setStyle(Paint.Style.FILL);
-        f_paint.setColor(fcolor);
-		
-		this.rect = new RectF(left, top, right, bottom);
 	}
 	
 	public void drawObject(Canvas c) {

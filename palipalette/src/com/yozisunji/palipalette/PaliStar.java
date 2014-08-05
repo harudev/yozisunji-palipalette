@@ -7,10 +7,6 @@ import android.graphics.RectF;
 
 public class PaliStar extends PaliObject {
 
-	PaliStar(String tag, int scolor, int fcolor)
-	{
-		super(tag,scolor,fcolor);
-	}
 	PaliStar(float x, float y, float r)
 	{
 		super();
@@ -36,28 +32,6 @@ public class PaliStar extends PaliObject {
         tagSet();        
 	}
 	
-	PaliStar(String tag, float x, float y, float r)
-	{        
-        s_paint = new Paint();        
-        s_paint.setAntiAlias(true);        
-        s_paint.setStyle(Paint.Style.STROKE);
-        s_paint.setColor(PaliCanvas.strokeColor);
-        s_paint.setAlpha(PaliCanvas.alpha);
-        s_paint.setStrokeWidth(PaliCanvas.strokeWidth);
-        
-        f_paint = new Paint();        
-        f_paint.setAntiAlias(true);
-        f_paint.setStyle(Paint.Style.FILL);
-        f_paint.setColor(PaliCanvas.fillColor);
-        f_paint.setAlpha(PaliCanvas.alpha);        
-        
-		svgtag=tag;
-		this.x = x;
-		this.y = y;
-		this.r = r;
-		this.rect = new RectF(x-r, y-r, x+r, y+r);
-	}
-	
 	PaliStar(float x, float y, float r, float theta, Paint s_p, Paint f_p)
 	{   
 		this.x = x;
@@ -69,26 +43,6 @@ public class PaliStar extends PaliObject {
         f_paint = new Paint(f_p);
         pathSet();
         tagSet();
-	}
-		
-	PaliStar(String tag, float x, float y, float r, int scolor, int fcolor)
-	{
-		svgtag=tag;
-		this.x = x;
-		this.y = y;
-		this.r = r;
-		
-		s_paint = new Paint();        
-        s_paint.setAntiAlias(true);        
-        s_paint.setStyle(Paint.Style.STROKE);
-        s_paint.setColor(scolor);
-        
-        f_paint = new Paint();        
-        f_paint.setAntiAlias(true);
-        f_paint.setStyle(Paint.Style.FILL);
-        f_paint.setColor(fcolor);
-        
-		this.rect = new RectF(x-r, y-r, x+r, y+r);
 	}
 
 	public void drawObject(Canvas c) {		
