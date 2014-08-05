@@ -218,25 +218,36 @@ public class CustomizingMainActivity extends Activity {
 		GearUIList.get(Select).putItem(Select, 0, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_pickobject_icon, "Pick Object");
 		// Layer Icon
 		GearUIList.get(Select).putItem(Select, 1, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_layer_icon,"Layer");
-		
+		// Layer Widget
+		GearUIList.get(Select).putItem(Select, 2, PaliItem.TYPE_WIDGET, 3, 3, R.drawable.tool_layer_icon,"Layer");
+				
 		// Pencil Icon
 		GearUIList.get(Drawing).putItem(Drawing, 0, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_pencil_icon,"Pencil");
 		// Brush Icon
 		GearUIList.get(Drawing).putItem(Drawing, 1, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_brush_icon,"Brush");
 		
-		// Circle Icon
-		GearUIList.get(Shape).putItem(Shape, 0, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_circle_icon,"Circle");
-		// Ellipse Icon
-		GearUIList.get(Shape).putItem(Shape, 1, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_ellipse_icon,"Ellipse");
 		// Rectangle Icon
-		GearUIList.get(Shape).putItem(Shape, 2, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_rect_icon,"Rectangle");
-		// Change Icon
-		GearUIList.get(Shape).putItem(Shape, 3, PaliItem.TYPE_WIDGET, 2, 1, R.drawable.tool_shape_2x1_widget,"Shape Change");
+		GearUIList.get(Shape).putItem(Shape, 0, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_rect_icon,"Rectangle");
+		// Circle Icon
+		GearUIList.get(Shape).putItem(Shape, 1, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_circle_icon,"Circle");
+		// Ellipse Icon
+		GearUIList.get(Shape).putItem(Shape, 2, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_ellipse_icon,"Ellipse");
+		// Star Icon
+		GearUIList.get(Shape).putItem(Shape, 3, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_ellipse_icon,"Star");
+		// Shape Widget (2X1)
+		GearUIList.get(Shape).putItem(Shape, 4, PaliItem.TYPE_WIDGET, 2, 1, R.drawable.tool_shape_2x1_widget,"Shape Change");
+		// Shape Widget (2X1)
+		GearUIList.get(Shape).putItem(Shape, 5, PaliItem.TYPE_WIDGET, 1, 2, R.drawable.tool_shape_2x1_widget,"Shape Change");
+				
 		
-		// Stroke Color Icon
-		GearUIList.get(Style).putItem(Style, 0, PaliItem.TYPE_WIDGET, 3, 3, R.drawable.tool_color_3x3_widget, "Color");
-		// Fill Color Icon
-		GearUIList.get(Style).putItem(Style, 1, PaliItem.TYPE_WIDGET, 1, 3, R.drawable.tool_stroke_1x3_widget, "Stroke Width");
+		// Color Icon
+		GearUIList.get(Style).putItem(Style, 0, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_color_icon,"Color");
+		// Color Widget
+		GearUIList.get(Style).putItem(Style, 1, PaliItem.TYPE_WIDGET, 3, 3, R.drawable.tool_color_3x3_widget, "Color");
+		// Stroke Icon
+		GearUIList.get(Style).putItem(Style, 2, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_color_icon,"Stroke");
+		// Stroke Widget
+		GearUIList.get(Style).putItem(Style, 3, PaliItem.TYPE_WIDGET, 1, 3, R.drawable.tool_stroke_1x3_widget, "Stroke Width");
 		
 		
 		// New File Icon
@@ -247,6 +258,8 @@ public class CustomizingMainActivity extends Activity {
 		GearUIList.get(File).putItem(File, 2, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_save_icon, "Save File");
 		// Export File Icon
 		GearUIList.get(File).putItem(File, 3, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_export_icon, "Export File");
+		// File Icon
+		GearUIList.get(File).putItem(File, 4, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_export_icon, "File");
 		
 		
 		// Undo Icon
@@ -254,8 +267,9 @@ public class CustomizingMainActivity extends Activity {
 		// Redo Icon
 		GearUIList.get(History).putItem(History, 1, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_redo_icon, "Redo");
 		
-		
+		// Allmenu Icon
 		GearUIList.get(Config).putItem(Config, 0, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_allmenu_icon, "All Menu");
+		// Customize Icon
 		GearUIList.get(Config).putItem(Config, 1, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_config_icon, "Configuration");
 		
 		// Null Icon
