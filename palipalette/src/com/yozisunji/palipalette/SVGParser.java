@@ -108,8 +108,6 @@ class SVGHandler extends DefaultHandler {
     {
     	
     }
-
-    
     
     private static String getStringAttr(String name, Attributes attributes) {
         int n = attributes.getLength();
@@ -151,6 +149,19 @@ class SVGHandler extends DefaultHandler {
                 return null;
             }
         }
+    }
+    
+    private static Float getTranformAttr(String name, Attributes attributes) {
+    	String v = getStringAttr(name, attributes);    	
+    	
+    	if(v.startsWith("translate(")) {
+    		
+    	}
+    	else if(v.startsWith("rotate(")) {
+    		    		
+    	}
+    	
+    	return null;
     }
     
     private static Path doPath(String s) {
