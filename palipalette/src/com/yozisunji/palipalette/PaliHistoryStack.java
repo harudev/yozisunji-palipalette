@@ -3,7 +3,7 @@ package com.yozisunji.palipalette;
 import java.util.ArrayList;
 
 public class PaliHistoryStack extends ArrayList<ArrayList<PaliLayer>> {
-	private int index = -1;
+	private int index = 0;
 	private boolean UndoCommited = false;
 	
 	public PaliHistoryStack()
@@ -12,7 +12,6 @@ public class PaliHistoryStack extends ArrayList<ArrayList<PaliLayer>> {
 	}
 	public void Do(ArrayList<PaliLayer> obj)
 	{
-		index++;
 		if(UndoCommited)
 		{
 			for(int i=index;i<this.size()-1;i++)
@@ -23,7 +22,14 @@ public class PaliHistoryStack extends ArrayList<ArrayList<PaliLayer>> {
 			this.remove(0);
 			index--;
 		}
-		this.add(index, (ArrayList<PaliLayer>)obj.clone());
+		
+		ArrayList<PaliLayer> temp = new ArrayList<PaliLayer>(obj.size());
+		for(PaliLayer layer : obj)
+		{
+			temp.add(new PaliLayer(layer));
+		}
+		this.add(index, temp);
+		index++;
 	}
 	public ArrayList<PaliLayer> UnDo()
 	{
@@ -45,5 +51,20 @@ public class PaliHistoryStack extends ArrayList<ArrayList<PaliLayer>> {
 			return this.get(index);
 		}
 		return null;
+	}
+	
+	public boolean isUnDoable()
+	{
+		if(index>0)
+			return true;
+		else
+			return false;
+	}
+	public boolean isReDoable()
+	{
+		if(index<this.size()-1)
+			return true;
+		else
+			return false;
 	}
 }

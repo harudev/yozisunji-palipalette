@@ -42,17 +42,4 @@ public class PaliItemView extends ImageView {
 		
 		this.setLayoutParams(gl);
 	}
-	@Override
-	public boolean onTouchEvent(MotionEvent e)
-	{
-		 switch(e.getAction() & MotionEvent.ACTION_MASK)
-		 {		 
-		 case MotionEvent.ACTION_DOWN:
-			 if(iteminfo.funcNum==PaliCanvas.TOOL_COMMON && iteminfo.itemNum == 0)
-				 return true;				 
-			 return false;
-		 }
-		
-		 return false;
-	}
 }

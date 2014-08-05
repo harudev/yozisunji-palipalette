@@ -1,7 +1,13 @@
 package com.yozisunji.palipalette;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.ColorFilter;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.RectF;
 
 public class PaliCircle extends PaliObject {
@@ -95,5 +101,16 @@ public class PaliCircle extends PaliObject {
 		
 		Move(dx/2, dy/2);
 		tagSet();
+	}
+	@Override
+	public PaliObject copy() {
+		PaliCircle circle = new PaliCircle(this.x, this.y, this.r, this.theta, this.s_paint, this.f_paint);
+		
+		circle.svgtag = this.svgtag;
+		circle.type = this.type;
+		circle.filter = this.filter;
+
+		// TODO Auto-generated method stub
+		return circle;
 	}
 }

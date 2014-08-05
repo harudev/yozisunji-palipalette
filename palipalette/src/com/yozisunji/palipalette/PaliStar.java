@@ -89,4 +89,9 @@ public class PaliStar extends PaliObject {
         path.lineTo(x - r, y - r*0.25f);
         path.close();
 	}
+	@Override
+	public PaliObject copy() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

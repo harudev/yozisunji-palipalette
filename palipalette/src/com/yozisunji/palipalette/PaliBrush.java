@@ -94,4 +94,10 @@ public class PaliBrush extends PaliObject {
 		this.rect.right = this.rect.left + ((this.rect.right - this.rect.left) * width);
 		this.rect.bottom = this.rect.top + ((this.rect.bottom - this.rect.top) * height);
 	}
+
+	@Override
+	public PaliObject copy() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

@@ -120,4 +120,10 @@ public class PaliEllipse extends PaliObject {
 		
 		tagSet();
 	}
+
+	@Override
+	public PaliObject copy() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

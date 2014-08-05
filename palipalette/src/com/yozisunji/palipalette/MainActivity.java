@@ -140,34 +140,8 @@ public class MainActivity extends Activity {
 			case KeyEvent.KEYCODE_BACK:
 				android.os.Process.killProcess(android.os.Process.myPid());
 				return true;
-			case KeyEvent.KEYCODE_MENU:		
-				/*
-				PaliCanvas.selectedTool++;
-				if (PaliCanvas.selectedTool > PaliCanvas.TOOL_COMMON) {
-					PaliCanvas.selectedTool = 0;
-				}
-				*/
+			case KeyEvent.KEYCODE_MENU:				
 
-				JSONObject json;
-				try {
-					String str = "{\"customize\":	[ "
-							+ "[{\"Function\":0, \"Num\":0,\"PosX\":0,\"PosY\":0},"
-							+ "{\"Function\":1, \"Num\":0,\"PosX\":0,\"PosY\":2},"
-							+ "{\"Function\":2, \"Num\":0,\"PosX\":1,\"PosY\":1}],"
-							+ "[{\"Function\":2, \"Num\":1,\"PosX\":0,\"PosY\":0},"
-							+ "{\"Function\":4, \"Num\":0,\"PosX\":1,\"PosY\":2},"
-							+ "{\"Function\":5, \"Num\":0,\"PosX\":2,\"PosY\":0}],"
-							+ "[{\"Function\":0, \"Num\":0,\"PosX\":0,\"PosY\":0},"
-							+ "{\"Function\":1, \"Num\":0,\"PosX\":0,\"PosY\":2},"
-							+ "{\"Function\":2, \"Num\":0,\"PosX\":1,\"PosY\":1}]"
-							+ "]}";
-					json = new JSONObject(str);
-
-					launchCustomizing(json);
-				} catch (JSONException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
 				return true;
 				
 			}

@@ -527,6 +527,8 @@ public class PaliTouchCanvas extends View {
 			 * canvas.DrawScreen(); break;
 			 */
 			case PaliCanvas.TOOL_CIRCLE:
+
+				PaliCanvas.history.Do(SVGParser.Layers);
 				if (!this.prepinch) {
 					r = (float) Math.sqrt((float) Math.pow(upX - downX, 2)
 							+ (float) Math.pow(upY - downY, 2));

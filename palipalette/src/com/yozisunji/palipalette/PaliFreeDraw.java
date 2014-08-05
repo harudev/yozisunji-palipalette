@@ -69,4 +69,9 @@ public class PaliFreeDraw extends PaliObject {
 	{
 
 	}
+	@Override
+	public PaliObject copy() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

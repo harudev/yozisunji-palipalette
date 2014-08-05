@@ -185,6 +185,8 @@ public abstract class PaliObject {
 	public abstract void Move(float dx, float dy);
 
 	public abstract void Scale(float dx, float dy);
+	
+	public abstract PaliObject copy();
 
 	// public abstract void copyInfo();
 

@@ -26,7 +26,7 @@ import android.widget.GridLayout.Spec;
 
 public class CustomizingMainActivity extends Activity {
 	public static ArrayList<PaliItemList> GearUIList;
-	public ArrayList<PaliItemList> GearUIViewList;
+	public static ArrayList<PaliItemList> GearUIViewList;
 	public static ArrayList<PaliScreen> screens;
 	public static Integer selectedScreen=0;
 	public PaliScreen addScreen;
@@ -113,7 +113,7 @@ public class CustomizingMainActivity extends Activity {
 	@Override
 	public void onResume()
 	{
-		InitializeGearViewUIList();
+		InitializeGearUIViewList();
 		this.grid.removeAllViews();
 		this.screens.clear();
 		
@@ -280,7 +280,7 @@ public class CustomizingMainActivity extends Activity {
 	}
 
 	
-	private void InitializeGearViewUIList()
+	private void InitializeGearUIViewList()
 	{
 		GearUIViewList = new ArrayList<PaliItemList>();
 				
@@ -296,25 +296,36 @@ public class CustomizingMainActivity extends Activity {
 		GearUIViewList.get(Select).putItem(Select, 0, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_pickobject_icon, "Pick Object");
 		// Layer Icon
 		GearUIViewList.get(Select).putItem(Select, 1, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_layer_icon,"Layer");
-		
+		// Layer Widget
+		GearUIViewList.get(Select).putItem(Select, 2, PaliItem.TYPE_WIDGET, 3, 3, R.drawable.tool_layer_icon,"Layer");
+				
 		// Pencil Icon
 		GearUIViewList.get(Drawing).putItem(Drawing, 0, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_pencil_icon,"Pencil");
 		// Brush Icon
 		GearUIViewList.get(Drawing).putItem(Drawing, 1, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_brush_icon,"Brush");
 		
-		// Circle Icon
-		GearUIViewList.get(Shape).putItem(Shape, 0, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_circle_icon,"Circle");
-		// Ellipse Icon
-		GearUIViewList.get(Shape).putItem(Shape, 1, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_ellipse_icon,"Ellipse");
 		// Rectangle Icon
-		GearUIViewList.get(Shape).putItem(Shape, 2, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_rect_icon,"Rectangle");
-		// Change Icon
-		GearUIViewList.get(Shape).putItem(Shape, 3, PaliItem.TYPE_WIDGET, 2, 1, R.drawable.tool_shape_2x1_widget,"Shape Change");
+		GearUIViewList.get(Shape).putItem(Shape, 0, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_rect_icon,"Rectangle");
+		// Circle Icon
+		GearUIViewList.get(Shape).putItem(Shape, 1, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_circle_icon,"Circle");
+		// Ellipse Icon
+		GearUIViewList.get(Shape).putItem(Shape, 2, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_ellipse_icon,"Ellipse");
+		// Star Icon
+		GearUIViewList.get(Shape).putItem(Shape, 3, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_ellipse_icon,"Star");
+		// Shape Widget (2X1)
+		GearUIViewList.get(Shape).putItem(Shape, 4, PaliItem.TYPE_WIDGET, 2, 1, R.drawable.tool_shape_2x1_widget,"Shape Change");
+		// Shape Widget (2X1)
+		GearUIViewList.get(Shape).putItem(Shape, 5, PaliItem.TYPE_WIDGET, 1, 2, R.drawable.tool_shape_2x1_widget,"Shape Change");
+				
 		
-		// Stroke Color Icon
-		GearUIViewList.get(Style).putItem(Style, 0, PaliItem.TYPE_WIDGET, 3, 3, R.drawable.tool_color_3x3_widget, "Color");
-		// Fill Color Icon
-		GearUIViewList.get(Style).putItem(Style, 1, PaliItem.TYPE_WIDGET, 1, 3, R.drawable.tool_stroke_1x3_widget, "Stroke Width");
+		// Color Icon
+		GearUIViewList.get(Style).putItem(Style, 0, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_color_icon,"Color");
+		// Color Widget
+		GearUIViewList.get(Style).putItem(Style, 1, PaliItem.TYPE_WIDGET, 3, 3, R.drawable.tool_color_3x3_widget, "Color");
+		// Stroke Icon
+		GearUIViewList.get(Style).putItem(Style, 2, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_color_icon,"Stroke");
+		// Stroke Widget
+		GearUIViewList.get(Style).putItem(Style, 3, PaliItem.TYPE_WIDGET, 1, 3, R.drawable.tool_stroke_1x3_widget, "Stroke Width");
 		
 		
 		// New File Icon
@@ -325,6 +336,8 @@ public class CustomizingMainActivity extends Activity {
 		GearUIViewList.get(File).putItem(File, 2, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_save_icon, "Save File");
 		// Export File Icon
 		GearUIViewList.get(File).putItem(File, 3, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_export_icon, "Export File");
+		// File Icon
+		GearUIViewList.get(File).putItem(File, 4, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_export_icon, "File");
 		
 		
 		// Undo Icon
@@ -332,8 +345,9 @@ public class CustomizingMainActivity extends Activity {
 		// Redo Icon
 		GearUIViewList.get(History).putItem(History, 1, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_redo_icon, "Redo");
 		
-		
+		// Allmenu Icon
 		GearUIViewList.get(Config).putItem(Config, 0, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_allmenu_icon, "All Menu");
+		// Customize Icon
 		GearUIViewList.get(Config).putItem(Config, 1, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_config_icon, "Configuration");
 	}
 	

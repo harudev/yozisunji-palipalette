@@ -23,7 +23,6 @@ public class PaliExpandableAdapter extends BaseExpandableListAdapter {
 	public PaliExpandableAdapter(Context context, ArrayList<PaliItemList> list, View.OnTouchListener t) {
         this.context = context;
         this.list = (ArrayList<PaliItemList>)list.clone(); 
-        this.list.remove(CustomizingMainActivity.Common);
         touch = t;
     }
 	@Override

@@ -12,7 +12,15 @@ public class PaliLayer {
 		objs = new ArrayList<PaliObject>();
 		visibility = true;
 	}
-	
+	public PaliLayer(PaliLayer origin)
+	{
+		objs = new ArrayList<PaliObject>(origin.objs.size());
+		for(PaliObject obj : origin.objs)
+		{
+			objs.add(obj.copy());
+		}
+		visibility = origin.visibility;
+	}
 	public boolean getVisible()
 	{
 		return this.visibility;

@@ -42,6 +42,8 @@ public class PaliCanvas extends SurfaceView implements SurfaceHolder.Callback {
 	public static int scale;
 	
 	public static ArrayList<PaliPoint> CopiedObjArr;
+	
+	public static PaliHistoryStack history;
 
 		
 	public PaliCanvas(Context c, AttributeSet attrs)
@@ -53,6 +55,7 @@ public class PaliCanvas extends SurfaceView implements SurfaceHolder.Callback {
 		strokeWidth = 10;
 		currentLayer=SVGParser.Layersize-1;
 		currentObject=-1;
+		history = new PaliHistoryStack();
 		SurfaceHolder holder = getHolder();
 		holder.addCallback(this);
 	}

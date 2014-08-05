@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 
 
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -17,6 +18,7 @@ import android.widget.GridLayout;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.View;
 
 public class PaliScreen extends GridLayout{
 	ArrayList<PaliItemView> items;
@@ -113,29 +115,28 @@ public class PaliScreen extends GridLayout{
 		temp.setImageResource(temp.iteminfo.imageid);
 		
 		temp.gl = (GridLayout.LayoutParams)temp.getLayoutParams();
-		temp.gl.rowSpec = GridLayout.spec(posX,temp.iteminfo.height);
-		temp.gl.columnSpec = GridLayout.spec(posY,temp.iteminfo.width);
-		temp.setLayoutParams(temp.gl);
-		
-		/*
+		temp.gl.rowSpec = GridLayout.spec(posY,temp.iteminfo.height);
+		temp.gl.columnSpec = GridLayout.spec(posX,temp.iteminfo.width);
 		if(temp.iteminfo.height>1)
 		{
-			for(int i=posY ; i<temp.iteminfo.height ; i++)
+			for(int i=posY+1; i<temp.iteminfo.height+posY ; i++)
 			{
-				for(int j=posX; j<temp.iteminfo.width ; j++)
+				for(int j=posX+1; j<temp.iteminfo.width+posX; j++)
 				{
-					this.itemNumbers.get(i).set(j, posY*3+posX);
+					this.items.get(i*3+j).setVisibility(View.INVISIBLE);
 				}
 			}
 		}
-		else if(temp.iteminfo.width>1)
+		else
 		{
-			for(int j=posX; j<temp.iteminfo.width ; j++)
+			for(int j=posX+1; j<temp.iteminfo.width+posX; j++)
 			{
-				this.itemNumbers.get(posY).set(j, posY*3+posX);
+				this.items.get(posY*3+j).setVisibility(View.INVISIBLE);
 			}
 		}
-		*/
+		temp.setLayoutParams(temp.gl);
+		
+		this.items.set(posY*3+posX, temp);
 	}
 	public void copy(PaliScreen p, int width, int height)
 	{	
@@ -202,6 +203,27 @@ public class PaliScreen extends GridLayout{
 		}
 		return json;
 	}
+	
+	public PaliPoint getPos(MotionEvent e)
+	{
+		PaliPoint pt = new PaliPoint(999,999);
+		Rect r = new Rect();
+		
+		for(int i=0;i<items.size();i++)
+		{
+			if(items.get(i).iteminfo.funcNum==PaliCanvas.TOOL_COMMON)
+			{
+				items.get(i).getGlobalVisibleRect(r);
+				if(r.contains((int)e.getX(),(int)e.getY()))
+				{
+					pt.x = items.get(i).x;
+					pt.y = items.get(i).y;
+					return pt;
+				}
+			}
+		}
+		return pt;
+	}
 	@Override
 	public boolean onTouchEvent(MotionEvent e)
 	{
@@ -217,14 +239,17 @@ public class PaliScreen extends GridLayout{
 			 
 			for(int i=0;i<items.size();i++)
 			{
-				items.get(i).getGlobalVisibleRect(r);
-				if(r.contains((int)e.getX(),(int)e.getY()))
+				if(items.get(i).iteminfo.funcNum!=PaliCanvas.TOOL_COMMON)
 				{
-					
-					selected=i;
-					mPressed=true;
-					items.get(selected).setBackgroundColor(Color.argb(80, 255, 255, 255));
-					break;
+					items.get(i).getGlobalVisibleRect(r);
+					if(r.contains((int)e.getX(),(int)e.getY()))
+					{
+						
+						selected=i;
+						mPressed=true;
+						items.get(selected).setBackgroundColor(Color.argb(80, 255, 255, 255));
+						break;
+					}
 				}
 			}
 			 return false;
@@ -257,25 +282,6 @@ public class PaliScreen extends GridLayout{
 						    	
 						    	change.x = tempX;
 						    	change.y = tempY;
-						    	
-						    	
-						    	/*
-						    	items.remove(temp);
-						    	items.remove(change);
-						    	
-						    	if(selected<i)
-						    	{
-						    		items.add(selected,change);
-							    	items.add(i,temp);
-						    	}
-						    	else
-						    	{
-						    		items.add(i,temp);
-						    		items.add(selected,change);
-						    	}
-						    	*/
-						    	
-						    	//selected = i;
 						    	break;
 						    
 							}

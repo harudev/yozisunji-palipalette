@@ -61,7 +61,7 @@ public class CustomizingActivity extends Activity {
 		}
 		
 		listview = (ExpandableListView)this.findViewById(R.id.itemmainlistview);
-		listview.setAdapter(new PaliExpandableAdapter(this,CustomizingMainActivity.GearUIList,vl));
+		listview.setAdapter(new PaliExpandableAdapter(this,CustomizingMainActivity.GearUIViewList,vl));
 		listview.expandGroup(0);
 		listview.expandGroup(1);
 		listview.expandGroup(2);
@@ -169,6 +169,11 @@ public class CustomizingActivity extends Activity {
 			 if(mPressed)
 			 {
 				 dragItem.setVisibility(View.GONE);
+				 PaliPoint tempP = screen.getPos(e);
+				 if(tempP.x<999 && tempP.y<999)
+				 {
+					 screen.putItem(selectedItem.funcNum, selectedItem.itemNum, tempP.x, tempP.y);
+				 }
 				 selectedItem=null;
 				 mPressed = false;
 			 }
