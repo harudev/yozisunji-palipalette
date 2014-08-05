@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class PaliLayer {
 	
 	ArrayList<PaliObject> objs;
-	boolean visibility;					// From 1 to 100, percent
+	boolean visibility;	
 
 	public PaliLayer()
 	{

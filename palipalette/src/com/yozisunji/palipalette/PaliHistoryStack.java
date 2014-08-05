@@ -2,7 +2,7 @@ package com.yozisunji.palipalette;
 
 import java.util.ArrayList;
 
-public class PaliHistoryStack extends ArrayList<ArrayList<PaliPoint>> {
+public class PaliHistoryStack extends ArrayList<ArrayList<PaliLayer>> {
 	private int index = -1;
 	private boolean UndoCommited = false;
 	
@@ -10,8 +10,7 @@ public class PaliHistoryStack extends ArrayList<ArrayList<PaliPoint>> {
 	{
 		super();
 	}
-	
-	public void Do(ArrayList<PaliPoint> obj)
+	public void Do(ArrayList<PaliLayer> obj)
 	{
 		index++;
 		if(UndoCommited)
@@ -19,10 +18,14 @@ public class PaliHistoryStack extends ArrayList<ArrayList<PaliPoint>> {
 			for(int i=index;i<this.size()-1;i++)
 				this.remove(i);
 		}
-		this.add(index, obj);
+		if(index>=10)
+		{
+			this.remove(0);
+			index--;
+		}
+		this.add(index, (ArrayList<PaliLayer>)obj.clone());
 	}
-	
-	public ArrayList<PaliPoint> UnDo()
+	public ArrayList<PaliLayer> UnDo()
 	{
 		if(index>0)
 		{
@@ -32,8 +35,7 @@ public class PaliHistoryStack extends ArrayList<ArrayList<PaliPoint>> {
 		}
 		return null;
 	}
-	
-	public ArrayList<PaliPoint> ReDo()
+	public ArrayList<PaliLayer> ReDo()
 	{
 		if(index<this.size()-1)
 		{
@@ -44,5 +46,4 @@ public class PaliHistoryStack extends ArrayList<ArrayList<PaliPoint>> {
 		}
 		return null;
 	}
-
 }
