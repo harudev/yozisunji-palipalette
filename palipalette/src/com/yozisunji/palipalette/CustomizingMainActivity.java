@@ -97,23 +97,32 @@ public class CustomizingMainActivity extends Activity {
 		
 		grid = (GridLayout) findViewById(R.id.screensLayout);
 		screens = new ArrayList<PaliScreen>();
-		Intent intent = getIntent();
 		
-		if(intent.getExtras().containsKey("json_screen"))
+		
+	}
+	
+	@Override
+	protected void onNewIntent(Intent intent)
+	{
+		super.onNewIntent(intent);
+		
+		if(null!= intent)
 		{
-			try {
-				JSONObject json = new JSONObject(intent.getExtras().getString("json_screen"));
-				this.ParseJSON(json);
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			setIntent(intent);
 		}
-		else if(intent.getExtras().containsKey("json"))
+	}
+	@Override
+	public void onResume()
+	{
+		this.grid.removeAllViews();
+		this.screens.clear();
+		
+		Intent intent = getIntent();
+		if(intent.getExtras().containsKey("json_screens"))
 		{
 			try {
-				JSONArray json = new JSONArray(intent.getExtras().getString("json_screen"));
-				this.screens.get(0).putJSON(json);
+				JSONObject json = new JSONObject(intent.getExtras().getString("json_screens"));
+				this.ParseJSON(json);
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -127,9 +136,9 @@ public class CustomizingMainActivity extends Activity {
 			addScreen.setBackgroundColor(Color.argb(90, 3, 74, 132));
 			//addScreen.setAlpha(Color.alpha(70));
 			addScreen.putItem(Common, 0, 0, 0);
-			addScreen.putItem(Common,1,1,1);
-			addX = 3;
-			addY = 0;
+			addScreen.putItem(Common, 1, 1, 1);
+			addX = screens.size()%4;
+			addY = screens.size()/4;
 			Spec row = GridLayout.spec(addY, 1); 
 	        Spec col = GridLayout.spec(addX, 1);
 	        GridLayout.LayoutParams gridLayoutParam;
@@ -146,6 +155,8 @@ public class CustomizingMainActivity extends Activity {
 		gridParm.width = activitySize.x;
 		gridParm.height = activitySize.y - 100;
 		grid.setLayoutParams(gridParm);		
+		
+		super.onResume();
 	}
 	
 	private void ParseJSON(JSONObject json)
@@ -156,10 +167,20 @@ public class CustomizingMainActivity extends Activity {
 			
 			for( int i = 0 ; i<jarr.length() ; i++ )
 			{
-				screens.add(new PaliScreen(this));
-				screen = jarr.getJSONArray(i);
 				screens.add(new PaliScreen(mContext));
+				screen = jarr.getJSONArray(i);
 				screens.get(i).putJSON(screen);
+				
+				Spec row = GridLayout.spec(i/4, 1); 
+		        Spec col = GridLayout.spec(i%4, 1);
+				GridLayout.LayoutParams gridLayoutParam;
+		        gridLayoutParam = new GridLayout.LayoutParams(row, col);
+		        gridLayoutParam.leftMargin=marginSize.x ;
+		        gridLayoutParam.rightMargin=marginSize.x ;
+		        gridLayoutParam.topMargin=marginSize.y;
+		        gridLayoutParam.bottomMargin=marginSize.y;
+				grid.addView(screens.get(i),gridLayoutParam);
+				screens.get(i).setSize(screenSize, screenSize);
 			}
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
@@ -175,7 +196,7 @@ public class CustomizingMainActivity extends Activity {
 		{
 			jarr.put(screens.get(i).getJSON());
 		}
-		json.put("Customize", jarr);
+		json.put("customize", jarr);
 		return json;
 	}
 
@@ -322,7 +343,8 @@ public class CustomizingMainActivity extends Activity {
 			case KeyEvent.KEYCODE_BACK:
 				intent = new Intent(this, MainActivity.class);
 				try {
-					intent.putExtra("json", this.PackJSON().toString());
+					intent.putExtra("json_screen", this.PackJSON().toString());
+					intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -330,16 +352,6 @@ public class CustomizingMainActivity extends Activity {
 				startActivity(intent);
 				//android.os.Process.killProcess(android.os.Process.myPid());
 				return super.dispatchKeyEvent(event);
-			case KeyEvent.KEYCODE_MENU:
-				intent = new Intent(this, CustomizingActivity.class);
-				try {
-					intent.putExtra("json_screen", this.screens.get(0).getJSON().toString());
-				} catch (JSONException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				startActivity(intent);
-				return true;
 			}
 		}
 		return super.dispatchKeyEvent(event);
@@ -355,6 +367,8 @@ public class CustomizingMainActivity extends Activity {
 		 {		 
 		 case MotionEvent.ACTION_DOWN:
 			r= new Rect();
+			
+			
 			addScreen.getGlobalVisibleRect(r);
 			if(r.contains((int)e.getX(),(int)e.getY())) 
 			{
@@ -376,6 +390,8 @@ public class CustomizingMainActivity extends Activity {
 				}
 				
 			}
+			preX = e.getX();
+			preY = e.getY();
 			 return false;
 		 case MotionEvent.ACTION_MOVE:
 			 if(mPressed)
@@ -464,10 +480,24 @@ public class CustomizingMainActivity extends Activity {
 		 case MotionEvent.ACTION_UP:
 			 if(mPressed)
 			 {
-				 
 				 mPressed=false;
 				 screens.get(selected).setBackgroundColor(BackgroundColor);
 			 }
+			 if(preX == e.getX() && preY == e.getY()){
+				 indexX = 4 * (int)e.getX() / this.activitySize.x;
+				 indexY = 2 * (int)e.getY() / this.activitySize.y;
+				 
+				 Intent intent = new Intent(this, CustomizingActivity.class);
+				 try {
+					intent.putExtra("json", this.PackJSON().toString());
+					intent.putExtra("selected", indexY*4+indexX);
+				 } catch (JSONException error) {
+					// TODO Auto-generated catch block
+						error.printStackTrace();
+				 }
+				 startActivity(intent);
+			 }
+			 
 			 return true;
 		 }
 		 return true;

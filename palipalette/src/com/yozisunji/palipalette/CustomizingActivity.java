@@ -18,6 +18,7 @@ import android.widget.ExpandableListView;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.GridLayout.Spec;
 
 public class CustomizingActivity extends Activity {
 	Context ctx = this;
@@ -28,6 +29,9 @@ public class CustomizingActivity extends Activity {
 	private PaliItem selectedItem=null;
 	private ImageView dragItem;
 	ExpandableListView listview;
+	
+	JSONArray screens;
+	Integer selected;
 	
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -46,10 +50,11 @@ public class CustomizingActivity extends Activity {
 		LinearLayout.LayoutParams lilayout = (LinearLayout.LayoutParams)this.screen.getLayoutParams();
 		
 		Intent intent = getIntent();
-		JSONArray json;
+		JSONObject json;
 		try {
-			json = new JSONArray(intent.getExtras().getString("json"));
-			screen.putJSON(json);
+			json = new JSONObject(intent.getExtras().getString("json"));
+			selected = intent.getExtras().getInt("selected");
+			this.ParseJSON(json);
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -65,6 +70,7 @@ public class CustomizingActivity extends Activity {
 		listview.expandGroup(5);
 		//listview.setOnChildClickListener(listClickListener);
 		this.screen.setTouchable(true);
+		this.screen.setSize(900, 900);
 	}
 	
 	@Override
@@ -72,16 +78,17 @@ public class CustomizingActivity extends Activity {
 		if (event.getAction() == KeyEvent.ACTION_DOWN) {
 			switch (event.getKeyCode()) {
 			case KeyEvent.KEYCODE_BACK:
-				CustomizingMainActivity.screens.get(0).copy(this.screen, CustomizingMainActivity.screenSize, CustomizingMainActivity.screenSize);
+				//CustomizingMainActivity.screens.get(0).copy(this.screen, CustomizingMainActivity.screenSize, CustomizingMainActivity.screenSize);
 				Intent intent = new Intent(this, CustomizingMainActivity.class);
 				try {
-					intent.putExtra("json", this.screen.getJSON().toString());
+					intent.putExtra("json_screens", this.PackJSON().toString());
+					intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				startActivity(intent);
-				return super.dispatchKeyEvent(event);
+				return true;
 			case KeyEvent.KEYCODE_MENU:
 				return true;
 			}
@@ -174,4 +181,25 @@ public class CustomizingActivity extends Activity {
 		 return true;
 	}
 	
+	private void ParseJSON(JSONObject json)
+	{
+		try {
+			screens = json.getJSONArray("customize");
+			JSONArray screenjson = screens.getJSONArray(selected);
+			screen.putJSON(screenjson);
+			
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	private JSONObject PackJSON() throws JSONException
+	{
+		screens.put(selected,screen.getJSON());
+		
+		JSONObject json = new JSONObject();
+		json.put("customize", screens);
+		return json;
+	}
 }

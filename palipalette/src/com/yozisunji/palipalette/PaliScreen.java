@@ -41,7 +41,8 @@ public class PaliScreen extends GridLayout{
 		this.setRowCount(3);
 		this.setColumnCount(3);
 		touchable = false;
-		fillNullItem();
+		this.setBackgroundColor( Color.rgb(3,74,132));
+		initialize();
 	}
 	
 	public PaliScreen(Context context, AttributeSet attrs) {
@@ -53,14 +54,17 @@ public class PaliScreen extends GridLayout{
 		itemNumbers.add(new ArrayList<Integer>());
 		itemNumbers.add(new ArrayList<Integer>());
 		itemNumbers.add(new ArrayList<Integer>());
+		this.setBackgroundColor( Color.rgb(3,74,132));
 		this.setRowCount(3);
 		this.setColumnCount(3);
 		touchable = false;
-		fillNullItem();		
+		initialize();		
 	}
 	
-	public void fillNullItem()
+	public void initialize()
 	{
+		this.items.clear();
+		this.removeAllViews();
 		putNullItem(0,0);
 		putNullItem(1,0);
 		putNullItem(2,0);
@@ -113,6 +117,7 @@ public class PaliScreen extends GridLayout{
 		temp.gl.columnSpec = GridLayout.spec(posY,temp.iteminfo.width);
 		temp.setLayoutParams(temp.gl);
 		
+		/*
 		if(temp.iteminfo.height>1)
 		{
 			for(int i=posY ; i<temp.iteminfo.height ; i++)
@@ -130,6 +135,7 @@ public class PaliScreen extends GridLayout{
 				this.itemNumbers.get(posY).set(j, posY*3+posX);
 			}
 		}
+		*/
 	}
 	public void copy(PaliScreen p, int width, int height)
 	{	
@@ -174,8 +180,9 @@ public class PaliScreen extends GridLayout{
 		{
 			temp = json.getJSONObject(i);
 			
-			this.putItem(temp.getInt("Function"), temp.getInt("Num"), temp.getInt("posX"), temp.getInt("posY"));
+			this.putItem(temp.getInt("Function"), temp.getInt("Num"), temp.getInt("PosX"), temp.getInt("PosY"));
 		}
+		this.invalidate();
 	}
 	
 	public JSONArray getJSON() throws JSONException
@@ -215,8 +222,8 @@ public class PaliScreen extends GridLayout{
 				{
 					
 					selected=i;
-					items.get(selected).setBackgroundColor(Color.argb(80, 255, 255, 255));
 					mPressed=true;
+					items.get(selected).setBackgroundColor(Color.argb(80, 255, 255, 255));
 					break;
 				}
 			}
@@ -226,19 +233,33 @@ public class PaliScreen extends GridLayout{
 			 {	
 				for(int i=0;i<items.size();i++)
 				{
-					 if(i!=selected)
+					 if(i!=selected && items.get(i).iteminfo.funcNum==PaliCanvas.TOOL_COMMON)
 					 {
 							items.get(i).getGlobalVisibleRect(r);
 							if(r.contains((int)e.getX(),(int)e.getY()))
 							{	
+								
 								PaliItemView temp = items.get(selected);
 						    	PaliItemView change = items.get(i);
+						    	
 						    	
 						    	GridLayout.LayoutParams gridLayoutParam = (GridLayout.LayoutParams)temp.getLayoutParams();
 						    	GridLayout.LayoutParams changeLayoutParam = (GridLayout.LayoutParams)change.getLayoutParams();
 						    	temp.setLayoutParams(changeLayoutParam);
 						    	change.setLayoutParams(gridLayoutParam);
 						    	
+						    	int tempX, tempY;
+						    	tempX = temp.x;
+						    	tempY = temp.y;
+						    	
+						    	temp.x = change.x;
+						    	temp.y = change.y;
+						    	
+						    	change.x = tempX;
+						    	change.y = tempY;
+						    	
+						    	
+						    	/*
 						    	items.remove(temp);
 						    	items.remove(change);
 						    	
@@ -252,9 +273,9 @@ public class PaliScreen extends GridLayout{
 						    		items.add(i,temp);
 						    		items.add(selected,change);
 						    	}
+						    	*/
 						    	
-						    	
-						    	selected = i;
+						    	//selected = i;
 						    	break;
 						    
 							}

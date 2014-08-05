@@ -2,6 +2,8 @@ package com.yozisunji.palipalette;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.view.MotionEvent;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 
@@ -40,5 +42,17 @@ public class PaliItemView extends ImageView {
 		
 		this.setLayoutParams(gl);
 	}
-
+	@Override
+	public boolean onTouchEvent(MotionEvent e)
+	{
+		 switch(e.getAction() & MotionEvent.ACTION_MASK)
+		 {		 
+		 case MotionEvent.ACTION_DOWN:
+			 if(iteminfo.funcNum==PaliCanvas.TOOL_COMMON && iteminfo.itemNum == 0)
+				 return true;				 
+			 return false;
+		 }
+		
+		 return false;
+	}
 }
