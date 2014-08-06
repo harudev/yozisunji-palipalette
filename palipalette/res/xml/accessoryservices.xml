@@ -32,7 +32,7 @@
             id="/system/helloaccessory"
             name="helloaccessory"
             role="provider"
-            serviceImpl="com.yozisunji.palipalette.HelloAccessoryProviderService"
+            serviceImpl="com.yozisunji.palipalette.PaliConnector"
             version="1.0"
             serviceLimit="ANY"
 	    serviceTimeout="10">
