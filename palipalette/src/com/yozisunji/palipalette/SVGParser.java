@@ -154,7 +154,8 @@ class SVGHandler extends DefaultHandler {
     	if(v == null) {
     		return null;
     	} else {
-    		if(v.startsWith("rotate(")) {
+    		if(v.contains("rotate(")) {
+    			v=v.substring(v.indexOf("rotate("));
         		String[] split = v.split(",");
         		String sTheta = split[0].substring("rotate(".length());
         		Float fTheta = Float.parseFloat(sTheta);
