@@ -140,8 +140,8 @@ public class MainActivity extends Activity {
 			case KeyEvent.KEYCODE_BACK:
 				android.os.Process.killProcess(android.os.Process.myPid());
 				return true;
-			case KeyEvent.KEYCODE_MENU:				
-
+			case KeyEvent.KEYCODE_MENU:		
+				popUpOpenMenu();
 				return true;
 				
 			}

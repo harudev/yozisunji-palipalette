@@ -31,7 +31,7 @@ public class PaliPencil extends PaliObject {
 		this.rect = rect;
 		tagSet();
 	}
-	PaliPencil(Path path, int strokeColor, float strokeWidth, float strokeOpacity)
+	PaliPencil(Path path, int strokeColor, float strokeWidth, float strokeOpacity, float theta)
 	{
 		s_paint = new Paint();
 		s_paint.setAntiAlias(true);
@@ -39,6 +39,7 @@ public class PaliPencil extends PaliObject {
 		s_paint.setStrokeWidth(strokeWidth);
 		s_paint.setAlpha((int)strokeOpacity);
 		this.path = path;
+		this.theta = theta;
 		this.rect = new RectF(100, 100, 500, 500);
 	}
 	PaliPencil(Path path, RectF rect, float theta, Paint s_p)

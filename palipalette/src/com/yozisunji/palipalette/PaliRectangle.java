@@ -41,7 +41,7 @@ public class PaliRectangle extends PaliObject {;
 		
 		tagSet();
 	}	
-	PaliRectangle(float left, float top, float right, float bottom, int strokeColor, int fillColor, float strokeWidth, float strokeOpacity, float fillOpacity)
+	PaliRectangle(float left, float top, float right, float bottom, int strokeColor, int fillColor, float strokeWidth, float strokeOpacity, float fillOpacity, float theta)
 	{
 		s_paint = new Paint();        
         s_paint.setAntiAlias(true);        
@@ -61,7 +61,7 @@ public class PaliRectangle extends PaliObject {;
 		this.top = top;
 		this.right = right;
 		this.bottom = bottom;
-		
+		this.theta = theta;
 		this.rect = new RectF(left, top, right, bottom);
 		
 		tagSet();

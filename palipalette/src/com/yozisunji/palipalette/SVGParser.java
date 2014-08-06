@@ -93,9 +93,7 @@ class SVGHandler extends DefaultHandler {
     // Scratch rect (so we aren't constantly making new ones)
     RectF rect = new RectF();
     public Rect bounds = null;
-    RectF limits = new RectF(Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY, Float.NEGATIVE_INFINITY, Float.NEGATIVE_INFINITY);
-
-	
+    RectF limits = new RectF(Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY, Float.NEGATIVE_INFINITY, Float.NEGATIVE_INFINITY);	
     
     Integer searchColor = null;
     Integer replaceColor = null;
@@ -151,14 +149,14 @@ class SVGHandler extends DefaultHandler {
         }
     }
     
-    private static Float getTranformAttr(String name, Attributes attributes) {
+    private static Float getThetaAttr(String name, Attributes attributes) {
     	String v = getStringAttr(name, attributes);    	
     	
-    	if(v.startsWith("translate(")) {
-    		
-    	}
-    	else if(v.startsWith("rotate(")) {
-    		    		
+    	if(v.startsWith("rotate(")) {
+    		String[] split = v.split(",");
+    		String sTheta = split[0].substring("rotate(".length());
+    		Float fTheta = Float.parseFloat(sTheta);
+    		return fTheta;
     	}
     	
     	return null;
@@ -399,9 +397,11 @@ class SVGHandler extends DefaultHandler {
             if(strokeOpacity==null) strokeOpacity = 1f;
             Float fillOpacity = getFloatAttr("fill-opacity", atts);
             if(fillOpacity==null) fillOpacity = 1f; 
+            Float theta = getThetaAttr("transform", atts);
+            if(theta==null) theta = 0f;
             
             if (centerX != null && centerY != null && radiusX != null && radiusY != null) {
-            	SVGParser.Layers.get(PaliCanvas.currentLayer).objs.add(new PaliEllipse(centerX-radiusX,centerY-radiusY,centerX+radiusX,centerY+radiusY,strokeColor,fillColor,strokeWidth,strokeOpacity*255,fillOpacity*255));
+            	SVGParser.Layers.get(PaliCanvas.currentLayer).objs.add(new PaliEllipse(centerX-radiusX,centerY-radiusY,centerX+radiusX,centerY+radiusY,strokeColor,fillColor,strokeWidth,strokeOpacity*255,fillOpacity*255,theta));
             	PaliCanvas.currentObject++;
             }
         } else if (localName.equals("rect")) {
@@ -419,9 +419,11 @@ class SVGHandler extends DefaultHandler {
             if(strokeOpacity==null) strokeOpacity = 1f;
             Float fillOpacity = getFloatAttr("fill-opacity", atts);
             if(fillOpacity==null) fillOpacity = 1f; 
-            
+            Float theta = getThetaAttr("transform", atts);
+            if(theta==null) theta = 0f;
+
         	if (centerX != null && centerY != null && width!= null && height != null) {
-        		SVGParser.Layers.get(PaliCanvas.currentLayer).objs.add(new PaliRectangle(centerX,centerY,centerX + width,centerY + height, strokeColor,fillColor,strokeWidth,strokeOpacity*255,fillOpacity*255));
+        		SVGParser.Layers.get(PaliCanvas.currentLayer).objs.add(new PaliRectangle(centerX,centerY,centerX + width,centerY + height, strokeColor,fillColor,strokeWidth,strokeOpacity*255,fillOpacity*255,theta));
         		PaliCanvas.currentObject++;
         	}
         } else if (localName.equals("path")) {
@@ -435,9 +437,11 @@ class SVGHandler extends DefaultHandler {
             if(strokeWidth==null) strokeWidth = 0f;
             Float strokeOpacity = getFloatAttr("stroke-opacity", atts);
             if(strokeOpacity==null) strokeOpacity = 1f;
+            Float theta = getThetaAttr("transform", atts);
+            if(theta==null) theta = 0f;
             
         	if (path != null) {
-        		SVGParser.Layers.get(SVGParser.Layers.size()-1).objs.add(new PaliPencil(path, strokeColor, strokeWidth, strokeOpacity*255));
+        		SVGParser.Layers.get(SVGParser.Layers.size()-1).objs.add(new PaliPencil(path, strokeColor, strokeWidth, strokeOpacity*255,theta));
         		PaliCanvas.currentObject++;
         	}
         }
