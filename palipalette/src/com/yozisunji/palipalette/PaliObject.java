@@ -86,6 +86,10 @@ public abstract class PaliObject {
 	public void setStyle(Paint.Style s) {
 		s_paint.setStyle(s);
 	}
+	
+	public void setAlpha(int alpha) {
+		f_paint.setAlpha(alpha);
+	}
 
 	public RectF getRect() {
 		return this.rect;

@@ -15,6 +15,7 @@ import android.graphics.RectF;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.FloatMath;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
@@ -141,10 +142,14 @@ public class PaliTouchCanvas extends View {
 			tempObj.setStrokeColor(Color.GREEN);
 			tempObj.setStyle(Style.STROKE);
 			tempObj.setWidth(2);
-			if (canvas.selectedTool != PaliCanvas.TOOL_PICKOBJECT) {
+			if(PaliCanvas.selectedTool == PaliCanvas.TOOL_PICKOBJECT) {
+				tempObj.setFillColor(Color.GREEN);
+				tempObj.setAlpha(30);
+			}
+			else {
 				tempObj.setFillColor(Color.GREEN);
 				tempObj.setStyle(Style.FILL);
-			}
+			}			
 			tempObj.drawObject(cnvs);
 		}
 		super.onDraw(cnvs);
@@ -341,6 +346,7 @@ public class PaliTouchCanvas extends View {
 					tempObj = new PaliEllipse(left, top, right, bottom);
 					break;
 				case PaliCanvas.TOOL_RECTANGLE:
+				case PaliCanvas.TOOL_PICKOBJECT:
 					left = Math.min(downX, moveX);
 					top = Math.min(downY, moveY);
 					right = Math.max(downX, moveX);
@@ -359,7 +365,10 @@ public class PaliTouchCanvas extends View {
 			return true;
 
 		case MotionEvent.ACTION_UP:
-
+			Log.i("debug", "UP");
+			tempObj = null;
+			this.invalidate();
+			
 			if(pinch)
 			{
 				this.pinch = false;
@@ -379,6 +388,7 @@ public class PaliTouchCanvas extends View {
 	
 				switch (PaliCanvas.selectedTool) {
 				case PaliCanvas.TOOL_PICKOBJECT:
+					
 					selector.stopTimeout();
 					if (this.selected) {
 						if (selector.getRect().contains(upX, upY)) {
@@ -468,7 +478,6 @@ public class PaliTouchCanvas extends View {
 					SVGParser.Layers.get(canvas.currentLayer).objs
 							.add(new PaliPencil(pencilPath, movingX, movingY,
 									rect));
-					tempObj = null;
 					pencilPath = null;
 					PaliCanvas.currentObject++;
 					PaliCanvas.drawMode = false;
@@ -503,7 +512,6 @@ public class PaliTouchCanvas extends View {
 					SVGParser.Layers.get(PaliCanvas.currentLayer).objs
 							.add(new PaliBrush(bm, brushX, brushY, brushP, rect));
 	
-					tempObj = null;
 					bm = null;
 					c = null;
 					PaliCanvas.currentObject++;
@@ -516,8 +524,7 @@ public class PaliTouchCanvas extends View {
 	
 					break;
 	
-				case PaliCanvas.TOOL_CIRCLE:
-	
+				case PaliCanvas.TOOL_CIRCLE:	
 					PaliCanvas.history.Do(SVGParser.Layers);
 					
 					r = (float) Math.sqrt((float) Math.pow(upX - downX, 2)
@@ -532,7 +539,8 @@ public class PaliTouchCanvas extends View {
 					PaliCanvas.drawMode = false;
 					canvas.DrawScreen();
 					break;
-				case PaliCanvas.TOOL_ELLIPSE:
+				case PaliCanvas.TOOL_ELLIPSE:					
+					PaliCanvas.history.Do(SVGParser.Layers);
 					
 					left = Math.min(downX, upX);
 					top = Math.min(downY, upY);
@@ -544,8 +552,7 @@ public class PaliTouchCanvas extends View {
 					tempObj = null;
 					PaliCanvas.currentObject++;
 					PaliCanvas.drawMode = false;
-					canvas.DrawScreen();
-					
+					canvas.DrawScreen();					
 					break;
 				case PaliCanvas.TOOL_RECTANGLE:
 					left = Math.min(downX, upX);
@@ -555,7 +562,6 @@ public class PaliTouchCanvas extends View {
 	
 					SVGParser.Layers.get(canvas.currentLayer).objs
 							.add(new PaliRectangle(left, top, right, bottom));
-					tempObj = null;
 					PaliCanvas.currentObject++;
 					PaliCanvas.drawMode = false;
 					canvas.DrawScreen();
@@ -568,14 +574,12 @@ public class PaliTouchCanvas extends View {
 	
 					SVGParser.Layers.get(PaliCanvas.currentLayer).objs
 							.add(new PaliStar(cx, cy, r));
-					tempObj = null;
 					PaliCanvas.currentObject++;
 					PaliCanvas.drawMode = false;
 					canvas.DrawScreen();
-					break;
+					break;					
 				}
-				this.invalidate();
-	
+				this.invalidate();	
 				return true;
 			}
 		}

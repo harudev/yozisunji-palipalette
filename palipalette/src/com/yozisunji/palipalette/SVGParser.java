@@ -151,15 +151,19 @@ class SVGHandler extends DefaultHandler {
     
     private static Float getThetaAttr(String name, Attributes attributes) {
     	String v = getStringAttr(name, attributes);    	
-    	
-    	if(v.startsWith("rotate(")) {
-    		String[] split = v.split(",");
-    		String sTheta = split[0].substring("rotate(".length());
-    		Float fTheta = Float.parseFloat(sTheta);
-    		return fTheta;
+    	if(v == null) {
+    		return null;
+    	} else {
+    		if(v.startsWith("rotate(")) {
+        		String[] split = v.split(",");
+        		String sTheta = split[0].substring("rotate(".length());
+        		Float fTheta = Float.parseFloat(sTheta);
+        		return fTheta;
+        	}
+    		else {
+    			return null;
+    		}
     	}
-    	
-    	return null;
     }
     
     private static Path doPath(String s) {
