@@ -65,6 +65,10 @@ public class MainActivity extends Activity {
 	EditText save_name;
 	EditText export_name;
 	ListView open_list;
+	
+	ImageButton copyBtn;
+	ImageButton pasteBtn;
+	ImageButton deletBtn;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -159,11 +163,11 @@ public class MainActivity extends Activity {
 		subDialog.setCancelable(true);
 		subDialog.setCanceledOnTouchOutside(true);
 
-		ImageButton copyBtn = (ImageButton) subDialog
+		copyBtn = (ImageButton) subDialog
 				.findViewById(R.id.copyBtn);
-		ImageButton pasteBtn = (ImageButton) subDialog
+		pasteBtn = (ImageButton) subDialog
 				.findViewById(R.id.pasteBtn);
-		ImageButton deletBtn = (ImageButton) subDialog
+		deletBtn = (ImageButton) subDialog
 				.findViewById(R.id.deletBtn);
 	}
 
@@ -218,6 +222,18 @@ public class MainActivity extends Activity {
 	}
 
 	public void popUpSubMenu() {
+		copyBtn.setVisibility(View.VISIBLE);
+		pasteBtn.setVisibility(View.VISIBLE);
+		deletBtn.setVisibility(View.VISIBLE);
+		
+		if(touchview.copyObject.size() == 0) {
+			pasteBtn.setVisibility(View.INVISIBLE);
+		}
+		if(touchview.selector.selObjArr.size() == 0) {
+			copyBtn.setVisibility(View.INVISIBLE);
+			deletBtn.setVisibility(View.INVISIBLE);
+		}
+		
 		subDialog.show();
 	}
 
