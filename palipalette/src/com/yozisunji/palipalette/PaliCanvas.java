@@ -96,7 +96,7 @@ public class PaliCanvas extends SurfaceView implements SurfaceHolder.Callback {
 					cnvs.drawPaint(p);
 					
 					cnvs.scale(zoom, zoom);
-					cnvs.translate(canvasX, canvasY);
+					cnvs.translate(canvasX/zoom, canvasY/zoom);
 					
 					RectF r = new RectF();
 					r.left = 0;

@@ -110,8 +110,9 @@ public class MainActivity extends Activity {
 		createExportDialog();
 		createOpenDialog();
 		
-		
-		
+		// test
+		connectSuccess();
+		//
 	}
 
 	@Override

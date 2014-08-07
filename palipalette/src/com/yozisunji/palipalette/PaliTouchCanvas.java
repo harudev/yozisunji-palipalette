@@ -81,6 +81,8 @@ public class PaliTouchCanvas extends View {
 
 	public int style;
 	Handler handler = new Handler();
+	
+	int directingCnt;
 
 	public PaliTouchCanvas(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -138,7 +140,7 @@ public class PaliTouchCanvas extends View {
 
 	public void onDraw(Canvas cnvs) {
 		cnvs.scale(PaliCanvas.zoom, PaliCanvas.zoom);
-		cnvs.translate(PaliCanvas.canvasX, PaliCanvas.canvasY);
+		cnvs.translate(PaliCanvas.canvasX/PaliCanvas.zoom, PaliCanvas.canvasY/PaliCanvas.zoom);
 		if (tempObj != null) {
 			tempObj.setStrokeColor(Color.GREEN);
 			tempObj.setStyle(Style.STROKE);
@@ -165,6 +167,7 @@ public class PaliTouchCanvas extends View {
 		super.onTouchEvent(e);
 		switch (e.getAction() & MotionEvent.ACTION_MASK) {
 		case MotionEvent.ACTION_DOWN:
+			directingCnt = 0;
 
 			fillColor = Integer.toHexString(PaliCanvas.fillColor).substring(2);
 			strokeColor = Integer.toHexString(PaliCanvas.strokeColor)
@@ -241,17 +244,24 @@ public class PaliTouchCanvas extends View {
 				selector.stopTimeout();
 				if(!prepinch)
 				{
-					if (directing(e, Point0, Point1))
-						zoom = false;
-					else
-						zoom = true;
+					if(directingCnt > 3) {
+						if (directing(e, Point0, Point1))
+							zoom = false;
+						else
+							zoom = true;
+						
+						prepinch = true;
+					}
+					directingCnt++;
 					
-					prepinch = true;
 				}
 				
 				if(!zoom) {
 					float dx = e.getX(0) - Point0.fx;
 					float dy = e.getY(0) - Point0.fy;
+					
+					Log.i("debug", "dx: "+dx+" dy: "+dy);
+					Log.i("debug", "zoom: "+PaliCanvas.zoom);
 
 					PaliCanvas.canvasX += dx;
 					PaliCanvas.canvasY += dy;
@@ -280,11 +290,11 @@ public class PaliTouchCanvas extends View {
 					if (newDist - oldDist > 20) { // zoom in
 						oldDist = newDist;
 						if (PaliCanvas.zoom < 300)
-							PaliCanvas.zoom *= 1.04;
+							PaliCanvas.zoom *= 1.05;
 					} else if (oldDist - newDist > 20) { // zoom out
 						oldDist = newDist;
 						if (PaliCanvas.zoom > 0.5)
-							PaliCanvas.zoom /= 1.04;
+							PaliCanvas.zoom /= 1.05;
 					}
 					if (selected) {
 						rect = selector.getRect();
@@ -605,9 +615,8 @@ public class PaliTouchCanvas extends View {
 	}
 
 	private boolean directing(MotionEvent e, PaliPoint p0, PaliPoint p1) {
-		float b = (p1.fy - e.getY(1)) / (p1.fx - e.getX(1));
-		float a = (p0.fy - e.getY(0)) / (p0.fx - e.getX(0));
-
+		float b = (p1.fx - e.getX(1));
+		float a = (p0.fx - e.getX(0));
 		if (a * b > 0)
 			return true;
 		else
