@@ -176,6 +176,8 @@ public class PaliConnector extends SAAgent {
 					}
 				}
 				
+				activity.connectSuccess();
+				
 			} else {
 				Log.e(TAG, "SASocket object is null");
 			}
@@ -277,12 +279,16 @@ public class PaliConnector extends SAAgent {
 	            	{
 	            		PaliCanvas.currentLayer = Integer.parseInt(obj.getString("currentLayer"));
 	            	}
-	            	else if(obj.has("checkedLayer"))
+	            	else if(obj.has("checkedtLayer"))
 	            	{
-	            		if(SVGParser.Layers.get(Integer.parseInt(obj.getString("checkedLayer"))).getVisible())
-	            			SVGParser.Layers.get(Integer.parseInt(obj.getString("checkedLayer"))).setVisible(false);
+	            		if(SVGParser.Layers.get(Integer.parseInt(obj.getString("checkedtLayer"))).getVisible())
+	            			SVGParser.Layers.get(Integer.parseInt(obj.getString("checkedtLayer"))).setVisible(false);
 	            		else
-	            			SVGParser.Layers.get(Integer.parseInt(obj.getString("checkedLayer"))).setVisible(true);
+	            			SVGParser.Layers.get(Integer.parseInt(obj.getString("checkedtLayer"))).setVisible(true);
+	            	}
+	            	else if(obj.has("insertLayer")) 
+	            	{
+	            		SVGParser.Layers.add(new PaliLayer());
 	            	}
 	            	else if(obj.has("deletedLayer"))
 	            	{
@@ -342,9 +348,7 @@ public class PaliConnector extends SAAgent {
 	            else if(jObject.has("undo"))
 	            {
 	            	if(PaliCanvas.history.isUnDoable())
-	            	{
-	            		PaliCanvas.history.Do(SVGParser.Layers);
-	            		SVGParser.Layers = PaliCanvas.history.UnDo();
+	            	{	    
 	            		SVGParser.Layers = PaliCanvas.history.UnDo();
 	            		mActivity.customview.DrawScreen();
 	            	}

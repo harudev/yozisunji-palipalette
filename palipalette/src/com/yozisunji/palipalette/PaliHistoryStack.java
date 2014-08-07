@@ -4,17 +4,18 @@ import java.util.ArrayList;
 
 public class PaliHistoryStack extends ArrayList<ArrayList<PaliLayer>> {
 	private int index = 0;
-	private boolean UndoCommited = false;
 
 	public PaliHistoryStack() {
 		super();
 	}
 
-	public void Do(ArrayList<PaliLayer> obj) {
-		if (UndoCommited) {
-			for (int i = index; i < this.size() - 1; i++)
-				this.remove(i);
+	public void Do(ArrayList<PaliLayer> obj) {		
+		if(index < this.size()) {
+			while(index != this.size()){
+				this.remove(this.size()-1);
+			}
 		}
+		
 		if (index >= 10) {
 			this.remove(0);
 			index--;
@@ -27,11 +28,24 @@ public class PaliHistoryStack extends ArrayList<ArrayList<PaliLayer>> {
 		this.add(index, temp);
 		index++;
 	}
+	
+	public void UndoDo(ArrayList<PaliLayer> obj) {
+
+		ArrayList<PaliLayer> temp = new ArrayList<PaliLayer>(obj.size());
+		for (PaliLayer layer : obj) {
+			temp.add(new PaliLayer(layer));
+		}
+		this.add(index, temp);
+
+	}
 
 	public ArrayList<PaliLayer> UnDo() {
+		if(index == this.size()) {
+			UndoDo(SVGParser.Layers);
+		}
+		
 		if (index > 0) {
 			index--;
-			UndoCommited = true;
 			return this.get(index);
 		}
 		return null;
@@ -41,7 +55,6 @@ public class PaliHistoryStack extends ArrayList<ArrayList<PaliLayer>> {
 		if (index < this.size() - 1) {
 			index++;
 			if (index == this.size() - 1)
-				UndoCommited = false;
 			return this.get(index);
 		}
 		return null;

@@ -46,6 +46,7 @@ public class MainActivity extends Activity {
 	public static final int STYLE_FILLCOLOR = 1;
 	public static final int STYLE_STROKEWIDTH = 2;
 	private Context ctx = this;
+	public boolean connectFlag = false;
 
 	static SVGParser svg;
 	public PaliCanvas customview;
@@ -521,11 +522,21 @@ public class MainActivity extends Activity {
 		}.start();
 
 	}
+	
+	public void connectSuccess() {
+		connectFlag = true;
+		mHandler.postDelayed(new IntroRunnable(), 100);
+	}
 
 	private class IntroRunnable implements Runnable {
 		@Override
 		public void run() {
-			intro.setVisibility(View.GONE);
+			if(!connectFlag) {
+				intro.setImageResource(R.drawable.no_conn);
+			}
+			else {
+				intro.setVisibility(View.GONE);
+			}
 		}
 	}
 }
