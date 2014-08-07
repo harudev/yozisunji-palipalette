@@ -121,7 +121,7 @@ public class MainActivity extends Activity {
 		createHelpImgDialog();
 
 		// test
-		//connectSuccess();
+		connectSuccess();
 		//
 	}
 
@@ -164,7 +164,9 @@ public class MainActivity extends Activity {
 				return true;
 			case KeyEvent.KEYCODE_MENU:
 				//popUpHelpMenu();
-				connectSuccess();
+				//popUpOpenMenu();
+				//popUpSaveMenu();
+				popUpExportMenu();
 				return true;
 
 			}
@@ -194,9 +196,9 @@ public class MainActivity extends Activity {
 				null);
 
 		saveDialog = new Dialog(this);
+		saveDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		saveDialog.setContentView(innerView);
 
-		saveDialog.setTitle("Save SVG");
 		saveDialog.setCancelable(true);
 		saveDialog.setCanceledOnTouchOutside(true);
 
@@ -211,16 +213,16 @@ public class MainActivity extends Activity {
 				R.layout.export_menu, null);
 
 		exportDialog = new Dialog(this);
+		exportDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		exportDialog.setContentView(innerView);
 
-		exportDialog.setTitle("Save PNG");
 		exportDialog.setCancelable(true);
 		exportDialog.setCanceledOnTouchOutside(true);
 
 		Button export_okBtn = (Button) exportDialog
 				.findViewById(R.id.export_okBtn);
 		Button export_cancleBtn = (Button) exportDialog
-				.findViewById(R.id.export_cancleBtn);
+				.findViewById(R.id.export_cancelBtn);
 		export_name = (EditText) exportDialog
 				.findViewById(R.id.export_editText);
 	}
@@ -230,9 +232,9 @@ public class MainActivity extends Activity {
 				null);
 
 		openDialog = new Dialog(this);
+		openDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		openDialog.setContentView(innerView);
 
-		openDialog.setTitle("Open SVG");
 		openDialog.setCancelable(true);
 		openDialog.setCanceledOnTouchOutside(true);
 
@@ -244,9 +246,9 @@ public class MainActivity extends Activity {
 				null);
 
 		helpDialog = new Dialog(this);
+		helpDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		helpDialog.setContentView(innerView);
 
-		helpDialog.setTitle("Help");
 		helpDialog.setCancelable(true);
 		helpDialog.setCanceledOnTouchOutside(true);
 
@@ -406,7 +408,7 @@ public class MainActivity extends Activity {
 			exportPNG(s);
 			exportDialog.cancel();
 			break;
-		case R.id.export_cancleBtn:
+		case R.id.export_cancelBtn:
 			exportDialog.cancel();
 			break;
 		}

@@ -7,5 +7,6 @@
     <string name="ConnectionEstablishedMsg">HelloAccessory Connection established with RemotePeer</string>
     <string name="title_activity_main">PaliPalette</string>
     <color name="background">#17375E</color>
+    <color name="pali">#FD6203</color>
 
 </resources>
