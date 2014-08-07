@@ -19,12 +19,22 @@ public class PaliItemList {
 	
 	public void putItem(int func, int item, int itemType, int width, int height, int d)
 	{
-		items.add(new PaliItem(func, item, itemType, width, height,d,FuncName));
+		items.add(item,new PaliItem(func, item, itemType, width, height,d,FuncName));
 	}
 	
 	public void putItem(int func, int item, int itemType, int width, int height, int d, String f)
 	{
-		items.add(new PaliItem(func, item, itemType, width, height,d,f));
+		items.add(item, new PaliItem(func, item, itemType, width, height,d,f));
+	}
+	
+	public void removeItem(int index)
+	{
+		items.get(index).setVisible(false);
+	}
+	
+	public void restoreItem(int index)
+	{
+		items.get(index).setVisible(true);
 	}
 	/*
 	public PaliItem getItem(int func, int item)

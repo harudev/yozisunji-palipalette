@@ -122,7 +122,6 @@ public class PaliConnector extends SAAgent {
 	@Override
 	protected void onFindPeerAgentResponse(SAPeerAgent remoteAgent, int result) {
 		// TODO Auto-generated method stub
-		Log.d(TAG, "onFindPeerAgentResponse  arg1 =" + result);
 		if(result == PEER_AGENT_FOUND )
 		{
 			onPeerFound(remoteAgent);

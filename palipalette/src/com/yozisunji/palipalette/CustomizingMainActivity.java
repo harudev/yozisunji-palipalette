@@ -7,6 +7,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -22,8 +23,11 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.GridLayout;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.GridLayout.Spec;
 
 public class CustomizingMainActivity extends Activity {
@@ -55,6 +59,7 @@ public class CustomizingMainActivity extends Activity {
 	private int selected;
 	Rect r;
 	
+	Dialog deleteDialog;
 	public boolean mLongPressed = false;
 	private Handler mHandler = new Handler();
 	private LongPressCheckRunnable mLongPressCheckRunnable = new LongPressCheckRunnable();
@@ -277,7 +282,7 @@ public class CustomizingMainActivity extends Activity {
 		// Allmenu Icon
 		GearUIList.get(Config).putItem(Config, 0, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_allmenu_icon, "All Menu");
 		// Customize Icon
-		GearUIList.get(Config).putItem(Config, 1, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_config_icon, "Configuration");
+		GearUIList.get(Config).putItem(Config, 1, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_config_icon, "Customizing");
 		
 		// Null Icon
 		GearUIList.get(Common).putItem(Common, 0, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.null_item);
@@ -300,62 +305,62 @@ public class CustomizingMainActivity extends Activity {
 		GearUIViewList.add(new PaliItemList("Config"));
 		
 		// Pick Object Icon
-		GearUIViewList.get(Select).putItem(Select, 0, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_pickobject_icon, "Pick Object");
-		// Layer Icon
-		GearUIViewList.get(Select).putItem(Select, 1, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_layer_icon,"Layer");
-		// Layer Widget
-		GearUIViewList.get(Select).putItem(Select, 2, PaliItem.TYPE_WIDGET, 3, 3, R.drawable.tool_layer_icon,"Layer");
+				GearUIViewList.get(Select).putItem(Select, 0, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_pickobject_icon, "Pick Object");
+				// Layer Icon
+				GearUIViewList.get(Select).putItem(Select, 1, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_layer_icon,"Layer");
+				// Layer Widget
+				GearUIViewList.get(Select).putItem(Select, 2, PaliItem.TYPE_WIDGET, 3, 3, R.drawable.tool_layer_3x3_widget,"Layer");
+						
+				// Pencil Icon
+				GearUIViewList.get(Drawing).putItem(Drawing, 0, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_pencil_icon,"Pencil");
+				// Brush Icon
+				GearUIViewList.get(Drawing).putItem(Drawing, 1, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_brush_icon,"Brush");
 				
-		// Pencil Icon
-		GearUIViewList.get(Drawing).putItem(Drawing, 0, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_pencil_icon,"Pencil");
-		// Brush Icon
-		GearUIViewList.get(Drawing).putItem(Drawing, 1, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_brush_icon,"Brush");
-		
-		// Rectangle Icon
-		GearUIViewList.get(Shape).putItem(Shape, 0, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_rect_icon,"Rectangle");
-		// Circle Icon
-		GearUIViewList.get(Shape).putItem(Shape, 1, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_circle_icon,"Circle");
-		// Ellipse Icon
-		GearUIViewList.get(Shape).putItem(Shape, 2, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_ellipse_icon,"Ellipse");
-		// Star Icon
-		GearUIViewList.get(Shape).putItem(Shape, 3, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_ellipse_icon,"Star");
-		// Shape Widget (2X1)
-		GearUIViewList.get(Shape).putItem(Shape, 4, PaliItem.TYPE_WIDGET, 2, 1, R.drawable.tool_shape_2x1_widget,"Shape Change");
-		// Shape Widget (2X1)
-		GearUIViewList.get(Shape).putItem(Shape, 5, PaliItem.TYPE_WIDGET, 1, 2, R.drawable.tool_shape_2x1_widget,"Shape Change");
+				// Rectangle Icon
+				GearUIViewList.get(Shape).putItem(Shape, 0, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_rect_icon,"Rectangle");
+				// Circle Icon
+				GearUIViewList.get(Shape).putItem(Shape, 1, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_circle_icon,"Circle");
+				// Ellipse Icon
+				GearUIViewList.get(Shape).putItem(Shape, 2, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_ellipse_icon,"Ellipse");
+				// Star Icon
+				GearUIViewList.get(Shape).putItem(Shape, 3, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_star_icon,"Star");
+				// Shape Widget (2X1)
+				GearUIViewList.get(Shape).putItem(Shape, 4, PaliItem.TYPE_WIDGET, 2, 1, R.drawable.tool_shape_2x1_widget,"Shape Change");
+				// Shape Widget (2X1)
+				GearUIViewList.get(Shape).putItem(Shape, 5, PaliItem.TYPE_WIDGET, 1, 2, R.drawable.tool_shape_1x2_widget,"Shape Change");
+						
 				
-		
-		// Color Icon
-		GearUIViewList.get(Style).putItem(Style, 0, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_color_icon,"Color");
-		// Color Widget
-		GearUIViewList.get(Style).putItem(Style, 1, PaliItem.TYPE_WIDGET, 3, 3, R.drawable.tool_color_3x3_widget, "Color");
-		// Stroke Icon
-		GearUIViewList.get(Style).putItem(Style, 2, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_color_icon,"Stroke");
-		// Stroke Widget
-		GearUIViewList.get(Style).putItem(Style, 3, PaliItem.TYPE_WIDGET, 1, 3, R.drawable.tool_stroke_1x3_widget, "Stroke Width");
-		
-		
-		// New File Icon
-		GearUIViewList.get(File).putItem(File, 0, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_new_icon, "New File");
-		// Open File Icon
-		GearUIViewList.get(File).putItem(File, 1, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_open_icon, "Open File");
-		// Save File Icon
-		GearUIViewList.get(File).putItem(File, 2, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_save_icon, "Save File");
-		// Export File Icon
-		GearUIViewList.get(File).putItem(File, 3, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_export_icon, "Export File");
-		// File Icon
-		GearUIViewList.get(File).putItem(File, 4, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_export_icon, "File");
-		
-		
-		// Undo Icon
-		GearUIViewList.get(History).putItem(History, 0, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_undo_icon, "Undo");
-		// Redo Icon
-		GearUIViewList.get(History).putItem(History, 1, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_redo_icon, "Redo");
-		
-		// Allmenu Icon
-		GearUIViewList.get(Config).putItem(Config, 0, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_allmenu_icon, "All Menu");
-		// Customize Icon
-		GearUIViewList.get(Config).putItem(Config, 1, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_config_icon, "Configuration");
+				// Color Icon
+				GearUIViewList.get(Style).putItem(Style, 0, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_color_icon,"Color");
+				// Color Widget
+				GearUIViewList.get(Style).putItem(Style, 1, PaliItem.TYPE_WIDGET, 3, 3, R.drawable.tool_color_3x3_widget, "Color");
+				// Stroke Icon
+				GearUIViewList.get(Style).putItem(Style, 2, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_stroke_icon,"Stroke");
+				// Stroke Widget
+				GearUIViewList.get(Style).putItem(Style, 3, PaliItem.TYPE_WIDGET, 1, 3, R.drawable.tool_stroke_1x3_widget, "Stroke Width");
+				
+				
+				// New File Icon
+				GearUIViewList.get(File).putItem(File, 0, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_new_icon, "New File");
+				// Open File Icon
+				GearUIViewList.get(File).putItem(File, 1, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_open_icon, "Open File");
+				// Save File Icon
+				GearUIViewList.get(File).putItem(File, 2, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_save_icon, "Save File");
+				// Export File Icon
+				GearUIViewList.get(File).putItem(File, 3, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_export_icon, "Export File");
+				// File Icon
+				GearUIViewList.get(File).putItem(File, 4, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_file_icon, "File");
+				
+				
+				// Undo Icon
+				GearUIViewList.get(History).putItem(History, 0, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_undo_icon, "Undo");
+				// Redo Icon
+				GearUIViewList.get(History).putItem(History, 1, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_redo_icon, "Redo");
+				
+				// Allmenu Icon
+				GearUIViewList.get(Config).putItem(Config, 0, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_allmenu_icon, "All Menu");
+				// Customize Icon
+				GearUIViewList.get(Config).putItem(Config, 1, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_config_icon, "Configuration");
 	}
 	
 	private void addScreen()
@@ -448,15 +453,9 @@ public class CustomizingMainActivity extends Activity {
 		 switch(e.getAction() & MotionEvent.ACTION_MASK)
 		 {		 
 		 case MotionEvent.ACTION_DOWN:
+			 
 			r= new Rect();
 			
-			
-			addScreen.getGlobalVisibleRect(r);
-			if(r.contains((int)e.getX(),(int)e.getY())) 
-			{
-				this.addScreen();
-				break;
-			}
 			for(int i=0;i<screens.size();i++)
 			{
 				
@@ -474,11 +473,10 @@ public class CustomizingMainActivity extends Activity {
 			}
 			preX = e.getX();
 			preY = e.getY();
-			 return false;
+			return false;
 		 case MotionEvent.ACTION_MOVE:
 			 if(mPressed)
 			 {	
-				 stopTimeout();
 				indexX = 4 * (int)e.getX() / this.activitySize.x;
 			    indexY = 2 * (int)e.getY() / this.activitySize.y;
 
@@ -491,6 +489,8 @@ public class CustomizingMainActivity extends Activity {
 			    
 			    if((index < screens.size()) && index!=selected)
 			    {
+			    	stopTimeout();
+			    	
 			    	PaliScreen selScreen = screens.get(selected);
 			    	GridLayout.LayoutParams gridLayoutParam = (GridLayout.LayoutParams)selScreen.getLayoutParams();
 			    	screens.remove(selScreen);
@@ -561,27 +561,44 @@ public class CustomizingMainActivity extends Activity {
 			 }
 			 return false;
 		 case MotionEvent.ACTION_UP:
-			 if(mPressed)
+			 if(mLongPressed)
 			 {
-				 stopTimeout();
-				 mPressed=false;
-				 screens.get(selected).setBackgroundColor(BackgroundColor);
+
+					finishLongPressed();
+					return true;
 			 }
-			 if(preX == e.getX() && preY == e.getY()){
-				 indexX = 4 * (int)e.getX() / this.activitySize.x;
-				 indexY = 2 * (int)e.getY() / this.activitySize.y;
-				 
-				 Intent intent = new Intent(this, CustomizingActivity.class);
-				 try {
-					intent.putExtra("json", this.PackJSON().toString());
-					intent.putExtra("selected", indexY*4+indexX);
-				 } catch (JSONException error) {
-					// TODO Auto-generated catch block
-						error.printStackTrace();
+			 else{
+				 if(mPressed)
+				 {
+					 stopTimeout();
+					 mPressed=false;
+					 screens.get(selected).setBackgroundColor(BackgroundColor);
 				 }
-				 startActivity(intent);
+				 else
+				 {
+					addScreen.getGlobalVisibleRect(r);
+					if(r.contains((int)e.getX(),(int)e.getY())) 
+					{
+						this.addScreen();
+					}
+					return true;
+				 }
+				 if(preX == e.getX() && preY == e.getY()){
+					 indexX = 4 * (int)e.getX() / this.activitySize.x;
+					 indexY = 2 * (int)e.getY() / this.activitySize.y;
+					 
+					 Intent intent = new Intent(this, CustomizingActivity.class);
+					 try {
+						intent.putExtra("json", this.PackJSON().toString());
+						intent.putExtra("selected", indexY*4+indexX);
+					 } catch (JSONException error) {
+						// TODO Auto-generated catch block
+							error.printStackTrace();
+					 }
+					 startActivity(intent);
+				 }
+				 
 			 }
-			 
 			 return true;
 		 }
 		 return true;
@@ -599,42 +616,116 @@ public class CustomizingMainActivity extends Activity {
 	public void finishLongPressed() {
 		this.mLongPressed = false;
 	}
+	
+	private void createDeleteDialog(boolean t) {
+		final View innerView = getLayoutInflater().inflate(R.layout.deletedialog,
+				null);
+		deleteDialog = new Dialog(this);
+		deleteDialog.setContentView(innerView);
+		
+		if(t)
+		{
+			deleteDialog.setTitle("Delete Confirmation");
+			deleteDialog.setCancelable(false);
+			deleteDialog.setCanceledOnTouchOutside(false);
+	
+			Button delete_okBtn = (Button) deleteDialog.findViewById(R.id.delete_okBtn);
+			Button delete_cancelBtn = (Button) deleteDialog.findViewById(R.id.delete_cancelBtn);
+			TextView deleteText = (TextView) deleteDialog.findViewById(R.id.deleteText);
+			deleteText.setText("Are you sure to delete the screen?");
+		}
+		else
+		{
+			deleteDialog.setTitle("Delete Failed");
+			deleteDialog.setCancelable(false);
+			deleteDialog.setCanceledOnTouchOutside(false);
+	
+			Button delete_okBtn = (Button) deleteDialog.findViewById(R.id.delete_okBtn);
+			Button delete_cancelBtn = (Button) deleteDialog.findViewById(R.id.delete_cancelBtn);
+			delete_cancelBtn.setVisibility(View.GONE);
+			TextView deleteText = (TextView) deleteDialog.findViewById(R.id.deleteText);
+			deleteText.setText("You can't delete the screen that include \"Customize\" Icon!");
+		}
+	}
+	
+	public void popUpDeleteDiglog() {
+		deleteDialog.show();
+	}
 	private class LongPressCheckRunnable implements Runnable {
 		@Override
 		public void run() {
 			mLongPressed = true;
 			PaliScreen selScreen = screens.get(selected);
 	    	GridLayout.LayoutParams gridLayoutParam = (GridLayout.LayoutParams)selScreen.getLayoutParams();
-	    	screens.remove(selScreen);
 	    	PaliScreen temp;
 	    	GridLayout.LayoutParams tempLayoutParam;
 	    	
 	    	int dx, dy;
-			
-			for(int i=selected;i<screens.size();i++) {
-	    		temp=screens.get(i);
-	    		tempLayoutParam = (GridLayout.LayoutParams) screens.get(i).getLayoutParams();
-				if(i>3)
+	    	int i;
+	    	
+	    	if(selScreen.hasCustomize())
+	    	{
+	    		
+	    	}
+	    	else
+	    	{
+				for(i=selected+1;i<screens.size();i++) {
+		    		temp=screens.get(i);
+		    		tempLayoutParam = (GridLayout.LayoutParams) screens.get(i).getLayoutParams();
+					if(i>4)
+		    		{
+		    			dx=(i-1)%4;
+		    			dy=1;
+		    		}
+		    		else if(i==4)
+		    		{
+		    			dx = 3;
+		    			dy = 0;
+		    		}
+		    		else
+		    		{
+		    			dx = (i-1)%4;
+		    			dy=0;
+		    		}
+		    		tempLayoutParam.rowSpec = GridLayout.spec(dy,1);
+		    		tempLayoutParam.columnSpec = GridLayout.spec(dx,1);
+		    		temp.setLayoutParams(tempLayoutParam);
+		    	}
+				
+				temp=addScreen;
+	    		tempLayoutParam = (GridLayout.LayoutParams) addScreen.getLayoutParams();
+				if(i>4)
 	    		{
-	    			dx=i%4;
+	    			dx=(i-1)%4;
 	    			dy=1;
 	    		}
-	    		else if(i==3)
+	    		else if(i==4)
 	    		{
 	    			dx = 3;
 	    			dy = 0;
 	    		}
 	    		else
 	    		{
-	    			dx = i%4;
+	    			dx = (i-1)%4;
 	    			dy=0;
 	    		}
 	    		tempLayoutParam.rowSpec = GridLayout.spec(dy,1);
 	    		tempLayoutParam.columnSpec = GridLayout.spec(dx,1);
 	    		temp.setLayoutParams(tempLayoutParam);
-	    	}
-			selScreen.setVisibility(View.GONE);
-			finishLongPressed();
+	    		
+	    		if(addX>0)
+					addX--;
+				else if(addY>0)
+				{
+					addY--;
+					addX=3;
+				}
+	    		
+	    		screens.remove(selScreen);
+				selScreen.setVisibility(View.GONE);
+				
+				mPressed = false;
+			}
 		}
 	}
 }

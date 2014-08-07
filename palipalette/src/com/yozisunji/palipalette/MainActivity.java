@@ -202,7 +202,7 @@ public class MainActivity extends Activity {
 
 		Button save_okBtn = (Button) saveDialog.findViewById(R.id.save_okBtn);
 		Button save_cancleBtn = (Button) saveDialog
-				.findViewById(R.id.save_cancleBtn);
+				.findViewById(R.id.save_cancelBtn);
 		save_name = (EditText) saveDialog.findViewById(R.id.save_editText);
 	}
 
@@ -398,7 +398,7 @@ public class MainActivity extends Activity {
 			saveSVG(s);
 			saveDialog.cancel();
 			break;
-		case R.id.save_cancleBtn:
+		case R.id.save_cancelBtn:
 			saveDialog.cancel();
 			break;
 		case R.id.export_okBtn:

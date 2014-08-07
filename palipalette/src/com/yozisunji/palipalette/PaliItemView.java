@@ -13,7 +13,7 @@ public class PaliItemView extends ImageView {
 	int x, y;
 	Bitmap image;
 	GridLayout.LayoutParams gl;
-	
+	boolean touchable;
 	PaliItem iteminfo;
 	
 	public PaliItemView(Context context) {
@@ -33,6 +33,10 @@ public class PaliItemView extends ImageView {
 		this.setImageResource(iteminfo.imageid);
 	}
 	
+	public void setTouchable(boolean t)
+	{
+		this.touchable = t;
+	}
 	public void setSize(int w, int h)
 	{
 		gl = (GridLayout.LayoutParams)this.getLayoutParams();

@@ -11,6 +11,8 @@ public class PaliItem
 	int imageid;
 	int itemType;
 	
+	boolean visible = true;
+	
 	String funcName;
 	String itemTypeName;
 		
@@ -36,5 +38,15 @@ public class PaliItem
 		case TYPE_WIDGET:
 			itemTypeName="Widget";
 		}
+	}
+	
+	public void setVisible(boolean v)
+	{
+		this.visible = v;
+	}
+	
+	public boolean getVisible()
+	{
+		return this.visible;
 	}
 }

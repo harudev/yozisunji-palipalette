@@ -99,16 +99,25 @@ public class PaliExpandableAdapter extends BaseExpandableListAdapter {
         }
         
         TextView text1 = (TextView)view.findViewById(R.id.functionNameView);
-        text1.setText(list.get(groupPosition).items.get(childPosition).funcName);
         TextView text2 = (TextView)view.findViewById(R.id.itemTypeView);
-        text2.setText(" - " + list.get(groupPosition).items.get(childPosition).itemTypeName);
         ImageView imgview = (ImageView)view.findViewById(R.id.itemImageView);
-		imgview.setImageResource(list.get(groupPosition).items.get(childPosition).imageid);
-		
-		
-		view.setOnTouchListener(touch);
-		view.setTag(list.get(groupPosition).items.get(childPosition));
-		
+        
+        if(list.get(groupPosition).items.get(childPosition).getVisible())
+        {
+	        text1.setText(list.get(groupPosition).items.get(childPosition).funcName);
+	        text2.setText(" - " + list.get(groupPosition).items.get(childPosition).itemTypeName);
+			imgview.setImageResource(list.get(groupPosition).items.get(childPosition).imageid);
+			
+			
+			view.setOnTouchListener(touch);
+			view.setTag(list.get(groupPosition).items.get(childPosition));
+        }
+        else
+        {
+        	text1.setVisibility(View.GONE);
+        	text2.setVisibility(View.GONE);
+        	imgview.setVisibility(View.GONE);
+        }
         return view;
 	}
 

@@ -7,6 +7,10 @@ import java.util.ArrayList;
 
 
 
+
+
+
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -15,10 +19,12 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.widget.GridLayout;
+import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
 
 public class PaliScreen extends GridLayout{
 	ArrayList<PaliItemView> items;
@@ -30,6 +36,13 @@ public class PaliScreen extends GridLayout{
 	private int indexX, indexY;
 	
 	private boolean touchable = false;
+	
+	public boolean mLongPressed = false;
+	private Handler mHandler = new Handler();
+	private LongPressCheckRunnable mLongPressCheckRunnable = new LongPressCheckRunnable();
+	private int mLongPressTimeout=700;
+	
+	CustomizingActivity parent = null;
 	
 	public PaliScreen(Context context) {
 		super(context);
@@ -44,6 +57,7 @@ public class PaliScreen extends GridLayout{
 		this.setColumnCount(3);
 		touchable = false;
 		this.setBackgroundColor( Color.rgb(3,74,132));
+		mLongPressTimeout = ViewConfiguration.getLongPressTimeout();
 		initialize();
 	}
 	
@@ -60,9 +74,13 @@ public class PaliScreen extends GridLayout{
 		this.setRowCount(3);
 		this.setColumnCount(3);
 		touchable = false;
+		mLongPressTimeout = ViewConfiguration.getLongPressTimeout();
 		initialize();		
 	}
-	
+	public void setParent(CustomizingActivity p)
+	{
+		parent = p;
+	}
 	public void initialize()
 	{
 		this.items.clear();
@@ -137,6 +155,10 @@ public class PaliScreen extends GridLayout{
 		temp.setLayoutParams(temp.gl);
 		
 		this.items.set(posY*3+posX, temp);
+		
+		CustomizingMainActivity.GearUIViewList.get(func).removeItem(item);
+		if(parent!=null)
+			parent.reDraw();
 	}
 	public void copy(PaliScreen p, int width, int height)
 	{	
@@ -171,6 +193,10 @@ public class PaliScreen extends GridLayout{
 	public void setTouchable(boolean t)
 	{
 		touchable = t;
+		for(int i=0;i<this.items.size();i++)
+		{
+			items.get(i).setTouchable(t);
+		}
 	}
 	
 	public void putJSON(JSONArray json) throws JSONException
@@ -227,6 +253,15 @@ public class PaliScreen extends GridLayout{
 		}
 		return pt;
 	}
+	public boolean hasCustomize()
+	{
+		for(int i=0;i<items.size();i++)
+		{
+			if(items.get(i).iteminfo.funcNum==CustomizingMainActivity.Config && items.get(i).iteminfo.itemNum==1)
+				return true;
+		}
+		return false;
+	}
 	@Override
 	public boolean onTouchEvent(MotionEvent e)
 	{
@@ -247,10 +282,11 @@ public class PaliScreen extends GridLayout{
 					items.get(i).getGlobalVisibleRect(r);
 					if(r.contains((int)e.getX(),(int)e.getY()))
 					{
-						
 						selected=i;
 						mPressed=true;
 						items.get(selected).setBackgroundColor(Color.argb(80, 255, 255, 255));
+						if(!(items.get(i).iteminfo.funcNum == CustomizingMainActivity.Config && items.get(i).iteminfo.itemNum == 1))
+							startTimeout();
 						break;
 					}
 				}
@@ -263,44 +299,115 @@ public class PaliScreen extends GridLayout{
 				{
 					 if(i!=selected && items.get(i).iteminfo.funcNum==PaliCanvas.TOOL_COMMON)
 					 {
-							items.get(i).getGlobalVisibleRect(r);
-							if(r.contains((int)e.getX(),(int)e.getY()))
-							{	
-								
-								PaliItemView temp = items.get(selected);
-						    	PaliItemView change = items.get(i);
-						    	
-						    	
-						    	GridLayout.LayoutParams gridLayoutParam = (GridLayout.LayoutParams)temp.getLayoutParams();
-						    	GridLayout.LayoutParams changeLayoutParam = (GridLayout.LayoutParams)change.getLayoutParams();
-						    	temp.setLayoutParams(changeLayoutParam);
-						    	change.setLayoutParams(gridLayoutParam);
-						    	
-						    	int tempX, tempY;
-						    	tempX = temp.x;
-						    	tempY = temp.y;
-						    	
-						    	temp.x = change.x;
-						    	temp.y = change.y;
-						    	
-						    	change.x = tempX;
-						    	change.y = tempY;
-						    	break;
-						    
-							}
+						items.get(i).getGlobalVisibleRect(r);
+						if(r.contains((int)e.getX(),(int)e.getY()))
+						{	
+							stopTimeout();
+							PaliItemView temp = items.get(selected);
+					    	PaliItemView change = items.get(i);
+					    	
+					    	
+					    	GridLayout.LayoutParams gridLayoutParam = (GridLayout.LayoutParams)temp.getLayoutParams();
+					    	GridLayout.LayoutParams changeLayoutParam = (GridLayout.LayoutParams)change.getLayoutParams();
+					    	temp.setLayoutParams(changeLayoutParam);
+					    	change.setLayoutParams(gridLayoutParam);
+					    	
+					    	int tempX, tempY;
+					    	tempX = temp.x;
+					    	tempY = temp.y;
+					    	
+					    	temp.x = change.x;
+					    	temp.y = change.y;
+					    	
+					    	change.x = tempX;
+					    	change.y = tempY;
+					    	
+					    	//selected = i;
+					    	break;
+					    
+						}
 					 }
 				}
 			 }
 			 return true;
 		 case MotionEvent.ACTION_UP:
-			 if(mPressed)
+			 if(mLongPressed)
 			 {
-				 
-				 mPressed=false;
-				 items.get(selected).setBackgroundColor(Color.argb(0, 255, 255, 255));
+
+					finishLongPressed();
+					return true;
 			 }
-			 return true;
+			 else{
+				 if(mPressed)
+				 {
+					 mPressed=false;
+					 items.get(selected).setBackgroundColor(Color.argb(0, 255, 255, 255));
+					 
+				 }
+				 return true;
+			 }
 		 }
 		 return true;
+	}
+	
+	public void startTimeout() {
+		mLongPressed = false;
+		mHandler.postDelayed(mLongPressCheckRunnable, mLongPressTimeout);
+	}
+
+	public void stopTimeout() {
+		if (!mLongPressed)
+			mHandler.removeCallbacks(mLongPressCheckRunnable);
+	}
+
+	public void finishLongPressed() {
+		this.mLongPressed = false;
+	}
+	private class LongPressCheckRunnable implements Runnable {
+		@Override
+		public void run() {
+			mLongPressed = true;
+
+			PaliItemView temp = items.get(selected);
+			
+			CustomizingMainActivity.GearUIViewList.get(temp.iteminfo.funcNum).restoreItem(temp.iteminfo.itemNum);
+			
+			if(temp.iteminfo.height>1)
+			{
+				for(int i=temp.y+1; i<temp.iteminfo.height+temp.y ; i++)
+				{
+					for(int j=temp.x+1; j<temp.iteminfo.width+temp.x; j++)
+					{
+						items.get(i*3+j).setVisibility(View.VISIBLE);
+					}
+				}
+			}
+			else
+			{
+				for(int j=temp.x+1; j<temp.iteminfo.width+temp.x; j++)
+				{
+					items.get(temp.y*3+j).setVisibility(View.VISIBLE);
+				}
+			}
+			
+			temp.iteminfo = CustomizingMainActivity.GearUIList.get(PaliCanvas.TOOL_COMMON).items.get(0);
+			temp.setImageResource(temp.iteminfo.imageid);
+			
+			temp.gl = (GridLayout.LayoutParams)temp.getLayoutParams();
+			temp.gl.rowSpec = GridLayout.spec(temp.y,temp.iteminfo.height);
+			temp.gl.columnSpec = GridLayout.spec(temp.x,temp.iteminfo.width);
+			temp.setLayoutParams(temp.gl);
+			
+			items.set(selected, temp);
+			items.get(selected).setBackgroundColor(Color.argb(0, 255, 255, 255));
+			
+			
+			
+			invalidate();
+			if(parent!=null)
+				parent.reDraw();
+			
+			mPressed = false;
+		}
 	}
 }

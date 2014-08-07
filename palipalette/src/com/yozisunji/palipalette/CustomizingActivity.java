@@ -61,14 +61,13 @@ public class CustomizingActivity extends Activity {
 		}
 		
 		listview = (ExpandableListView)this.findViewById(R.id.itemmainlistview);
-		listview.setAdapter(new PaliExpandableAdapter(this,CustomizingMainActivity.GearUIViewList,vl));
+		listview.setAdapter(new PaliExpandableAdapter(this,CustomizingMainActivity.GearUIViewList,listTouchListener));
 		listview.expandGroup(0);
 		listview.expandGroup(1);
 		listview.expandGroup(2);
 		listview.expandGroup(3);
 		listview.expandGroup(4);
 		listview.expandGroup(5);
-		//listview.setOnChildClickListener(listClickListener);
 		this.screen.setTouchable(true);
 		this.screen.setSize(900, 900);
 	}
@@ -99,8 +98,10 @@ public class CustomizingActivity extends Activity {
 	@Override
 	public boolean dispatchTouchEvent(MotionEvent e)
 	{
-		Rect r = new Rect();;
-		screen.dispatchTouchEvent(e);
+		Rect r = new Rect();
+		screen.getGlobalVisibleRect(r);
+		if(r.contains((int)e.getX(),(int)e.getY()))
+			screen.dispatchTouchEvent(e);
 		listview.getGlobalVisibleRect(r);
 		if(r.contains((int)e.getX(),(int)e.getY()))
 			listview.dispatchTouchEvent(e);
@@ -108,7 +109,7 @@ public class CustomizingActivity extends Activity {
 		return true;
 	}
 	
-	View.OnTouchListener vl= new View.OnTouchListener() {
+	View.OnTouchListener listTouchListener= new View.OnTouchListener() {
 
 		@Override
 		public boolean onTouch(View v, MotionEvent event) {
@@ -173,6 +174,7 @@ public class CustomizingActivity extends Activity {
 				 if(tempP.x<999 && tempP.y<999)
 				 {
 					 screen.putItem(selectedItem.funcNum, selectedItem.itemNum, tempP.x, tempP.y);
+					 CustomizingMainActivity.GearUIViewList.get(selectedItem.funcNum).removeItem(selectedItem.itemNum);
 				 }
 				 selectedItem=null;
 				 mPressed = false;
@@ -184,6 +186,11 @@ public class CustomizingActivity extends Activity {
 			 return true;
 		 }
 		 return true;
+	}
+	
+	public void reDraw()
+	{
+		this.listview.invalidate();
 	}
 	
 	private void ParseJSON(JSONObject json)
