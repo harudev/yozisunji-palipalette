@@ -9,6 +9,7 @@ public class PaliEllipse extends PaliObject {
 	
 	PaliEllipse (RectF r)
 	{
+		super();
 		this.rect = new RectF(r);
 		this.left = rect.left;
 		this.top = rect.top;
@@ -18,6 +19,7 @@ public class PaliEllipse extends PaliObject {
 		
 	PaliEllipse(float left, float top, float right, float bottom)
 	{
+		super();
 		s_paint = new Paint();        
         s_paint.setAntiAlias(true);        
         s_paint.setStyle(Paint.Style.STROKE);
@@ -123,7 +125,12 @@ public class PaliEllipse extends PaliObject {
 
 	@Override
 	public PaliObject copy() {
-		// TODO Auto-generated method stub
-		return null;
+		PaliEllipse ellipse = new PaliEllipse(this.left, this.top, this.right, this.bottom, this.theta, this.s_paint, this.f_paint);
+		
+		ellipse.svgtag = this.svgtag;
+		ellipse.type = this.type;
+		ellipse.filter = this.filter;
+
+		return ellipse;
 	}
 }

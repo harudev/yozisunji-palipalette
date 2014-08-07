@@ -91,7 +91,12 @@ public class PaliStar extends PaliObject {
 	}
 	@Override
 	public PaliObject copy() {
-		// TODO Auto-generated method stub
-		return null;
+		PaliStar star = new PaliStar(this.x, this.y, this.r, this.theta, this.s_paint, this.f_paint);
+		
+		star.svgtag = this.svgtag;
+		star.type = this.type;
+		star.filter = this.filter;
+
+		return star;
 	}
 }

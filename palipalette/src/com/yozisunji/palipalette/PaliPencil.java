@@ -99,7 +99,12 @@ public class PaliPencil extends PaliObject {
 	}
 	@Override
 	public PaliObject copy() {
-		// TODO Auto-generated method stub
-		return null;
+		PaliPencil pencil = new PaliPencil(this.path, this.rect, this.theta, this.s_paint);
+		
+		pencil.svgtag = this.svgtag;
+		pencil.type = this.type;
+		pencil.filter = this.filter;
+
+		return pencil;
 	}
 }

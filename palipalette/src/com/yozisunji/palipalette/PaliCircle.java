@@ -110,7 +110,6 @@ public class PaliCircle extends PaliObject {
 		circle.type = this.type;
 		circle.filter = this.filter;
 
-		// TODO Auto-generated method stub
 		return circle;
 	}
 }

@@ -364,7 +364,6 @@ public class PaliTouchCanvas extends View {
 			return true;
 
 		case MotionEvent.ACTION_UP:
-			Log.i("debug", "UP");
 			tempObj = null;
 			this.invalidate();
 			
@@ -465,6 +464,8 @@ public class PaliTouchCanvas extends View {
 					}
 					return true;
 				case PaliCanvas.TOOL_PENCIL:
+					PaliCanvas.history.Do(SVGParser.Layers);
+					
 					minX = min(minX, upX);
 					minY = min(minY, upY);
 					maxX = max(maxX, upX);
@@ -484,6 +485,8 @@ public class PaliTouchCanvas extends View {
 					movingY.clear();
 					break;
 				case PaliCanvas.TOOL_BRUSH:
+					PaliCanvas.history.Do(SVGParser.Layers);
+					
 					html += "</g>";
 	
 					minX = min(minX, upX);
@@ -552,6 +555,8 @@ public class PaliTouchCanvas extends View {
 					canvas.DrawScreen();					
 					break;
 				case PaliCanvas.TOOL_RECTANGLE:
+					PaliCanvas.history.Do(SVGParser.Layers);
+					
 					left = Math.min(downX, upX);
 					top = Math.min(downY, upY);
 					right = Math.max(downX, upX);
@@ -564,6 +569,8 @@ public class PaliTouchCanvas extends View {
 					canvas.DrawScreen();
 					break;
 				case PaliCanvas.TOOL_STAR:
+					PaliCanvas.history.Do(SVGParser.Layers);
+					
 					r = (float) Math.sqrt((float) Math.pow(upX - downX, 2)
 							+ (float) Math.pow(upY - downY, 2));
 					cx = downX;
@@ -608,6 +615,8 @@ public class PaliTouchCanvas extends View {
 	}
 
 	public void deleteObject() {
+		PaliCanvas.history.Do(SVGParser.Layers);
+		
 		for (int i = 0; i < selector.selObjArr.size(); i++) {
 			SVGParser.Layers.get(selector.selObjArr.get(i).x).objs
 					.remove(selector.selObjArr.get(i).y);
@@ -634,6 +643,8 @@ public class PaliTouchCanvas extends View {
 	}
 
 	public void pasteObject() {
+		PaliCanvas.history.Do(SVGParser.Layers);
+		
 		translateX = pastePosX - copyPosX;
 		translateY = pastePosY - copyPosY;
 		for (int i = 0; i < copyObject.size(); i++) {
@@ -704,7 +715,9 @@ public class PaliTouchCanvas extends View {
 
 		@Override
 		public void run() {
-			if (selector.selObjArr.size() > 0) {
+			if (selector.selObjArr.size() > 0) {				
+				PaliCanvas.history.Do(SVGParser.Layers);
+				
 				for (int i = 0; i < selector.selObjArr.size(); i++) {
 					switch (style) {
 					case MainActivity.STYLE_STROKECOLOR:

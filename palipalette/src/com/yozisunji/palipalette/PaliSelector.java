@@ -200,6 +200,8 @@ public class PaliSelector extends View {
 			upY = e.getY();
 
 			if (mMovePressed) {
+				PaliCanvas.history.Do(SVGParser.Layers);
+				
 				for (int i = selObjArr.size() - 1; i >= 0; i--) {
 					SVGParser.Layers.get(selObjArr.get(i).x).objs.get(
 							selObjArr.get(i).y).Move(upX - downX - screenWidth,
@@ -207,6 +209,8 @@ public class PaliSelector extends View {
 				}
 				touchCanvas.selectedClear();
 			} else if (mRotatePressed) {
+				PaliCanvas.history.Do(SVGParser.Layers);
+				
 				for (int i = selObjArr.size() - 1; i >= 0; i--) {
 					float theta = (upX - downX) + (upY - downY);
 					SVGParser.Layers.get(selObjArr.get(i).x).objs.get(
@@ -215,6 +219,8 @@ public class PaliSelector extends View {
 				}
 				touchCanvas.selectedClear();
 			} else if (mScalePressed) {
+				PaliCanvas.history.Do(SVGParser.Layers);
+				
 				for (int i = selObjArr.size() - 1; i >= 0; i--) {
 					SVGParser.Layers.get(selObjArr.get(i).x).objs.get(
 							selObjArr.get(i).y).Scale((upX - downX) / 2,

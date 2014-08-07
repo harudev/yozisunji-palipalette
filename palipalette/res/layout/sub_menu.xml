@@ -6,23 +6,29 @@
 
     <ImageButton
         android:id="@+id/copyBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="85dp"
+        android:layout_height="85dp"
         android:onClick="OnClick"
+        android:padding="0sp"
+        android:scaleType="centerCrop"
         android:src="@drawable/icon_copy" />
 
     <ImageButton
         android:id="@+id/pasteBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="85dp"
+        android:layout_height="85dp"
         android:onClick="OnClick"
+        android:padding="0sp"
+        android:scaleType="centerCrop"
         android:src="@drawable/icon_paste" />
 
     <ImageButton
         android:id="@+id/deletBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="85dp"
+        android:layout_height="85dp"
         android:onClick="OnClick"
+        android:padding="0sp"
+        android:scaleType="centerCrop"
         android:src="@drawable/icon_delet" />
 
 </LinearLayout>

@@ -18,6 +18,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -56,6 +57,7 @@ public class MainActivity extends Activity {
 	public static int screenWidth;
 
 	ImageView intro;
+	ImageView noConnImg;
 	private Handler mHandler = new Handler();
 
 	private Dialog subDialog = null;
@@ -106,6 +108,9 @@ public class MainActivity extends Activity {
 		createSaveDialog();
 		createExportDialog();
 		createOpenDialog();
+		
+		
+		
 	}
 
 	@Override
@@ -165,6 +170,7 @@ public class MainActivity extends Activity {
 
 		subDialog.setCancelable(true);
 		subDialog.setCanceledOnTouchOutside(true);
+		subDialog.getWindow().setBackgroundDrawable(new ColorDrawable(0x000000));
 
 		copyBtn = (ImageButton) subDialog
 				.findViewById(R.id.copyBtn);
@@ -230,11 +236,11 @@ public class MainActivity extends Activity {
 		deletBtn.setVisibility(View.VISIBLE);
 		
 		if(touchview.copyObject.size() == 0) {
-			pasteBtn.setVisibility(View.INVISIBLE);
+			pasteBtn.setVisibility(View.GONE);
 		}
 		if(touchview.selector.selObjArr.size() == 0) {
-			copyBtn.setVisibility(View.INVISIBLE);
-			deletBtn.setVisibility(View.INVISIBLE);
+			copyBtn.setVisibility(View.GONE);
+			deletBtn.setVisibility(View.GONE);
 		}
 		
 		subDialog.show();

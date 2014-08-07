@@ -123,7 +123,12 @@ public class PaliRectangle extends PaliObject {;
 	}
 	@Override
 	public PaliObject copy() {
-		// TODO Auto-generated method stub
-		return null;
+		PaliRectangle rect = new PaliRectangle(this.left, this.top, this.right, this.bottom, this.theta, this.s_paint, this.f_paint);
+		
+		rect.svgtag = this.svgtag;
+		rect.type = this.type;
+		rect.filter = this.filter;
+
+		return rect;
 	}
 }

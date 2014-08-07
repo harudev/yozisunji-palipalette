@@ -49,21 +49,6 @@ public class PaliBrush extends PaliObject {
 		tagSet();
 	}
 
-	PaliBrush(String tag, Bitmap bitmap, RectF rect, int scolor, int fcolor) {
-		svgtag = tag;
-		this.bitmap = bitmap;
-		s_paint = new Paint();
-		s_paint.setAntiAlias(true);
-		s_paint.setStyle(Paint.Style.STROKE);
-		s_paint.setColor(scolor);
-
-		f_paint = new Paint();
-		f_paint.setAntiAlias(true);
-		f_paint.setStyle(Paint.Style.FILL);
-		f_paint.setColor(fcolor);
-		this.rect = rect;
-	}
-
 	public void drawObject(Canvas c) {
 		this.type = PaliCanvas.TOOL_BRUSH;
 		this.rotRect = rotateRect(this.rect, this.theta);
@@ -97,7 +82,12 @@ public class PaliBrush extends PaliObject {
 
 	@Override
 	public PaliObject copy() {
-		// TODO Auto-generated method stub
-		return null;
+		PaliBrush brush = new PaliBrush(this.bitmap, this.rect, this.theta, this.f_paint, this.filter);
+		
+		brush.svgtag = this.svgtag;
+		brush.type = this.type;
+		brush.filter = this.filter;
+
+		return brush;
 	}
 }

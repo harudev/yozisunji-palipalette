@@ -343,6 +343,8 @@ public class PaliConnector extends SAAgent {
 	            {
 	            	if(PaliCanvas.history.isUnDoable())
 	            	{
+	            		PaliCanvas.history.Do(SVGParser.Layers);
+	            		SVGParser.Layers = PaliCanvas.history.UnDo();
 	            		SVGParser.Layers = PaliCanvas.history.UnDo();
 	            		mActivity.customview.DrawScreen();
 	            	}
