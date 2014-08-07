@@ -5,8 +5,8 @@
     android:id="@+id/save_root"
     android:orientation="vertical" >
 
-    <EditText
-        android:id="@+id/save_editText"
+    <TextView
+        android:id="@+id/deleteText"
         android:layout_width="match_parent"
         android:layout_height="50dp" />
 
@@ -17,14 +17,14 @@
         android:orientation="horizontal" >
 
         <Button
-            android:id="@+id/save_okBtn"
+            android:id="@+id/delete_okBtn"
             android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:onClick="OnClick"
             android:text="OK" />
 
         <Button
-            android:id="@+id/save_cancelBtn"
+            android:id="@+id/delete_cancelBtn"
             android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:onClick="OnClick"
