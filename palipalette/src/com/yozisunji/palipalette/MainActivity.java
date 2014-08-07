@@ -18,6 +18,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -25,6 +26,7 @@ import android.os.Message;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -74,10 +76,11 @@ public class MainActivity extends Activity {
 	ListView open_list;
 	ListView help_list;
 	ImageView help_img;
+	int imgCnt;
 
 	ImageButton copyBtn;
 	ImageButton pasteBtn;
-	ImageButton deletBtn;
+	ImageButton deletBtn;	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -118,7 +121,7 @@ public class MainActivity extends Activity {
 		createHelpImgDialog();
 
 		// test
-		connectSuccess();
+		//connectSuccess();
 		//
 	}
 
@@ -160,7 +163,8 @@ public class MainActivity extends Activity {
 				android.os.Process.killProcess(android.os.Process.myPid());
 				return true;
 			case KeyEvent.KEYCODE_MENU:
-				popUpHelpMenu();
+				//popUpHelpMenu();
+				connectSuccess();
 				return true;
 
 			}
@@ -339,7 +343,6 @@ public class MainActivity extends Activity {
 		});
 	}
 
-	int imgCnt;
 	public void popUpHelpImg(final int listNum) {
 		helpImgDialog.show();
 
@@ -625,6 +628,18 @@ public class MainActivity extends Activity {
 			} else {
 				intro.setVisibility(View.GONE);
 			}
+		}
+	}
+	
+	@Override
+	public boolean dispatchTouchEvent(MotionEvent e)
+	{
+		if(connectFlag) {
+			touchview.dispatchTouchEvent(e);
+			this.onTouchEvent(e);
+			return true;
+		} else {
+			return false;
 		}
 	}
 }
