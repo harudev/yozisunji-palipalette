@@ -6,7 +6,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -14,10 +13,13 @@ import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
+import android.view.HapticFeedbackConstants;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.GridLayout;
@@ -53,6 +55,11 @@ public class CustomizingMainActivity extends Activity {
 	private int selected;
 	Rect r;
 	
+	public boolean mLongPressed = false;
+	private Handler mHandler = new Handler();
+	private LongPressCheckRunnable mLongPressCheckRunnable = new LongPressCheckRunnable();
+	private int mLongPressTimeout=700;
+	
 	public static final int Select 	= 0;
 	public static final int Drawing	= 1;
 	public static final int Shape	= 2;
@@ -74,7 +81,7 @@ public class CustomizingMainActivity extends Activity {
 				WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
 		setContentView(R.layout.customizingmain);
 		
-		//ParseJSON();
+		mLongPressTimeout = ViewConfiguration.getLongPressTimeout();
 
 		getWindowManager().getDefaultDisplay().getSize(this.activitySize);
 		int tempX, tempY;
@@ -219,7 +226,7 @@ public class CustomizingMainActivity extends Activity {
 		// Layer Icon
 		GearUIList.get(Select).putItem(Select, 1, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_layer_icon,"Layer");
 		// Layer Widget
-		GearUIList.get(Select).putItem(Select, 2, PaliItem.TYPE_WIDGET, 3, 3, R.drawable.tool_layer_icon,"Layer");
+		GearUIList.get(Select).putItem(Select, 2, PaliItem.TYPE_WIDGET, 3, 3, R.drawable.tool_layer_3x3_widget,"Layer");
 				
 		// Pencil Icon
 		GearUIList.get(Drawing).putItem(Drawing, 0, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_pencil_icon,"Pencil");
@@ -233,11 +240,11 @@ public class CustomizingMainActivity extends Activity {
 		// Ellipse Icon
 		GearUIList.get(Shape).putItem(Shape, 2, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_ellipse_icon,"Ellipse");
 		// Star Icon
-		GearUIList.get(Shape).putItem(Shape, 3, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_ellipse_icon,"Star");
+		GearUIList.get(Shape).putItem(Shape, 3, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_star_icon,"Star");
 		// Shape Widget (2X1)
 		GearUIList.get(Shape).putItem(Shape, 4, PaliItem.TYPE_WIDGET, 2, 1, R.drawable.tool_shape_2x1_widget,"Shape Change");
 		// Shape Widget (2X1)
-		GearUIList.get(Shape).putItem(Shape, 5, PaliItem.TYPE_WIDGET, 1, 2, R.drawable.tool_shape_2x1_widget,"Shape Change");
+		GearUIList.get(Shape).putItem(Shape, 5, PaliItem.TYPE_WIDGET, 1, 2, R.drawable.tool_shape_1x2_widget,"Shape Change");
 				
 		
 		// Color Icon
@@ -245,7 +252,7 @@ public class CustomizingMainActivity extends Activity {
 		// Color Widget
 		GearUIList.get(Style).putItem(Style, 1, PaliItem.TYPE_WIDGET, 3, 3, R.drawable.tool_color_3x3_widget, "Color");
 		// Stroke Icon
-		GearUIList.get(Style).putItem(Style, 2, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_color_icon,"Stroke");
+		GearUIList.get(Style).putItem(Style, 2, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_stroke_icon,"Stroke");
 		// Stroke Widget
 		GearUIList.get(Style).putItem(Style, 3, PaliItem.TYPE_WIDGET, 1, 3, R.drawable.tool_stroke_1x3_widget, "Stroke Width");
 		
@@ -259,7 +266,7 @@ public class CustomizingMainActivity extends Activity {
 		// Export File Icon
 		GearUIList.get(File).putItem(File, 3, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_export_icon, "Export File");
 		// File Icon
-		GearUIList.get(File).putItem(File, 4, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_export_icon, "File");
+		GearUIList.get(File).putItem(File, 4, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_file_icon, "File");
 		
 		
 		// Undo Icon
@@ -460,7 +467,7 @@ public class CustomizingMainActivity extends Activity {
 					selected=i;
 					screens.get(selected).setBackgroundColor(Color.argb(60, 3, 74, 132));
 					mPressed=true;
-					//startTimeout();
+					startTimeout();
 					break;
 				}
 				
@@ -471,6 +478,7 @@ public class CustomizingMainActivity extends Activity {
 		 case MotionEvent.ACTION_MOVE:
 			 if(mPressed)
 			 {	
+				 stopTimeout();
 				indexX = 4 * (int)e.getX() / this.activitySize.x;
 			    indexY = 2 * (int)e.getY() / this.activitySize.y;
 
@@ -541,7 +549,7 @@ public class CustomizingMainActivity extends Activity {
 				    		}
 				    		tempLayoutParam.rowSpec = GridLayout.spec(dy,1);
 				    		tempLayoutParam.columnSpec = GridLayout.spec(dx,1);
-				    		temp.setLayoutParams(tempLayoutParam);;
+				    		temp.setLayoutParams(tempLayoutParam);
 				    	}
 				    }
 				    gridLayoutParam.rowSpec = GridLayout.spec(indexY,1);
@@ -555,6 +563,7 @@ public class CustomizingMainActivity extends Activity {
 		 case MotionEvent.ACTION_UP:
 			 if(mPressed)
 			 {
+				 stopTimeout();
 				 mPressed=false;
 				 screens.get(selected).setBackgroundColor(BackgroundColor);
 			 }
@@ -576,5 +585,56 @@ public class CustomizingMainActivity extends Activity {
 			 return true;
 		 }
 		 return true;
+	}
+	public void startTimeout() {
+		mLongPressed = false;
+		mHandler.postDelayed(mLongPressCheckRunnable, mLongPressTimeout);
+	}
+
+	public void stopTimeout() {
+		if (!mLongPressed)
+			mHandler.removeCallbacks(mLongPressCheckRunnable);
+	}
+
+	public void finishLongPressed() {
+		this.mLongPressed = false;
+	}
+	private class LongPressCheckRunnable implements Runnable {
+		@Override
+		public void run() {
+			mLongPressed = true;
+			PaliScreen selScreen = screens.get(selected);
+	    	GridLayout.LayoutParams gridLayoutParam = (GridLayout.LayoutParams)selScreen.getLayoutParams();
+	    	screens.remove(selScreen);
+	    	PaliScreen temp;
+	    	GridLayout.LayoutParams tempLayoutParam;
+	    	
+	    	int dx, dy;
+			
+			for(int i=selected;i<screens.size();i++) {
+	    		temp=screens.get(i);
+	    		tempLayoutParam = (GridLayout.LayoutParams) screens.get(i).getLayoutParams();
+				if(i>3)
+	    		{
+	    			dx=i%4;
+	    			dy=1;
+	    		}
+	    		else if(i==3)
+	    		{
+	    			dx = 3;
+	    			dy = 0;
+	    		}
+	    		else
+	    		{
+	    			dx = i%4;
+	    			dy=0;
+	    		}
+	    		tempLayoutParam.rowSpec = GridLayout.spec(dy,1);
+	    		tempLayoutParam.columnSpec = GridLayout.spec(dx,1);
+	    		temp.setLayoutParams(tempLayoutParam);
+	    	}
+			selScreen.setVisibility(View.GONE);
+			finishLongPressed();
+		}
 	}
 }

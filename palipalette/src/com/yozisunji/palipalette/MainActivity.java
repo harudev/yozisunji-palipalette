@@ -50,7 +50,7 @@ public class MainActivity extends Activity {
 	public PaliCanvas customview;
 	PaliTouchCanvas touchview;
 
-	public static HelloAccessoryProviderService hs;
+	public PaliConnector hs;
 
 	public static int screenHeight;
 	public static int screenWidth;
@@ -94,12 +94,14 @@ public class MainActivity extends Activity {
 		svg.addLayer();
 		//svg.parse(getResources().openRawResource(R.drawable.test));
 		customview = (PaliCanvas) findViewById(R.id.paliCanvas);
-		customview.setBound(800, 600);
+		customview.setBound(screenWidth, screenHeight);
 		touchview = (PaliTouchCanvas) findViewById(R.id.paliTouch);
 		touchview.setCanvasAddr(customview,
 				(LinearLayout) findViewById(R.id.selectLayout));
 
-		hs = new HelloAccessoryProviderService();
+
+		hs = new PaliConnector();
+		
 		createSubDialog();
 		createSaveDialog();
 		createExportDialog();
@@ -119,7 +121,7 @@ public class MainActivity extends Activity {
 	@Override
 	public void onResume() {
 		super.onResume();
-		HelloAccessoryProviderService.setActivity(this);
+		hs.setActivity(this);
 		
 		 if(this.getIntent().getExtras()==null)
 			 return;
@@ -128,6 +130,7 @@ public class MainActivity extends Activity {
 		 if(intent.getExtras().containsKey("json_screen"))
 		 {
 			 try {
+				 //PaliConnector.getInstance().send(new JSONObject(intent.getExtras().getString("json_screen")));
 				 hs.send(new JSONObject(intent.getExtras().getString("json_screen")));
 				 }
 			 catch (JSONException e)

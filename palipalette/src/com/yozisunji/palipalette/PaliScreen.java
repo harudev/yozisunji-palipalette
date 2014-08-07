@@ -193,13 +193,16 @@ public class PaliScreen extends GridLayout{
 		
 		for(int i=0 ; i<items.size(); i++)
 		{
-			JSONObject temp = new JSONObject();
-			temp.put("Function", items.get(i).iteminfo.funcNum);
-			temp.put("Num", items.get(i).iteminfo.itemNum);
-			temp.put("PosX",items.get(i).x);
-			temp.put("PosY",items.get(i).y);
-			
-			json.put(temp);
+			if(items.get(i).iteminfo.funcNum!=PaliCanvas.TOOL_COMMON)
+			{
+				JSONObject temp = new JSONObject();
+				temp.put("Function", items.get(i).iteminfo.funcNum);
+				temp.put("Num", items.get(i).iteminfo.itemNum);
+				temp.put("PosX",items.get(i).x);
+				temp.put("PosY",items.get(i).y);
+				
+				json.put(temp);
+			}
 		}
 		return json;
 	}

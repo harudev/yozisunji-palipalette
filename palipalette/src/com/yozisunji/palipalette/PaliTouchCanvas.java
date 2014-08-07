@@ -138,6 +138,7 @@ public class PaliTouchCanvas extends View {
 
 	public void onDraw(Canvas cnvs) {
 		cnvs.scale(PaliCanvas.zoom, PaliCanvas.zoom);
+		cnvs.translate(PaliCanvas.canvasX, PaliCanvas.canvasY);
 		if (tempObj != null) {
 			tempObj.setStrokeColor(Color.GREEN);
 			tempObj.setStyle(Style.STROKE);
@@ -226,12 +227,11 @@ public class PaliTouchCanvas extends View {
 
 			newDist = spacing(e);
 			oldDist = spacing(e);
-			this.prepinch = false;
 			this.pinch = true;
 			return true;
 		case MotionEvent.ACTION_POINTER_UP:
 			
-			//this.pinch = false;
+			this.pinch = false;
 			//this.zoom = false;
 			//this.prepinch = false;
 			
@@ -279,11 +279,11 @@ public class PaliTouchCanvas extends View {
 
 					if (newDist - oldDist > 20) { // zoom in
 						oldDist = newDist;
-						if (PaliCanvas.zoom < 1000)
+						if (PaliCanvas.zoom < 300)
 							PaliCanvas.zoom *= 1.04;
 					} else if (oldDist - newDist > 20) { // zoom out
 						oldDist = newDist;
-						if (PaliCanvas.zoom > 1)
+						if (PaliCanvas.zoom > 0.5)
 							PaliCanvas.zoom /= 1.04;
 					}
 					if (selected) {
@@ -299,15 +299,14 @@ public class PaliTouchCanvas extends View {
 					}
 					canvas.DrawScreen();
 				}
-
-			} else {
+			} else if(prepinch==false){
 				moveX = (e.getX() - PaliCanvas.canvasX) / PaliCanvas.zoom;
 				moveY = (e.getY() - PaliCanvas.canvasY) / PaliCanvas.zoom;
 
 				if ((Math.abs(moveX - downX) > 30)
 						|| (Math.abs(moveY - downY) > 30))
 					selector.stopTimeout();
-
+				
 				switch (PaliCanvas.selectedTool) {
 				case PaliCanvas.TOOL_PENCIL:
 					minX = min(minX, moveX);
@@ -369,11 +368,10 @@ public class PaliTouchCanvas extends View {
 			tempObj = null;
 			this.invalidate();
 			
-			if(pinch)
+			if(prepinch)
 			{
-				this.pinch = false;
-				this.prepinch = false;
 				this.zoom = false;
+				this.prepinch = false;
 				return true;
 			}
 			else
@@ -465,7 +463,6 @@ public class PaliTouchCanvas extends View {
 					if (!selected) {
 						selector.setVisibility(android.view.View.GONE);
 					}
-					this.prepinch = false;
 					return true;
 				case PaliCanvas.TOOL_PENCIL:
 					minX = min(minX, upX);

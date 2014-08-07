@@ -9,6 +9,9 @@ import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Paint.Style;
+import android.graphics.Rect;
+import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.SurfaceHolder;
@@ -33,7 +36,7 @@ public class PaliCanvas extends SurfaceView implements SurfaceHolder.Callback {
 	public static int width, height;
 	public static int currentLayer;
 	public static int currentObject;
-	public static int selectedTool=0;
+	public static int selectedTool=3;
 	
 	public static boolean drawMode = true;
 	public static float canvasX=0, canvasY=0;
@@ -89,11 +92,22 @@ public class PaliCanvas extends SurfaceView implements SurfaceHolder.Callback {
 				synchronized(getHolder())
 				{
 					Paint p = new Paint();
-					p.setColor(Color.WHITE);
+					p.setColor(Color.DKGRAY);
 					cnvs.drawPaint(p);
+					
 					cnvs.scale(zoom, zoom);
 					cnvs.translate(canvasX, canvasY);
-                    
+					
+					RectF r = new RectF();
+					r.left = 0;
+					r.right = width;
+					r.top = 0;
+					r.bottom = height;
+					
+					p.setStyle(Style.FILL);
+					p.setColor(Color.WHITE);
+					cnvs.drawRect(r, p);
+					
 					for(int i = 0; i<SVGParser.Layers.size();i++)
 					 {
 						 if(SVGParser.Layers.get(i).visibility==true)
