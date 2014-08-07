@@ -23,8 +23,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
@@ -65,10 +67,14 @@ public class MainActivity extends Activity {
 	private Dialog saveDialog = null;
 	private Dialog exportDialog = null;
 	private Dialog openDialog = null;
+	private Dialog helpDialog = null;
+	private Dialog helpImgDialog = null;
 	EditText save_name;
 	EditText export_name;
 	ListView open_list;
-	
+	ListView help_list;
+	ImageView help_img;
+
 	ImageButton copyBtn;
 	ImageButton pasteBtn;
 	ImageButton deletBtn;
@@ -95,56 +101,55 @@ public class MainActivity extends Activity {
 
 		svg = new SVGParser();
 		svg.addLayer();
-		//svg.parse(getResources().openRawResource(R.drawable.test));
+		// svg.parse(getResources().openRawResource(R.drawable.test));
 		customview = (PaliCanvas) findViewById(R.id.paliCanvas);
 		customview.setBound(screenWidth, screenHeight);
 		touchview = (PaliTouchCanvas) findViewById(R.id.paliTouch);
 		touchview.setCanvasAddr(customview,
 				(LinearLayout) findViewById(R.id.selectLayout));
 
-
 		hs = new PaliConnector();
-		
+
 		createSubDialog();
 		createSaveDialog();
 		createExportDialog();
 		createOpenDialog();
-		
+		createHelpDialog();
+		createHelpImgDialog();
+
 		// test
 		connectSuccess();
 		//
 	}
 
 	@Override
-	protected void onNewIntent(Intent intent)
-	{
+	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
-		
-		if(null!= intent)
-		{
+
+		if (null != intent) {
 			setIntent(intent);
 		}
 	}
+
 	@Override
 	public void onResume() {
 		super.onResume();
 		hs.setActivity(this);
-		
-		 if(this.getIntent().getExtras()==null)
-			 return;
-		
-		 Intent intent = getIntent();
-		 if(intent.getExtras().containsKey("json_screen"))
-		 {
-			 try {
-				 //PaliConnector.getInstance().send(new JSONObject(intent.getExtras().getString("json_screen")));
-				 hs.send(new JSONObject(intent.getExtras().getString("json_screen")));
-				 }
-			 catch (JSONException e)
-			 { // TODO Auto-generated catch block
-				 e.printStackTrace();
-			 }
-		 }
+
+		if (this.getIntent().getExtras() == null)
+			return;
+
+		Intent intent = getIntent();
+		if (intent.getExtras().containsKey("json_screen")) {
+			try {
+				// PaliConnector.getInstance().send(new
+				// JSONObject(intent.getExtras().getString("json_screen")));
+				hs.send(new JSONObject(intent.getExtras().getString(
+						"json_screen")));
+			} catch (JSONException e) { // TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 
 	@Override
@@ -154,10 +159,10 @@ public class MainActivity extends Activity {
 			case KeyEvent.KEYCODE_BACK:
 				android.os.Process.killProcess(android.os.Process.myPid());
 				return true;
-			case KeyEvent.KEYCODE_MENU:		
-				popUpOpenMenu();
+			case KeyEvent.KEYCODE_MENU:
+				popUpHelpMenu();
 				return true;
-				
+
 			}
 		}
 		return super.dispatchKeyEvent(event);
@@ -172,14 +177,12 @@ public class MainActivity extends Activity {
 
 		subDialog.setCancelable(true);
 		subDialog.setCanceledOnTouchOutside(true);
-		subDialog.getWindow().setBackgroundDrawable(new ColorDrawable(0x000000));
+		subDialog.getWindow()
+				.setBackgroundDrawable(new ColorDrawable(0x000000));
 
-		copyBtn = (ImageButton) subDialog
-				.findViewById(R.id.copyBtn);
-		pasteBtn = (ImageButton) subDialog
-				.findViewById(R.id.pasteBtn);
-		deletBtn = (ImageButton) subDialog
-				.findViewById(R.id.deletBtn);
+		copyBtn = (ImageButton) subDialog.findViewById(R.id.copyBtn);
+		pasteBtn = (ImageButton) subDialog.findViewById(R.id.pasteBtn);
+		deletBtn = (ImageButton) subDialog.findViewById(R.id.deletBtn);
 	}
 
 	private void createSaveDialog() {
@@ -232,19 +235,47 @@ public class MainActivity extends Activity {
 		open_list = (ListView) openDialog.findViewById(R.id.open_list);
 	}
 
+	private void createHelpDialog() {
+		final View innerView = getLayoutInflater().inflate(R.layout.help_menu,
+				null);
+
+		helpDialog = new Dialog(this);
+		helpDialog.setContentView(innerView);
+
+		helpDialog.setTitle("Help");
+		helpDialog.setCancelable(true);
+		helpDialog.setCanceledOnTouchOutside(true);
+
+		help_list = (ListView) helpDialog.findViewById(R.id.help_list);
+	}
+
+	private void createHelpImgDialog() {
+		final View innerView = getLayoutInflater().inflate(R.layout.help_image,
+				null);
+
+		helpImgDialog = new Dialog(this);
+		helpImgDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		helpImgDialog.setContentView(innerView);
+
+		helpImgDialog.setCancelable(true);
+		helpImgDialog.setCanceledOnTouchOutside(true);
+
+		help_img = (ImageView) helpImgDialog.findViewById(R.id.help_image);
+	}
+
 	public void popUpSubMenu() {
 		copyBtn.setVisibility(View.VISIBLE);
 		pasteBtn.setVisibility(View.VISIBLE);
 		deletBtn.setVisibility(View.VISIBLE);
-		
-		if(touchview.copyObject.size() == 0) {
+
+		if (touchview.copyObject.size() == 0) {
 			pasteBtn.setVisibility(View.GONE);
 		}
-		if(touchview.selector.selObjArr.size() == 0) {
+		if (touchview.selector.selObjArr.size() == 0) {
 			copyBtn.setVisibility(View.GONE);
 			deletBtn.setVisibility(View.GONE);
 		}
-		
+
 		subDialog.show();
 	}
 
@@ -274,7 +305,6 @@ public class MainActivity extends Activity {
 		openDialog.show();
 
 		open_list.setOnItemClickListener(new OnItemClickListener() {
-
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
@@ -284,6 +314,64 @@ public class MainActivity extends Activity {
 				openDialog.cancel();
 			}
 		});
+	}
+
+	public void popUpHelpMenu() {
+		ArrayList<String> helpName = new ArrayList<String>();
+
+		final ArrayAdapter<String> helpList = new ArrayAdapter<String>(this,
+				android.R.layout.simple_list_item_1, helpName);
+
+		helpName.add("Drawing");
+		helpName.add("Gear Icon");
+		helpName.add("Custommizing");
+
+		help_list.setAdapter(helpList);
+		helpDialog.show();
+
+		help_list.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1,
+					int listNum, long arg3) {
+				popUpHelpImg(listNum);
+				helpDialog.cancel();
+			}
+		});
+	}
+
+	int imgCnt;
+	public void popUpHelpImg(final int listNum) {
+		helpImgDialog.show();
+
+		if (listNum == 0) {
+			help_img.setImageResource(R.drawable.help_drawing_1);
+		} else if (listNum == 1) {
+			help_img.setImageResource(R.drawable.help_gear_icon_1);
+		} else if (listNum == 2) {
+			help_img.setImageResource(R.drawable.help_custom_1);
+			imgCnt = 3;
+		}
+
+		help_img.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (listNum == 0 || listNum == 1) {
+					helpImgDialog.dismiss();
+					helpDialog.show();
+				} else if (listNum == 2) {
+					imgCnt--;
+					if (imgCnt == 2)
+						help_img.setImageResource(R.drawable.help_custom_2);
+					else if (imgCnt == 1)
+						help_img.setImageResource(R.drawable.help_custom_3);
+					else {
+						helpImgDialog.dismiss();
+						helpDialog.show();
+					}
+				}
+			}
+		});
+
 	}
 
 	public void OnClick(View v) {
@@ -523,7 +611,7 @@ public class MainActivity extends Activity {
 		}.start();
 
 	}
-	
+
 	public void connectSuccess() {
 		connectFlag = true;
 		mHandler.postDelayed(new IntroRunnable(), 100);
@@ -532,10 +620,9 @@ public class MainActivity extends Activity {
 	private class IntroRunnable implements Runnable {
 		@Override
 		public void run() {
-			if(!connectFlag) {
+			if (!connectFlag) {
 				intro.setImageResource(R.drawable.no_conn);
-			}
-			else {
+			} else {
 				intro.setVisibility(View.GONE);
 			}
 		}
