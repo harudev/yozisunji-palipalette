@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -121,7 +122,7 @@ public class MainActivity extends Activity {
 		createHelpImgDialog();
 
 		// test
-		//connectSuccess();
+		connectSuccess();
 		//
 	}
 
@@ -638,6 +639,14 @@ public class MainActivity extends Activity {
 				intro.setImageResource(R.drawable.no_conn);
 			} else {
 				intro.setVisibility(View.GONE);
+				
+				try {
+					initGear();
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
 			}
 		}
 	}
@@ -654,7 +663,20 @@ public class MainActivity extends Activity {
 		}
 	}
 	
-	public void initGear() {
+	public void initGear() throws JSONException {
 		
+		JSONObject json = new JSONObject();
+		json.put("layerCnt", SVGParser.Layers.size());
+		json.put("currentLayer", PaliCanvas.currentLayer);
+		JSONArray jsonArr = new JSONArray();		
+		for(int i=0; i<SVGParser.Layers.size(); i ++) {
+			if(SVGParser.Layers.get(i).visibility) {
+				jsonArr.put(i);
+			}
+		}
+		json.put("checkedLayer", jsonArr);
+		hs.send(json);
+		
+		Log.i("debug", ""+json);
 	}
 }

@@ -363,6 +363,9 @@ public class PaliConnector extends SAAgent {
 	            		mActivity.customview.DrawScreen();
 	            	}
 	            }
+	            else if(jObject.has("currentIcon")) {
+	            	PaliCanvas.selectedTool = Integer.parseInt(jObject.getString("currentIcon"));	     	      	      
+	            }
 	        } catch (JSONException e1) {
 	        	// TODO Auto-generated catch block
 	        	e1.printStackTrace();
