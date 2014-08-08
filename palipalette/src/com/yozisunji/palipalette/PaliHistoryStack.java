@@ -54,7 +54,6 @@ public class PaliHistoryStack extends ArrayList<ArrayList<PaliLayer>> {
 	public ArrayList<PaliLayer> ReDo() {
 		if (index < this.size() - 1) {
 			index++;
-			if (index == this.size() - 1)
 			return this.get(index);
 		}
 		return null;

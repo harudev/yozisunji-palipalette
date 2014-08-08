@@ -318,10 +318,13 @@ public class PaliConnector extends SAAgent {
                         PaliCanvas.selectedTool = PaliCanvas.TOOL_RECTANGLE;
 	                }
 	                else if(obj.getString("circle").equals("1")) {
-	                        PaliCanvas.selectedTool = PaliCanvas.TOOL_CIRCLE;
+	                    PaliCanvas.selectedTool = PaliCanvas.TOOL_CIRCLE;
 	                }
 	                else if(obj.getString("ellipse").equals("1")) {
-	                        PaliCanvas.selectedTool = PaliCanvas.TOOL_ELLIPSE;
+	                    PaliCanvas.selectedTool = PaliCanvas.TOOL_ELLIPSE;
+	                }
+	                else if(obj.getString("star").equals("1")) {
+	                	PaliCanvas.selectedTool = PaliCanvas.TOOL_STAR;
 	                }
 	            	mActivity.changeTool();
 	            }

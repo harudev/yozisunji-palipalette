@@ -121,7 +121,7 @@ public class MainActivity extends Activity {
 		createHelpImgDialog();
 
 		// test
-		connectSuccess();
+		//connectSuccess();
 		//
 	}
 
@@ -163,10 +163,7 @@ public class MainActivity extends Activity {
 				android.os.Process.killProcess(android.os.Process.myPid());
 				return true;
 			case KeyEvent.KEYCODE_MENU:
-				//popUpHelpMenu();
-				//popUpOpenMenu();
-				//popUpSaveMenu();
-				popUpExportMenu();
+				popUpHelpMenu();
 				return true;
 
 			}
@@ -331,6 +328,7 @@ public class MainActivity extends Activity {
 		helpName.add("Drawing");
 		helpName.add("Gear Icon");
 		helpName.add("Custommizing");
+		helpName.add("Screen Control");
 
 		help_list.setAdapter(helpList);
 		helpDialog.show();
@@ -355,6 +353,9 @@ public class MainActivity extends Activity {
 		} else if (listNum == 2) {
 			help_img.setImageResource(R.drawable.help_custom_1);
 			imgCnt = 3;
+		} else if (listNum == 3) {
+			help_img.setImageResource(R.drawable.help_screen_control_1);
+			imgCnt = 2;
 		}
 
 		help_img.setOnClickListener(new OnClickListener() {
@@ -369,6 +370,14 @@ public class MainActivity extends Activity {
 						help_img.setImageResource(R.drawable.help_custom_2);
 					else if (imgCnt == 1)
 						help_img.setImageResource(R.drawable.help_custom_3);
+					else {
+						helpImgDialog.dismiss();
+						helpDialog.show();
+					}
+				} else if (listNum == 3) {
+					imgCnt--;
+					if(imgCnt== 1)
+						help_img.setImageResource(R.drawable.help_screen_control_2);
 					else {
 						helpImgDialog.dismiss();
 						helpDialog.show();
@@ -643,5 +652,9 @@ public class MainActivity extends Activity {
 		} else {
 			return false;
 		}
+	}
+	
+	public void initGear() {
+		
 	}
 }
