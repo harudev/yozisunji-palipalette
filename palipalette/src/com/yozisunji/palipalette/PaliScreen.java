@@ -246,6 +246,33 @@ public class PaliScreen extends GridLayout{
 				items.get(i).getGlobalVisibleRect(r);
 				if(r.contains((int)e.getX(),(int)e.getY()))
 				{
+					if(sel.height>1)
+					{
+						for(int o=items.get(i).y+1; i<sel.height+items.get(i).y ; i++)
+						{
+							for(int p=items.get(i).x+1; p<sel.width+items.get(i).x; p++)
+							{
+								if(o>2 || o<0 || p>2 || p<0)
+								{
+									return pt;
+								}
+								if(items.get(o*3+p).iteminfo.funcNum!=PaliCanvas.TOOL_COMMON)
+									return pt;
+							}
+						}
+					}
+					else
+					{
+						for(int p=items.get(i).x+1; p<sel.width+items.get(i).x; p++)
+						{
+							if(p>2 || p<0)
+							{
+								return pt;
+							}
+							if(items.get(items.get(i).y*3+p).iteminfo.funcNum!=PaliCanvas.TOOL_COMMON)
+								return pt;
+						}
+					}
 					pt.x = items.get(i).x;
 					pt.y = items.get(i).y;
 					return pt;

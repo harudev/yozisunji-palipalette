@@ -636,6 +636,87 @@ public class CustomizingMainActivity extends Activity {
 			Button delete_cancelBtn = (Button) deleteDialog.findViewById(R.id.delete_cancelBtn);
 			TextView deleteText = (TextView) deleteDialog.findViewById(R.id.deleteText);
 			deleteText.setText("Are you sure to delete the screen?");
+			
+			delete_okBtn.setOnClickListener(
+					new View.OnClickListener() 
+					{
+						@Override
+						public void onClick(View v) {
+							mLongPressed = true;
+							PaliScreen selScreen = screens.get(selected);
+					    	GridLayout.LayoutParams gridLayoutParam = (GridLayout.LayoutParams)selScreen.getLayoutParams();
+					    	PaliScreen temp;
+					    	GridLayout.LayoutParams tempLayoutParam;
+					    	
+					    	int dx, dy;
+					    	int i;
+					    	
+							for(i=selected+1;i<screens.size();i++) {
+					    		temp=screens.get(i);
+					    		tempLayoutParam = (GridLayout.LayoutParams) screens.get(i).getLayoutParams();
+								if(i>4)
+					    		{
+					    			dx=(i-1)%4;
+					    			dy=1;
+					    		}
+					    		else if(i==4)
+					    		{
+					    			dx = 3;
+					    			dy = 0;
+					    		}
+					    		else
+					    		{
+					    			dx = (i-1)%4;
+					    			dy=0;
+					    		}
+					    		tempLayoutParam.rowSpec = GridLayout.spec(dy,1);
+					    		tempLayoutParam.columnSpec = GridLayout.spec(dx,1);
+					    		temp.setLayoutParams(tempLayoutParam);
+					    	}
+							
+							temp=addScreen;
+				    		tempLayoutParam = (GridLayout.LayoutParams) addScreen.getLayoutParams();
+							if(i>4)
+				    		{
+				    			dx=(i-1)%4;
+				    			dy=1;
+				    		}
+				    		else if(i==4)
+				    		{
+				    			dx = 3;
+				    			dy = 0;
+				    		}
+				    		else
+				    		{
+				    			dx = (i-1)%4;
+				    			dy=0;
+				    		}
+				    		tempLayoutParam.rowSpec = GridLayout.spec(dy,1);
+				    		tempLayoutParam.columnSpec = GridLayout.spec(dx,1);
+				    		temp.setLayoutParams(tempLayoutParam);
+				    		
+				    		if(addX>0)
+								addX--;
+							else if(addY>0)
+							{
+								addY--;
+								addX=3;
+							}
+				    		
+				    		screens.remove(selScreen);
+							selScreen.setVisibility(View.GONE);
+							
+							mPressed = false;
+						}
+					});
+			delete_cancelBtn.setOnClickListener(
+					new View.OnClickListener() 
+					{
+						@Override
+						public void onClick(View v) {
+							deleteDialog.cancel();
+						}
+					});
 		}
 		else
 		{
@@ -651,84 +732,18 @@ public class CustomizingMainActivity extends Activity {
 		}
 	}
 	
-	public void popUpDeleteDiglog() {
+	public void popUpDeleteDialog() {
 		deleteDialog.show();
 	}
 	private class LongPressCheckRunnable implements Runnable {
 		@Override
 		public void run() {
-			mLongPressed = true;
-			PaliScreen selScreen = screens.get(selected);
-	    	GridLayout.LayoutParams gridLayoutParam = (GridLayout.LayoutParams)selScreen.getLayoutParams();
-	    	PaliScreen temp;
-	    	GridLayout.LayoutParams tempLayoutParam;
+			
 	    	
-	    	int dx, dy;
-	    	int i;
 	    	
-	    	if(selScreen.hasCustomize())
-	    	{
-	    		
-	    	}
-	    	else
-	    	{
-				for(i=selected+1;i<screens.size();i++) {
-		    		temp=screens.get(i);
-		    		tempLayoutParam = (GridLayout.LayoutParams) screens.get(i).getLayoutParams();
-					if(i>4)
-		    		{
-		    			dx=(i-1)%4;
-		    			dy=1;
-		    		}
-		    		else if(i==4)
-		    		{
-		    			dx = 3;
-		    			dy = 0;
-		    		}
-		    		else
-		    		{
-		    			dx = (i-1)%4;
-		    			dy=0;
-		    		}
-		    		tempLayoutParam.rowSpec = GridLayout.spec(dy,1);
-		    		tempLayoutParam.columnSpec = GridLayout.spec(dx,1);
-		    		temp.setLayoutParams(tempLayoutParam);
-		    	}
-				
-				temp=addScreen;
-	    		tempLayoutParam = (GridLayout.LayoutParams) addScreen.getLayoutParams();
-				if(i>4)
-	    		{
-	    			dx=(i-1)%4;
-	    			dy=1;
-	    		}
-	    		else if(i==4)
-	    		{
-	    			dx = 3;
-	    			dy = 0;
-	    		}
-	    		else
-	    		{
-	    			dx = (i-1)%4;
-	    			dy=0;
-	    		}
-	    		tempLayoutParam.rowSpec = GridLayout.spec(dy,1);
-	    		tempLayoutParam.columnSpec = GridLayout.spec(dx,1);
-	    		temp.setLayoutParams(tempLayoutParam);
-	    		
-	    		if(addX>0)
-					addX--;
-				else if(addY>0)
-				{
-					addY--;
-					addX=3;
-				}
-	    		
-	    		screens.remove(selScreen);
-				selScreen.setVisibility(View.GONE);
-				
-				mPressed = false;
-			}
+	    	createDeleteDialog(screens.get(selected).hasCustomize());
+	    	popUpDeleteDialog();
+	    	
 		}
 	}
 }
