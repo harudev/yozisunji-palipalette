@@ -170,11 +170,10 @@ public class CustomizingActivity extends Activity {
 			 if(mPressed)
 			 {
 				 dragItem.setVisibility(View.GONE);
-				 PaliPoint tempP = screen.getPos(e);
+				 PaliPoint tempP = screen.getPos(e, selectedItem);
 				 if(tempP.x<999 && tempP.y<999)
 				 {
 					 screen.putItem(selectedItem.funcNum, selectedItem.itemNum, tempP.x, tempP.y);
-					 CustomizingMainActivity.GearUIViewList.get(selectedItem.funcNum).removeItem(selectedItem.itemNum);
 				 }
 				 selectedItem=null;
 				 mPressed = false;

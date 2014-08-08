@@ -306,64 +306,64 @@ public class CustomizingMainActivity extends Activity {
 		GearUIViewList.add(new PaliItemList("Config"));
 		
 		// Pick Object Icon
-				GearUIViewList.get(Select).putItem(Select, 0, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_pickobject_icon, "Pick Object");
-				// Layer Icon
-				GearUIViewList.get(Select).putItem(Select, 1, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_layer_icon,"Layer");
-				// Layer Widget
-				GearUIViewList.get(Select).putItem(Select, 2, PaliItem.TYPE_WIDGET, 3, 3, R.drawable.tool_layer_3x3_widget,"Layer");
-						
-				// Pencil Icon
-				GearUIViewList.get(Drawing).putItem(Drawing, 0, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_pencil_icon,"Pencil");
-				// Brush Icon
-				GearUIViewList.get(Drawing).putItem(Drawing, 1, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_brush_icon,"Brush");
-				
-				// Rectangle Icon
-				GearUIViewList.get(Shape).putItem(Shape, 0, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_rect_icon,"Rectangle");
-				// Circle Icon
-				GearUIViewList.get(Shape).putItem(Shape, 1, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_circle_icon,"Circle");
-				// Ellipse Icon
-				GearUIViewList.get(Shape).putItem(Shape, 2, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_ellipse_icon,"Ellipse");
-				// Star Icon
-				GearUIViewList.get(Shape).putItem(Shape, 3, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_star_icon,"Star");
-				// Shape Widget (2X1)
-				GearUIViewList.get(Shape).putItem(Shape, 4, PaliItem.TYPE_WIDGET, 2, 1, R.drawable.tool_shape_2x1_widget,"Shape Change");
-				// Shape Widget (2X1)
-				GearUIViewList.get(Shape).putItem(Shape, 5, PaliItem.TYPE_WIDGET, 1, 2, R.drawable.tool_shape_1x2_widget,"Shape Change");
-						
-				
-				// Color Icon
-				GearUIViewList.get(Style).putItem(Style, 0, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_color_icon,"Color");
-				// Color Widget
-				GearUIViewList.get(Style).putItem(Style, 1, PaliItem.TYPE_WIDGET, 3, 3, R.drawable.tool_color_3x3_widget, "Color");
-				// Stroke Icon
-				GearUIViewList.get(Style).putItem(Style, 2, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_stroke_icon,"Stroke");
-				// Stroke Widget
-				GearUIViewList.get(Style).putItem(Style, 3, PaliItem.TYPE_WIDGET, 1, 3, R.drawable.tool_stroke_1x3_widget, "Stroke Width");
-				
-				
-				// New File Icon
-				GearUIViewList.get(File).putItem(File, 0, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_new_icon, "New File");
-				// Open File Icon
-				GearUIViewList.get(File).putItem(File, 1, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_open_icon, "Open File");
-				// Save File Icon
-				GearUIViewList.get(File).putItem(File, 2, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_save_icon, "Save File");
-				// Export File Icon
-				GearUIViewList.get(File).putItem(File, 3, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_export_icon, "Export File");
-				// File Icon
-				GearUIViewList.get(File).putItem(File, 4, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_file_icon, "File");
-				
-				
-				// Undo Icon
-				GearUIViewList.get(History).putItem(History, 0, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_undo_icon, "Undo");
-				// Redo Icon
-				GearUIViewList.get(History).putItem(History, 1, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_redo_icon, "Redo");
-				
-				// Allmenu Icon
-				GearUIViewList.get(Config).putItem(Config, 0, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_allmenu_icon, "All Menu");
-				// Customize Icon
-				GearUIViewList.get(Config).putItem(Config, 1, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_customize_icon, "Customizing");
-				// Configure Icon
-				GearUIViewList.get(Config).putItem(Config, 2, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_config_icon, "Configure");
+			GearUIViewList.get(Select).putItem(Select, 0, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_pickobject_icon, "Pick Object");
+			// Layer Icon
+			GearUIViewList.get(Select).putItem(Select, 1, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_layer_icon,"Layer");
+			// Layer Widget
+			GearUIViewList.get(Select).putItem(Select, 2, PaliItem.TYPE_WIDGET, 3, 3, R.drawable.tool_layer_3x3_widget,"Layer");
+					
+			// Pencil Icon
+			GearUIViewList.get(Drawing).putItem(Drawing, 0, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_pencil_icon,"Pencil");
+			// Brush Icon
+			GearUIViewList.get(Drawing).putItem(Drawing, 1, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_brush_icon,"Brush");
+			
+			// Rectangle Icon
+			GearUIViewList.get(Shape).putItem(Shape, 0, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_rect_icon,"Rectangle");
+			// Circle Icon
+			GearUIViewList.get(Shape).putItem(Shape, 1, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_circle_icon,"Circle");
+			// Ellipse Icon
+			GearUIViewList.get(Shape).putItem(Shape, 2, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_ellipse_icon,"Ellipse");
+			// Star Icon
+			GearUIViewList.get(Shape).putItem(Shape, 3, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_star_icon,"Star");
+			// Shape Widget (2X1)
+			GearUIViewList.get(Shape).putItem(Shape, 4, PaliItem.TYPE_WIDGET, 2, 1, R.drawable.tool_shape_2x1_widget,"Shape Change");
+			// Shape Widget (2X1)
+			GearUIViewList.get(Shape).putItem(Shape, 5, PaliItem.TYPE_WIDGET, 1, 2, R.drawable.tool_shape_1x2_widget,"Shape Change");
+					
+			
+			// Color Icon
+			GearUIViewList.get(Style).putItem(Style, 0, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_color_icon,"Color");
+			// Color Widget
+			GearUIViewList.get(Style).putItem(Style, 1, PaliItem.TYPE_WIDGET, 3, 3, R.drawable.tool_color_3x3_widget, "Color");
+			// Stroke Icon
+			GearUIViewList.get(Style).putItem(Style, 2, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_stroke_icon,"Stroke");
+			// Stroke Widget
+			GearUIViewList.get(Style).putItem(Style, 3, PaliItem.TYPE_WIDGET, 1, 3, R.drawable.tool_stroke_1x3_widget, "Stroke Width");
+			
+			
+			// New File Icon
+			GearUIViewList.get(File).putItem(File, 0, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_new_icon, "New File");
+			// Open File Icon
+			GearUIViewList.get(File).putItem(File, 1, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_open_icon, "Open File");
+			// Save File Icon
+			GearUIViewList.get(File).putItem(File, 2, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_save_icon, "Save File");
+			// Export File Icon
+			GearUIViewList.get(File).putItem(File, 3, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_export_icon, "Export File");
+			// File Icon
+			GearUIViewList.get(File).putItem(File, 4, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_file_icon, "File");
+			
+			
+			// Undo Icon
+			GearUIViewList.get(History).putItem(History, 0, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_undo_icon, "Undo");
+			// Redo Icon
+			GearUIViewList.get(History).putItem(History, 1, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_redo_icon, "Redo");
+			
+			// Allmenu Icon
+			GearUIViewList.get(Config).putItem(Config, 0, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_allmenu_icon, "All Menu");
+			// Customize Icon
+			GearUIViewList.get(Config).putItem(Config, 1, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_customize_icon, "Customizing");
+			// Configure Icon
+			GearUIViewList.get(Config).putItem(Config, 2, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_config_icon, "Configure");
 	}
 	
 	private void addScreen()

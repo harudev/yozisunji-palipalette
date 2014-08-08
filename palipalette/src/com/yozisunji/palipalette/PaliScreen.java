@@ -156,7 +156,8 @@ public class PaliScreen extends GridLayout{
 		
 		this.items.set(posY*3+posX, temp);
 		
-		CustomizingMainActivity.GearUIViewList.get(func).removeItem(item);
+		if(func!=PaliCanvas.TOOL_COMMON)
+			CustomizingMainActivity.GearUIViewList.get(func).removeItem(item);
 		if(parent!=null)
 			parent.reDraw();
 	}
@@ -233,7 +234,7 @@ public class PaliScreen extends GridLayout{
 		return json;
 	}
 	
-	public PaliPoint getPos(MotionEvent e)
+	public PaliPoint getPos(MotionEvent e, PaliItem sel)
 	{
 		PaliPoint pt = new PaliPoint(999,999);
 		Rect r = new Rect();
@@ -370,7 +371,8 @@ public class PaliScreen extends GridLayout{
 
 			PaliItemView temp = items.get(selected);
 			
-			CustomizingMainActivity.GearUIViewList.get(temp.iteminfo.funcNum).restoreItem(temp.iteminfo.itemNum);
+			if(temp.iteminfo.funcNum!=PaliCanvas.TOOL_COMMON)
+				CustomizingMainActivity.GearUIViewList.get(temp.iteminfo.funcNum).restoreItem(temp.iteminfo.itemNum);
 			
 			if(temp.iteminfo.height>1)
 			{
