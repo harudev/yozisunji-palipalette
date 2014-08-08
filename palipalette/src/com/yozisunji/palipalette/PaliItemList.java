@@ -25,6 +25,7 @@ public class PaliItemList {
 	public void putItem(int func, int item, int itemType, int width, int height, int d, String f)
 	{
 		items.add(item, new PaliItem(func, item, itemType, width, height,d,f));
+		items.get(item).setVisible(true);
 	}
 	
 	public void removeItem(int index)

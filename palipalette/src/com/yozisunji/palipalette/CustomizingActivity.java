@@ -70,6 +70,8 @@ public class CustomizingActivity extends Activity {
 		listview.expandGroup(5);
 		this.screen.setTouchable(true);
 		this.screen.setSize(900, 900);
+		
+		this.reDraw();
 	}
 	
 	@Override
@@ -101,10 +103,14 @@ public class CustomizingActivity extends Activity {
 		Rect r = new Rect();
 		screen.getGlobalVisibleRect(r);
 		if(r.contains((int)e.getX(),(int)e.getY()))
+		{
 			screen.dispatchTouchEvent(e);
+		}
 		listview.getGlobalVisibleRect(r);
 		if(r.contains((int)e.getX(),(int)e.getY()))
 			listview.dispatchTouchEvent(e);
+		
+		this.reDraw();
 		this.onTouchEvent(e);
 		return true;
 	}
