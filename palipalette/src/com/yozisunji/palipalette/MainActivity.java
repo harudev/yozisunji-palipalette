@@ -56,6 +56,7 @@ public class MainActivity extends Activity {
 	static SVGParser svg;
 	public PaliCanvas customview;
 	PaliTouchCanvas touchview;
+	
 
 	public PaliConnector hs;
 
@@ -164,7 +165,12 @@ public class MainActivity extends Activity {
 				android.os.Process.killProcess(android.os.Process.myPid());
 				return true;
 			case KeyEvent.KEYCODE_MENU:
-				popUpHelpMenu();
+				//popUpHelpMenu();
+				
+				PaliCanvas.selectedTool++;
+				if(PaliCanvas.selectedTool >= PaliCanvas.TOOL_COMMON) {
+					PaliCanvas.selectedTool = 0;
+				}
 				return true;
 
 			}
@@ -648,18 +654,6 @@ public class MainActivity extends Activity {
 				}
 				
 			}
-		}
-	}
-	
-	@Override
-	public boolean dispatchTouchEvent(MotionEvent e)
-	{
-		if(connectFlag) {
-			touchview.dispatchTouchEvent(e);
-			this.onTouchEvent(e);
-			return true;
-		} else {
-			return false;
 		}
 	}
 	

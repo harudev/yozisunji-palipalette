@@ -67,6 +67,7 @@ public class PaliConnector extends SAAgent {
 
 	private final IBinder mBinder = new LocalBinder();
 	private int mConnctionID;
+	private int deleteCnt = 0;
 	
 	private static PaliCanvas canvas;
 	private static MainActivity activity;
@@ -278,20 +279,30 @@ public class PaliConnector extends SAAgent {
 	            	{
 	            		PaliCanvas.currentLayer = Integer.parseInt(obj.getString("currentLayer"));
 	            	}
-	            	else if(obj.has("checkedtLayer"))
+	            	else if(obj.has("checkedLayer"))
 	            	{
-	            		if(SVGParser.Layers.get(Integer.parseInt(obj.getString("checkedtLayer"))).getVisible())
-	            			SVGParser.Layers.get(Integer.parseInt(obj.getString("checkedtLayer"))).setVisible(false);
+	            		if(SVGParser.Layers.get(Integer.parseInt(obj.getString("checkedLayer"))).getVisible())
+	            			SVGParser.Layers.get(Integer.parseInt(obj.getString("checkedLayer"))).setVisible(false);
 	            		else
-	            			SVGParser.Layers.get(Integer.parseInt(obj.getString("checkedtLayer"))).setVisible(true);
+	            			SVGParser.Layers.get(Integer.parseInt(obj.getString("checkedLayer"))).setVisible(true);
 	            	}
 	            	else if(obj.has("insertLayer")) 
 	            	{
 	            		SVGParser.Layers.add(new PaliLayer());
+	            		if(deleteCnt > 0) {
+	            			deleteCnt --;
+	            		}
 	            	}
 	            	else if(obj.has("deletedLayer"))
 	            	{
-	            		SVGParser.Layers.remove(Integer.parseInt(obj.getString("deletedLayer")));
+	            		int index = Integer.parseInt(obj.getString("deletedLayer"));
+	            		if(index-deleteCnt >= 0) {
+	            			SVGParser.Layers.remove(index-deleteCnt);
+	            		}
+	            		else {
+	            			SVGParser.Layers.remove(index);
+	            		}	            		
+	            		deleteCnt ++;
 	            	}
 	            	canvas.DrawScreen();
 	            }
