@@ -114,9 +114,21 @@ public abstract class PaliObject {
 		float fillOpacity = (float)f_paint.getAlpha()/255;
 		float strokeOpacity = (float)s_paint.getAlpha()/255;
 
-		switch (this.type) {
+		String movement = "";
+		switch (this.type) {		
+		case PaliCanvas.TOOL_PEN:	
+			movement = "";
+			for (int i = 0; i < movingX.size(); i++) {
+				movement += " " + movingX.get(i) + " " + movingY.get(i);
+			}
+			svgtag = "<path fill=\"none\" stroke=\"#" + strokeColor
+					+ "\" stroke-width=\"" + s_paint.getStrokeWidth()
+					+ "\" stroke-opacity=\"" + strokeOpacity + "\" d=\"M"
+					+ movement + "\" transform=\"rotate(" + theta + "," + x
+					+ "," + y + ")\" />";
+			break;
 		case PaliCanvas.TOOL_PENCIL:
-			String movement = "";
+			movement = "";
 			for (int i = 0; i < movingX.size(); i++) {
 				movement += " " + movingX.get(i) + " " + movingY.get(i);
 			}
