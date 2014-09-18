@@ -67,7 +67,7 @@ public class PaliConnector extends SAAgent {
 
 	private final IBinder mBinder = new LocalBinder();
 	private int mConnctionID;
-	private int deleteCnt = 0;
+	private int deleteLayerCnt=0;
 	
 	private static PaliCanvas canvas;
 	private static MainActivity activity;
@@ -281,28 +281,28 @@ public class PaliConnector extends SAAgent {
 	            	}
 	            	else if(obj.has("checkedLayer"))
 	            	{
-	            		if(SVGParser.Layers.get(Integer.parseInt(obj.getString("checkedLayer"))).getVisible())
-	            			SVGParser.Layers.get(Integer.parseInt(obj.getString("checkedLayer"))).setVisible(false);
+	            		int selectLayerNum = Integer.parseInt(obj.getString("checkedLayer"));
+	            		
+	            		if(SVGParser.Layers.get(selectLayerNum).getVisible())
+	            			SVGParser.Layers.get(selectLayerNum).setVisible(false);
 	            		else
-	            			SVGParser.Layers.get(Integer.parseInt(obj.getString("checkedLayer"))).setVisible(true);
+	            			SVGParser.Layers.get(selectLayerNum).setVisible(true);
 	            	}
 	            	else if(obj.has("insertLayer")) 
-	            	{
-	            		SVGParser.Layers.add(new PaliLayer());
-	            		if(deleteCnt > 0) {
-	            			deleteCnt --;
+	            	{	            		
+	            		if(deleteLayerCnt == 0) {
+	            			SVGParser.Layers.add(new PaliLayer());
+	            		}
+	            		else {
+	            			deleteLayerCnt --;
 	            		}
 	            	}
 	            	else if(obj.has("deletedLayer"))
 	            	{
-	            		int index = Integer.parseInt(obj.getString("deletedLayer"));
-	            		if(index-deleteCnt >= 0) {
-	            			SVGParser.Layers.remove(index-deleteCnt);
-	            		}
-	            		else {
-	            			SVGParser.Layers.remove(index);
-	            		}	            		
-	            		deleteCnt ++;
+	            		int index = Integer.parseInt(obj.getString("deletedLayer"));            			            		
+	            		SVGParser.Layers.get(index).objs.clear();
+	            		
+	            		deleteLayerCnt++;
 	            	}
 	            	canvas.DrawScreen();
 	            }
