@@ -49,6 +49,15 @@ public class PaliPencil extends PaliObject {
 		this.theta = theta;
 		s_paint = new Paint(s_p);
 		this.Move(PaliTouchCanvas.translateX, PaliTouchCanvas.translateY);
+		tagSet();
+	}
+	PaliPencil(Path path, RectF rect, float theta, Paint s_p, int flag)
+	{
+		this.path = new Path(path);
+		this.rect = new RectF(rect);
+		this.theta = theta;
+		s_paint = new Paint(s_p);
+		tagSet();
 	}
 
 	PaliPencil()
@@ -99,7 +108,7 @@ public class PaliPencil extends PaliObject {
 	}
 	@Override
 	public PaliObject copy() {
-		PaliPencil pencil = new PaliPencil(this.path, this.rect, this.theta, this.s_paint);
+		PaliPencil pencil = new PaliPencil(this.path, this.rect, this.theta, this.s_paint, 0);
 		
 		pencil.svgtag = this.svgtag;
 		pencil.type = this.type;

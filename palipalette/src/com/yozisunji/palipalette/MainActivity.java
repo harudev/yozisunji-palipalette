@@ -121,10 +121,6 @@ public class MainActivity extends Activity {
 		createOpenDialog();
 		createHelpDialog();
 		createHelpImgDialog();
-
-		// test
-		connectSuccess();
-		//
 	}
 
 	@Override
@@ -445,15 +441,13 @@ public class MainActivity extends Activity {
 	}
 
 	public void newActivity() {
-
-		for (int i = 0; i < SVGParser.Layers.size(); i++) {
-			SVGParser.Layers.get(i).objs.clear();
-		}
 		SVGParser.Layers.clear();
 		svg.addLayer();
 		SVGParser.Layersize = 1;
 		PaliCanvas.currentLayer = SVGParser.Layersize - 1;
 		PaliCanvas.currentObject = -1;
+		
+		mHandler.postDelayed(new initLayerRunnable(), 100);
 
 		customview.DrawScreen();
 	}
@@ -644,15 +638,7 @@ public class MainActivity extends Activity {
 			if (!connectFlag) {
 				intro.setImageResource(R.drawable.no_conn);
 			} else {
-				intro.setVisibility(View.GONE);
-				
-				try {
-					initGear();
-				} catch (JSONException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				
+				intro.setVisibility(View.GONE);				
 			}
 		}
 	}
@@ -672,5 +658,24 @@ public class MainActivity extends Activity {
 		hs.send(json);
 		
 		Log.i("debug", ""+json);
+	}
+	
+	private class initLayerRunnable implements Runnable {
+
+		@Override
+		public void run() {
+			try {
+				initLayer();
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}			
+		}		
+	}
+	
+	public void initLayer() throws JSONException {
+		JSONObject json = new JSONObject();
+		json.put("initLayer", 1);
+		hs.send(json);		
 	}
 }

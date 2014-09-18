@@ -492,11 +492,11 @@ public class PaliTouchCanvas extends View {
 						penPath.moveTo(upX, upY);
 
 						tempObj = new PaliFreeDraw();
-						((PaliFreeDraw) tempObj).getPath().moveTo(downX, downY);
+						((PaliFreeDraw) tempObj).getPath().moveTo(upX, upY);
 						movingX.add(upX);
 						movingY.add(upY);
 
-						tempObj2 = new PaliCircle(upX, upY, 15);
+						tempObj2 = new PaliCircle(upX, upY, 15/PaliCanvas.zoom);
 						penActive = true;
 					} else {
 

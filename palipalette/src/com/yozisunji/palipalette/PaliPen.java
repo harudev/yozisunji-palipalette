@@ -8,6 +8,7 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
+import android.util.Log;
 
 public class PaliPen extends PaliObject {
 
@@ -44,11 +45,20 @@ public class PaliPen extends PaliObject {
 	}
 	PaliPen(Path path, RectF rect, float theta, Paint s_p)
 	{
+		
 		this.path = new Path(path);
 		this.rect = new RectF(rect);
 		this.theta = theta;
 		s_paint = new Paint(s_p);
 		this.Move(PaliTouchCanvas.translateX, PaliTouchCanvas.translateY);
+	}
+	PaliPen(Path path, RectF rect, float theta, Paint s_p, int flag)
+	{
+		
+		this.path = new Path(path);
+		this.rect = new RectF(rect);
+		this.theta = theta;
+		s_paint = new Paint(s_p);
 	}
 
 	PaliPen()
@@ -72,6 +82,7 @@ public class PaliPen extends PaliObject {
 	}
 	public void Move(float dx, float dy)
 	{
+		Log.i("debug","dx: "+dx+" dy: "+dy);
 		Matrix moveMatrix = new Matrix();
 		moveMatrix.setTranslate(dx,dy);
 		this.path.transform(moveMatrix);
@@ -99,7 +110,7 @@ public class PaliPen extends PaliObject {
 	}
 	@Override
 	public PaliObject copy() {
-		PaliPen pen = new PaliPen(this.path, this.rect, this.theta, this.s_paint);
+		PaliPen pen = new PaliPen(this.path, this.rect, this.theta, this.s_paint, 0);
 		
 		pen.svgtag = this.svgtag;
 		pen.type = this.type;
