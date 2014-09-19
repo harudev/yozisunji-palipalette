@@ -19,7 +19,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -27,7 +26,6 @@ import android.os.Message;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -37,6 +35,8 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ExpandableListView;
+import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -56,7 +56,6 @@ public class MainActivity extends Activity {
 	static SVGParser svg;
 	public PaliCanvas customview;
 	PaliTouchCanvas touchview;
-	
 
 	public PaliConnector hs;
 
@@ -82,7 +81,7 @@ public class MainActivity extends Activity {
 
 	ImageButton copyBtn;
 	ImageButton pasteBtn;
-	ImageButton deletBtn;	
+	ImageButton deletBtn;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -121,6 +120,11 @@ public class MainActivity extends Activity {
 		createOpenDialog();
 		createHelpDialog();
 		createHelpImgDialog();
+
+		// test //
+		connectSuccess();
+		// ////////
+
 	}
 
 	@Override
@@ -161,12 +165,11 @@ public class MainActivity extends Activity {
 				android.os.Process.killProcess(android.os.Process.myPid());
 				return true;
 			case KeyEvent.KEYCODE_MENU:
-				//popUpHelpMenu();
-				
-				PaliCanvas.selectedTool++;
-				if(PaliCanvas.selectedTool >= PaliCanvas.TOOL_COMMON) {
-					PaliCanvas.selectedTool = 0;
-				}
+				popUpHelpMenu();
+				/*
+				 * PaliCanvas.selectedTool++; if(PaliCanvas.selectedTool >=
+				 * PaliCanvas.TOOL_COMMON) { PaliCanvas.selectedTool = 0; }
+				 */
 				return true;
 
 			}
@@ -242,17 +245,39 @@ public class MainActivity extends Activity {
 	}
 
 	private void createHelpDialog() {
-		final View innerView = getLayoutInflater().inflate(R.layout.help_menu,
-				null);
+		
+		ExpandableListView list = new ExpandableListView(this);
+        list.setGroupIndicator(null);
+        list.setChildIndicator(null);
+        String[] titles = {"Basic Operation","UI Components","UI Customizing"};
+        String[] help_1 = {"How to Use App","Object Pick","Copy/Paste/Delete","File","Layer","Undo/Redo"};
+        String[] help_2 = {"Description of Icons","Layer Widget","Color Widget","Shapes Selection"};
+        String[] help_3 = {"Screen Structure","Change Screen Order","Add Screen","Add/Remove Icon or Widget","Move Icon or Widget"};
+        String[][] contents = {help_1,help_2,help_3};
+        PaliHelpPageAdapter adapter = new PaliHelpPageAdapter(this,
+            titles, contents);
+     
+        list.setAdapter(adapter);
 
 		helpDialog = new Dialog(this);
-		helpDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-		helpDialog.setContentView(innerView);
-
+		helpDialog.requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
+		helpDialog.setContentView(list);		
 		helpDialog.setCancelable(true);
 		helpDialog.setCanceledOnTouchOutside(true);
-
-		help_list = (ListView) helpDialog.findViewById(R.id.help_list);
+		
+		list.setOnChildClickListener(new OnChildClickListener() {
+			
+			@Override
+			public boolean onChildClick(ExpandableListView arg0, View arg1, int groupPosition,
+					int childPosition, long arg4) {
+				// TODO Auto-generated method stub
+				int clickPos = (groupPosition*10) + childPosition;
+				popUpHelpImg(clickPos);
+				return false;
+			}
+		});
+		
+		
 	}
 
 	private void createHelpImgDialog() {
@@ -322,28 +347,8 @@ public class MainActivity extends Activity {
 		});
 	}
 
-	public void popUpHelpMenu() {
-		ArrayList<String> helpName = new ArrayList<String>();
-
-		final ArrayAdapter<String> helpList = new ArrayAdapter<String>(this,
-				android.R.layout.simple_list_item_1, helpName);
-
-		helpName.add("Drawing");
-		helpName.add("Gear Icon");
-		helpName.add("Custommizing");
-		helpName.add("Screen Control");
-
-		help_list.setAdapter(helpList);
-		helpDialog.show();
-
-		help_list.setOnItemClickListener(new OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> arg0, View arg1,
-					int listNum, long arg3) {
-				popUpHelpImg(listNum);
-				helpDialog.cancel();
-			}
-		});
+	public void popUpHelpMenu() {		
+		helpDialog.show();		
 	}
 
 	public void popUpHelpImg(final int listNum) {
@@ -379,7 +384,7 @@ public class MainActivity extends Activity {
 					}
 				} else if (listNum == 3) {
 					imgCnt--;
-					if(imgCnt== 1)
+					if (imgCnt == 1)
 						help_img.setImageResource(R.drawable.help_screen_control_2);
 					else {
 						helpImgDialog.dismiss();
@@ -446,7 +451,7 @@ public class MainActivity extends Activity {
 		SVGParser.Layersize = 1;
 		PaliCanvas.currentLayer = SVGParser.Layersize - 1;
 		PaliCanvas.currentObject = -1;
-		
+
 		mHandler.postDelayed(new initLayerRunnable(), 100);
 
 		customview.DrawScreen();
@@ -638,28 +643,28 @@ public class MainActivity extends Activity {
 			if (!connectFlag) {
 				intro.setImageResource(R.drawable.no_conn);
 			} else {
-				intro.setVisibility(View.GONE);				
+				intro.setVisibility(View.GONE);
 			}
 		}
 	}
-	
+
 	public void initGear() throws JSONException {
-		
+
 		JSONObject json = new JSONObject();
 		json.put("layerCnt", SVGParser.Layers.size());
 		json.put("currentLayer", PaliCanvas.currentLayer);
-		JSONArray jsonArr = new JSONArray();		
-		for(int i=0; i<SVGParser.Layers.size(); i ++) {
-			if(SVGParser.Layers.get(i).visibility) {
+		JSONArray jsonArr = new JSONArray();
+		for (int i = 0; i < SVGParser.Layers.size(); i++) {
+			if (SVGParser.Layers.get(i).visibility) {
 				jsonArr.put(i);
 			}
 		}
 		json.put("checkedLayer", jsonArr);
 		hs.send(json);
-		
-		Log.i("debug", ""+json);
+
+		Log.i("debug", "" + json);
 	}
-	
+
 	private class initLayerRunnable implements Runnable {
 
 		@Override
@@ -669,13 +674,13 @@ public class MainActivity extends Activity {
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}			
-		}		
+			}
+		}
 	}
-	
+
 	public void initLayer() throws JSONException {
 		JSONObject json = new JSONObject();
 		json.put("initLayer", 1);
-		hs.send(json);		
+		hs.send(json);
 	}
 }
