@@ -353,7 +353,7 @@ public class MainActivity extends Activity {
 
 	public void popUpHelpImg(final int listNum) {
 		helpImgDialog.show();
-
+/*
 		if (listNum == 0) {
 			help_img.setImageResource(R.drawable.help_drawing_1);
 		} else if (listNum == 1) {
@@ -393,6 +393,7 @@ public class MainActivity extends Activity {
 				}
 			}
 		});
+		*/
 
 	}
 

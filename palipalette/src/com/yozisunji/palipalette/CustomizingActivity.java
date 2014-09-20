@@ -179,7 +179,24 @@ public class CustomizingActivity extends Activity {
 				 PaliPoint tempP = screen.getPos(e, selectedItem);
 				 if(tempP.x<999 && tempP.y<999)
 				 {
-					 screen.putItem(selectedItem.funcNum, selectedItem.itemNum, tempP.x, tempP.y);
+					 if(selectedItem.itemType!=PaliItem.TYPE_WIDGET)
+						 screen.putItem(selectedItem.funcNum, selectedItem.itemNum, tempP.x, tempP.y);
+					 else
+					 {
+						 if((selectedItem.funcNum==0 && selectedItem.itemNum == 2) || (selectedItem.funcNum==3 && selectedItem.itemNum == 1))
+						 {
+							 screen.putItem(selectedItem.funcNum, selectedItem.itemNum, 0, 0);
+						 }
+						 else
+						 {
+						 
+						 }
+						 //WIDGET별 조건문
+						 
+					 }
+					 
+					 this.screen.setSize(900, 900);
+					 this.screen.invalidate();
 				 }
 				 selectedItem=null;
 				 mPressed = false;
@@ -195,7 +212,7 @@ public class CustomizingActivity extends Activity {
 	
 	public void reDraw()
 	{
-		this.listview.invalidate();
+		this.screen.invalidate();
 	}
 	
 	private void ParseJSON(JSONObject json)

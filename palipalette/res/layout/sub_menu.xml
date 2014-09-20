@@ -29,6 +29,6 @@
         android:onClick="OnClick"
         android:padding="0sp"
         android:scaleType="centerCrop"
-        android:src="@drawable/icon_delet" />
+        android:src="@drawable/icon_delete" />
 
 </LinearLayout>

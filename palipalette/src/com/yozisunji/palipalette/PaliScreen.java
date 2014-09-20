@@ -31,6 +31,8 @@ public class PaliScreen extends GridLayout{
 	ArrayList<ArrayList<Integer>>itemNumbers;
 	Context mContext;
 	
+	int sWidth, sHeight;
+	
 	private boolean mPressed = false;
 	private int selected = 0;
 	private int indexX, indexY;
@@ -56,7 +58,7 @@ public class PaliScreen extends GridLayout{
 		this.setRowCount(3);
 		this.setColumnCount(3);
 		touchable = false;
-		this.setBackgroundColor( Color.rgb(3,74,132));
+		this.setBackgroundColor( Color.rgb(255,255,255));
 		mLongPressTimeout = ViewConfiguration.getLongPressTimeout();
 		initialize();
 	}
@@ -70,7 +72,7 @@ public class PaliScreen extends GridLayout{
 		itemNumbers.add(new ArrayList<Integer>());
 		itemNumbers.add(new ArrayList<Integer>());
 		itemNumbers.add(new ArrayList<Integer>());
-		this.setBackgroundColor( Color.rgb(3,74,132));
+		this.setBackgroundColor( Color.rgb(255,255,255));
 		this.setRowCount(3);
 		this.setColumnCount(3);
 		touchable = false;
@@ -97,11 +99,11 @@ public class PaliScreen extends GridLayout{
 	}
 	public void putNullItem(int x, int y)
 	{
-		PaliItemView temp = new PaliItemView(PaliCanvas.TOOL_COMMON, 0, x, y, mContext);
+		PaliItemView temp = new PaliItemView(CustomizingMainActivity.Common, 0, x, y, mContext);
 		this.items.add(y*3+x,temp);
 		this.addView(temp , temp.gl);
 		
-		for(int i=0;i<temp.iteminfo.width;i++)
+		//for(int i=0;i<temp.iteminfo.width;i++)
 		{
 			
 		}
@@ -156,10 +158,9 @@ public class PaliScreen extends GridLayout{
 		
 		this.items.set(posY*3+posX, temp);
 		
-		if(func!=PaliCanvas.TOOL_COMMON)
-			CustomizingMainActivity.GearUIViewList.get(func).removeItem(item);
-		if(parent!=null)
-			parent.reDraw();
+		//if(func!=PaliCanvas.TOOL_COMMON)
+		//	CustomizingMainActivity.GearUIViewList.get(func).removeItem(item);
+		this.invalidate();
 	}
 	public void copy(PaliScreen p, int width, int height)
 	{	
@@ -220,7 +221,7 @@ public class PaliScreen extends GridLayout{
 		
 		for(int i=0 ; i<items.size(); i++)
 		{
-			if(items.get(i).iteminfo.funcNum!=PaliCanvas.TOOL_COMMON)
+			if(items.get(i).iteminfo.funcNum!=CustomizingMainActivity.Common)
 			{
 				JSONObject temp = new JSONObject();
 				temp.put("Function", items.get(i).iteminfo.funcNum);
@@ -241,7 +242,7 @@ public class PaliScreen extends GridLayout{
 		
 		for(int i=0;i<items.size();i++)
 		{
-			if(items.get(i).iteminfo.funcNum==PaliCanvas.TOOL_COMMON)
+			if(items.get(i).iteminfo.funcNum==CustomizingMainActivity.Common)
 			{
 				items.get(i).getGlobalVisibleRect(r);
 				if(r.contains((int)e.getX(),(int)e.getY()))
@@ -256,7 +257,7 @@ public class PaliScreen extends GridLayout{
 								{
 									return pt;
 								}
-								if(items.get(o*3+p).iteminfo.funcNum!=PaliCanvas.TOOL_COMMON)
+								if(items.get(o*3+p).iteminfo.funcNum!=CustomizingMainActivity.Common)
 									return pt;
 							}
 						}
@@ -269,7 +270,7 @@ public class PaliScreen extends GridLayout{
 							{
 								return pt;
 							}
-							if(items.get(items.get(i).y*3+p).iteminfo.funcNum!=PaliCanvas.TOOL_COMMON)
+							if(items.get(items.get(i).y*3+p).iteminfo.funcNum!=CustomizingMainActivity.Common)
 								return pt;
 						}
 					}
@@ -305,14 +306,14 @@ public class PaliScreen extends GridLayout{
 			 
 			for(int i=0;i<items.size();i++)
 			{
-				if(items.get(i).iteminfo.funcNum!=PaliCanvas.TOOL_COMMON)
+				if(items.get(i).iteminfo.funcNum!=CustomizingMainActivity.Common)
 				{
 					items.get(i).getGlobalVisibleRect(r);
 					if(r.contains((int)e.getX(),(int)e.getY()))
 					{
 						selected=i;
 						mPressed=true;
-						items.get(selected).setBackgroundColor(Color.argb(80, 255, 255, 255));
+						items.get(selected).setBackgroundColor(Color.argb(70, 170, 170, 170));
 						if(!(items.get(i).iteminfo.funcNum == CustomizingMainActivity.Config && items.get(i).iteminfo.itemNum == 1))
 							startTimeout();
 						break;
@@ -321,11 +322,18 @@ public class PaliScreen extends GridLayout{
 			}
 			 return false;
 		 case MotionEvent.ACTION_MOVE:
+			 if(items.get(selected).iteminfo.itemType==PaliItem.TYPE_WIDGET)
+			 {
+				 mPressed=false;
+				 items.get(selected).setBackgroundColor(Color.argb(0, 255, 255, 255));
+				 return true;
+			 }
 			 if(mPressed)
 			 {	
+				 finishLongPressed();
 				for(int i=0;i<items.size();i++)
 				{
-					 if(i!=selected && items.get(i).iteminfo.funcNum==PaliCanvas.TOOL_COMMON)
+					 if(i!=selected && items.get(i).iteminfo.funcNum==CustomizingMainActivity.Common)
 					 {
 						items.get(i).getGlobalVisibleRect(r);
 						if(r.contains((int)e.getX(),(int)e.getY()))
@@ -398,8 +406,8 @@ public class PaliScreen extends GridLayout{
 
 			PaliItemView temp = items.get(selected);
 			
-			if(temp.iteminfo.funcNum!=PaliCanvas.TOOL_COMMON)
-				CustomizingMainActivity.GearUIViewList.get(temp.iteminfo.funcNum).restoreItem(temp.iteminfo.itemNum);
+			//if(temp.iteminfo.funcNum!=PaliCanvas.TOOL_COMMON)
+				//CustomizingMainActivity.GearUIViewList.get(temp.iteminfo.funcNum).restoreItem(temp.iteminfo.itemNum);
 			
 			if(temp.iteminfo.height>1)
 			{
@@ -419,7 +427,7 @@ public class PaliScreen extends GridLayout{
 				}
 			}
 			
-			temp.iteminfo = CustomizingMainActivity.GearUIList.get(PaliCanvas.TOOL_COMMON).items.get(0);
+			temp.iteminfo = CustomizingMainActivity.GearUIList.get(CustomizingMainActivity.Common).items.get(0);
 			temp.setImageResource(temp.iteminfo.imageid);
 			
 			temp.gl = (GridLayout.LayoutParams)temp.getLayoutParams();
