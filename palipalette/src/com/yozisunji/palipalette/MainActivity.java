@@ -28,6 +28,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
@@ -168,8 +169,8 @@ public class MainActivity extends Activity {
 				android.os.Process.killProcess(android.os.Process.myPid());
 				return true;
 			case KeyEvent.KEYCODE_MENU:
-				//popUpHelpMenu();
-				popUpOpenMenu();
+				popUpHelpMenu();
+				//popUpOpenMenu();
 				/*
 				 * PaliCanvas.selectedTool++; if(PaliCanvas.selectedTool >=
 				 * PaliCanvas.TOOL_COMMON) { PaliCanvas.selectedTool = 0; }
@@ -254,9 +255,9 @@ public class MainActivity extends Activity {
         list.setGroupIndicator(null);
         list.setChildIndicator(null);
         String[] titles = {"Basic Operation","UI Components","UI Customizing"};
-        String[] help_1 = {"How to Use App","Object Pick","Copy/Paste/Delete","File","Layer","Undo/Redo"};
+        String[] help_1 = {"How to Use App","Object Pick","Copy/Paste/Delete","Undo/Redo","Zoom","Screen Control"};
         String[] help_2 = {"Description of Icons","Layer Widget","Color Widget","Shapes Selection"};
-        String[] help_3 = {"Screen Structure","Change Screen Order","Add Screen","Add/Remove Icon or Widget","Move Icon or Widget"};
+        String[] help_3 = {"Add Screen","Change Screen Order","Icon or Widget Layout"};
         String[][] contents = {help_1,help_2,help_3};
         PaliHelpPageAdapter adapter = new PaliHelpPageAdapter(this,
             titles, contents);
@@ -357,48 +358,53 @@ public class MainActivity extends Activity {
 
 	public void popUpHelpImg(final int listNum) {
 		helpImgDialog.show();
-/*
+		
 		if (listNum == 0) {
-			help_img.setImageResource(R.drawable.help_drawing_1);
+			help_img.setImageResource(R.drawable.help_0_0);
 		} else if (listNum == 1) {
-			help_img.setImageResource(R.drawable.help_gear_icon_1);
+			help_img.setImageResource(R.drawable.help_0_1);
 		} else if (listNum == 2) {
-			help_img.setImageResource(R.drawable.help_custom_1);
-			imgCnt = 3;
+			help_img.setImageResource(R.drawable.help_0_2);
 		} else if (listNum == 3) {
-			help_img.setImageResource(R.drawable.help_screen_control_1);
-			imgCnt = 2;
-		}
-
+			help_img.setImageResource(R.drawable.help_0_3);
+		} else if (listNum == 4) {
+			help_img.setImageResource(R.drawable.help_0_4_1);
+		} else if (listNum == 5) {
+			help_img.setImageResource(R.drawable.help_0_5);
+		} else if (listNum == 10) {
+			help_img.setImageResource(R.drawable.help_1_0);
+		} else if (listNum == 11) {
+			help_img.setImageResource(R.drawable.help_1_1);
+		} else if (listNum == 12) {
+			help_img.setImageResource(R.drawable.help_1_2);
+		} else if (listNum == 13) {
+			help_img.setImageResource(R.drawable.help_1_3);
+		} else if (listNum == 20) {
+			help_img.setImageResource(R.drawable.help_2_0);
+		} else if (listNum == 21) {
+			help_img.setImageResource(R.drawable.help_2_1);
+		} else if (listNum == 22) {
+			help_img.setImageResource(R.drawable.help_2_2);
+		} 
+		
 		help_img.setOnClickListener(new OnClickListener() {
 			@Override
-			public void onClick(View v) {
-				if (listNum == 0 || listNum == 1) {
-					helpImgDialog.dismiss();
-					helpDialog.show();
-				} else if (listNum == 2) {
-					imgCnt--;
-					if (imgCnt == 2)
-						help_img.setImageResource(R.drawable.help_custom_2);
-					else if (imgCnt == 1)
-						help_img.setImageResource(R.drawable.help_custom_3);
-					else {
-						helpImgDialog.dismiss();
-						helpDialog.show();
-					}
-				} else if (listNum == 3) {
+			public void onClick(View v) {				
+				if (listNum == 4) {
 					imgCnt--;
 					if (imgCnt == 1)
-						help_img.setImageResource(R.drawable.help_screen_control_2);
+						help_img.setImageResource(R.drawable.help_0_4_2);
 					else {
 						helpImgDialog.dismiss();
 						helpDialog.show();
 					}
 				}
+				else {
+					helpImgDialog.dismiss();
+					helpDialog.show();
+				}
 			}
 		});
-		*/
-
 	}
 
 	public void OnClick(View v) {
@@ -728,16 +734,18 @@ public class MainActivity extends Activity {
 		jsonScolorArray.put(sColor_g);
 		jsonScolorArray.put(sColor_b);
 		jsonScolorArray.put(sColor_a);
+		json.put("sColorArr", jsonScolorArray);
 		
 		JSONArray jsonFcolorArray = new JSONArray();
-		jsonScolorArray.put(fColor_r);
-		jsonScolorArray.put(fColor_g);
-		jsonScolorArray.put(fColor_b);
-		jsonScolorArray.put(fColor_a);
-		
-		json.put("sColorArr", jsonScolorArray);
+		jsonFcolorArray.put(fColor_r);
+		jsonFcolorArray.put(fColor_g);
+		jsonFcolorArray.put(fColor_b);
+		jsonFcolorArray.put(fColor_a);		
 		json.put("fColorArr", jsonFcolorArray);
+		
+		JSONObject json2 = new JSONObject();
+		json2.put("colorPicker", json);
 
-		hs.send(json);
+		hs.send(json2);
 	}
 }
