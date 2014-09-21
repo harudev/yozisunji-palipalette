@@ -312,6 +312,11 @@ public class PaliConnector extends SAAgent {
 	            	PaliCanvas.strokeWidth = Integer.parseInt(stroke);
 	            	mActivity.changeStyle(MainActivity.STYLE_STROKEWIDTH);
 	            }
+	            else if(jObject.has("pen"))
+	            {
+	            	PaliCanvas.selectedTool = PaliCanvas.TOOL_PEN;
+	            	mActivity.changeTool();
+	            }
 	            else if(jObject.has("pencil"))
 	            {
 	            	PaliCanvas.selectedTool = PaliCanvas.TOOL_PENCIL;
@@ -341,6 +346,9 @@ public class PaliConnector extends SAAgent {
 	            }
 	            else if(jObject.has("objectPicker")) {
 	            	PaliCanvas.selectedTool = PaliCanvas.TOOL_PICKOBJECT;
+	            }
+	            else if(jObject.has("colorPicker")) {
+	            	PaliCanvas.selectedTool = PaliCanvas.TOOL_COLORPICKER;
 	            }
 	            else if(jObject.has("newCanvas")) {
 	            	mActivity.newActivity();

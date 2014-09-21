@@ -19,6 +19,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -27,7 +28,6 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
@@ -64,7 +64,7 @@ public class MainActivity extends Activity {
 
 	ImageView intro;
 	ImageView noConnImg;
-	private Handler mHandler = new Handler();
+	public Handler mHandler = new Handler();
 
 	private Dialog subDialog = null;
 	private Dialog saveDialog = null;
@@ -82,6 +82,9 @@ public class MainActivity extends Activity {
 	ImageButton copyBtn;
 	ImageButton pasteBtn;
 	ImageButton deletBtn;
+	
+	Paint pickSpaint;
+	Paint pickFpaint;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -110,7 +113,7 @@ public class MainActivity extends Activity {
 		customview.setBound(screenWidth, screenHeight);
 		touchview = (PaliTouchCanvas) findViewById(R.id.paliTouch);
 		touchview.setCanvasAddr(customview,
-				(LinearLayout) findViewById(R.id.selectLayout));
+				(LinearLayout) findViewById(R.id.selectLayout),this);
 
 		hs = new PaliConnector();
 
@@ -165,7 +168,8 @@ public class MainActivity extends Activity {
 				android.os.Process.killProcess(android.os.Process.myPid());
 				return true;
 			case KeyEvent.KEYCODE_MENU:
-				popUpHelpMenu();
+				//popUpHelpMenu();
+				popUpOpenMenu();
 				/*
 				 * PaliCanvas.selectedTool++; if(PaliCanvas.selectedTool >=
 				 * PaliCanvas.TOOL_COMMON) { PaliCanvas.selectedTool = 0; }
@@ -473,7 +477,6 @@ public class MainActivity extends Activity {
 				} else {
 					Toast.makeText(ctx, "save fail", Toast.LENGTH_SHORT).show();
 				}
-
 			}
 		};
 
@@ -678,10 +681,63 @@ public class MainActivity extends Activity {
 			}
 		}
 	}
-
 	public void initLayer() throws JSONException {
 		JSONObject json = new JSONObject();
 		json.put("initLayer", 1);
+		hs.send(json);
+	}
+	
+	public void colorPickCall(Paint sc, Paint fc) {
+		pickSpaint = sc;
+		pickFpaint = fc;
+		mHandler.postDelayed(new colorPickRunnable(), 100);
+		
+	}
+	
+	private class colorPickRunnable implements Runnable {
+
+		@Override
+		public void run() {
+			try {
+				colorPick();
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+	public void colorPick() throws JSONException {
+		// transform r,g,b,a
+		String pick16Scolor = Integer.toHexString(pickSpaint.getColor());
+		String sColor_r = pick16Scolor.substring(2, 4);
+		String sColor_g = pick16Scolor.substring(4, 6);
+		String sColor_b = pick16Scolor.substring(6, 8);
+		String sColor_a = String.valueOf(pickSpaint.getAlpha());
+		
+		String pick16Fcolor = Integer.toHexString(pickFpaint.getColor());	
+		String fColor_r = pick16Fcolor.substring(2, 4);
+		String fColor_g = pick16Fcolor.substring(4, 6);
+		String fColor_b = pick16Fcolor.substring(6, 8);
+		String fColor_a = String.valueOf(pickFpaint.getAlpha());				
+		
+		// json
+		JSONObject json = new JSONObject();
+		
+		JSONArray jsonScolorArray = new JSONArray();
+		jsonScolorArray.put(sColor_r);
+		jsonScolorArray.put(sColor_g);
+		jsonScolorArray.put(sColor_b);
+		jsonScolorArray.put(sColor_a);
+		
+		JSONArray jsonFcolorArray = new JSONArray();
+		jsonScolorArray.put(fColor_r);
+		jsonScolorArray.put(fColor_g);
+		jsonScolorArray.put(fColor_b);
+		jsonScolorArray.put(fColor_a);
+		
+		json.put("sColorArr", jsonScolorArray);
+		json.put("fColorArr", jsonFcolorArray);
+
 		hs.send(json);
 	}
 }

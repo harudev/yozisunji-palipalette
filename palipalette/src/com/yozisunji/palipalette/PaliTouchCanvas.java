@@ -15,6 +15,7 @@ import android.graphics.RectF;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.FloatMath;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
@@ -30,6 +31,9 @@ import com.samsung.android.sdk.look.smartclip.SlookSmartClipCroppedArea;
 import com.samsung.android.sdk.look.smartclip.SlookSmartClipDataElement;
 
 public class PaliTouchCanvas extends View {
+	
+	MainActivity mactivity;
+	
 	Path penPath = new Path();
 	Path pencilPath = new Path();
 	Path brushPath = new Path();
@@ -126,7 +130,7 @@ public class PaliTouchCanvas extends View {
 		}
 	};
 
-	public void setCanvasAddr(PaliCanvas c, LinearLayout selectorll) {
+	public void setCanvasAddr(PaliCanvas c, LinearLayout selectorll, MainActivity mainactivity) {
 		canvas = c;
 
 		selector = new PaliSelector(mContext, new RectF(0, 0, 100, 100), c,
@@ -138,6 +142,8 @@ public class PaliTouchCanvas extends View {
 		params.height = LayoutParams.MATCH_PARENT;
 		selector.setLayoutParams(params);
 		selector.setVisibility(View.GONE);
+		
+		mactivity = mainactivity;
 	}
 
 	public void onDraw(Canvas cnvs) {
@@ -398,9 +404,31 @@ public class PaliTouchCanvas extends View {
 				upX = (e.getX() - PaliCanvas.canvasX) / PaliCanvas.zoom;
 				upY = (e.getY() - PaliCanvas.canvasY) / PaliCanvas.zoom;
 				float rect_left = 999999, rect_right = 0, rect_top = 999999, rect_bottom = 0;
-				PaliObject temp;
-
+				
 				switch (PaliCanvas.selectedTool) {
+				case PaliCanvas.TOOL_COLORPICKER:
+					PaliObject temp;
+					PaliPoint pickTemp = null;
+					for (int i = SVGParser.Layers.size() - 1; i >= 0; i--) {
+						if (SVGParser.Layers.get(i).visibility == true) {
+							for (int j = SVGParser.Layers.get(i).objs
+									.size() - 1; j >= 0; j--) {
+								temp = SVGParser.Layers.get(i).objs.get(j);
+								if (temp.rect.contains(upX, upY)) {
+									pickTemp = new PaliPoint(i,j);
+									break;
+								}
+							}
+						}
+					}
+					
+					if(pickTemp != null) {
+						Paint pickFpaint = SVGParser.Layers.get(pickTemp.x).objs.get(pickTemp.y).f_paint;
+						Paint pickSpaint = SVGParser.Layers.get(pickTemp.x).objs.get(pickTemp.y).s_paint;					
+						
+						mactivity.colorPickCall(pickFpaint, pickSpaint);									
+					}
+					return true;
 				case PaliCanvas.TOOL_PICKOBJECT:
 
 					selector.stopTimeout();
@@ -423,8 +451,7 @@ public class PaliTouchCanvas extends View {
 										.size() - 1; j >= 0; j--) {
 									temp = SVGParser.Layers.get(i).objs.get(j);
 									if (temp.rect.contains(upX, upY)) {
-										selector.selObjArr.add(new PaliPoint(i,
-												j));
+										selector.selObjArr.add(new PaliPoint(i,j));
 										rect = temp.rotRect;
 
 										this.selected = true;
@@ -433,7 +460,6 @@ public class PaliTouchCanvas extends View {
 								}
 							}
 						}
-
 					} else {
 						this.rect = new RectF(min(downX, upX), min(downY, upY),
 								max(downX, upX), max(downY, upY));
@@ -444,8 +470,7 @@ public class PaliTouchCanvas extends View {
 										.size() - 1; j >= 0; j--) {
 									temp = SVGParser.Layers.get(i).objs.get(j);
 									if (this.rect.contains(temp.rect)) {
-										selector.selObjArr.add(new PaliPoint(i,
-												j));
+										selector.selObjArr.add(new PaliPoint(i,j));
 										rect_left = min(rect_left,
 												temp.rotRect.left);
 										rect_top = min(rect_top,
@@ -496,7 +521,8 @@ public class PaliTouchCanvas extends View {
 						movingX.add(upX);
 						movingY.add(upY);
 
-						tempObj2 = new PaliCircle(upX, upY, 15/PaliCanvas.zoom);
+						tempObj2 = new PaliCircle(upX, upY,
+								15 / PaliCanvas.zoom);
 						penActive = true;
 					} else {
 

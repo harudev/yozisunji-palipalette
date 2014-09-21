@@ -26,6 +26,7 @@ public class PaliCanvas extends SurfaceView implements SurfaceHolder.Callback {
 	public static final int TOOL_ELLIPSE=5;
 	public static final int TOOL_RECTANGLE=6;
 	public static final int TOOL_STAR=7;
+	public static final int TOOL_COLORPICKER=9;
 	public static final int TOOL_COMMON=8;
 	
 	public static final int TOOL_FACTOR = 10;
@@ -37,7 +38,7 @@ public class PaliCanvas extends SurfaceView implements SurfaceHolder.Callback {
 	public static int width, height;
 	public static int currentLayer;
 	public static int currentObject;
-	public static int selectedTool=1;
+	public static int selectedTool=9;
 	
 	public static boolean drawMode = true;
 	public static float canvasX=0, canvasY=0;
