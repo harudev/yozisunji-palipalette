@@ -29,8 +29,8 @@
 
     <application name="PaliPalette" >
         <serviceProfile
-            id="/system/helloaccessory"
-            name="helloaccessory"
+            id="/system/PaliPalette"
+            name="PaliPalette"
             role="provider"
             serviceImpl="com.yozisunji.palipalette.PaliConnector"
             version="1.0"

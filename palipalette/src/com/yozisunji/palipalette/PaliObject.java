@@ -142,7 +142,7 @@ public abstract class PaliObject {
 			svgtag = "<g>";
 			for (int i = 0; i < brushX.size(); i++) {
 				svgtag += "<circle cx=\"" + brushX.get(i) + "\" cy=\""
-						+ brushY.get(i) + "\" r=\"" + 30 + "\" fill=\"#"
+						+ brushY.get(i) + "\" r=\"" + r + "\" fill=\"#"
 						+ fillColor + "\" fill-opacity=\"" + brushP.get(i)
 						+ "\" />";
 			}

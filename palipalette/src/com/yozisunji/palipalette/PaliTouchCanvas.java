@@ -223,7 +223,7 @@ public class PaliTouchCanvas extends View {
 				brushY.add(downY);
 				pressure = e.getPressure();
 				brushP.add(pressure);
-				brushR = 30;
+				brushR = PaliCanvas.strokeWidth;
 
 				tempObj = new PaliFreeDraw();
 				((PaliFreeDraw) tempObj).getPath().moveTo(downX, downY);
@@ -426,7 +426,7 @@ public class PaliTouchCanvas extends View {
 						Paint pickFpaint = SVGParser.Layers.get(pickTemp.x).objs.get(pickTemp.y).f_paint;
 						Paint pickSpaint = SVGParser.Layers.get(pickTemp.x).objs.get(pickTemp.y).s_paint;					
 						
-						mactivity.colorPickCall(pickFpaint, pickSpaint);									
+						mactivity.colorPickCall(pickSpaint, pickFpaint);									
 					}
 					return true;
 				case PaliCanvas.TOOL_PICKOBJECT:
@@ -615,7 +615,7 @@ public class PaliTouchCanvas extends View {
 					}
 
 					SVGParser.Layers.get(PaliCanvas.currentLayer).objs
-							.add(new PaliBrush(bm, brushX, brushY, brushP, rect));
+							.add(new PaliBrush(bm, brushX, brushY, brushP, brushR, rect));
 
 					bm = null;
 					c = null;

@@ -25,7 +25,7 @@ public class PaliBrush extends PaliObject {
 		this.rect = new RectF(100, 100, 500, 500);
 	}
 
-	PaliBrush(Bitmap bitmap, List<Float> brushX, List<Float> brushY, List<Float> brushP, RectF rect) {
+	PaliBrush(Bitmap bitmap, List<Float> brushX, List<Float> brushY, List<Float> brushP, float r, RectF rect) {
 		f_paint = new Paint();
 		f_paint.setAntiAlias(true);
 
@@ -34,6 +34,7 @@ public class PaliBrush extends PaliObject {
 		this.brushX = new ArrayList<Float>(brushX);
 		this.brushY = new ArrayList<Float>(brushY);
 		this.brushP = new ArrayList<Float>(brushP);
+		this.r = r;
 		this.rect = rect;
 		filter = new LightingColorFilter(PaliCanvas.fillColor, 1);
 		tagSet();
