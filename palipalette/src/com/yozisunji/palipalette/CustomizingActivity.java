@@ -7,8 +7,11 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.Point;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -18,12 +21,14 @@ import android.widget.ExpandableListView;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.GridLayout.Spec;
+import android.widget.LinearLayout.LayoutParams;
 
 public class CustomizingActivity extends Activity {
 	Context ctx = this;
 	public PaliScreen screen;
 	GridLayout.LayoutParams layout;
+	int screenSize;
+	LinearLayout.LayoutParams sl;
 	
 	public boolean mPressed = false;
 	private PaliItem selectedItem=null;
@@ -69,10 +74,17 @@ public class CustomizingActivity extends Activity {
 		listview.expandGroup(4);
 		listview.expandGroup(5);
 		this.screen.setTouchable(true);
-		this.screen.setSize(900, 900);
 		
+
+		
+		Resources r = getResources();
+		float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 300, r.getDisplayMetrics());
+		
+		screenSize=(int)px;
+		this.screen.setSize(screenSize, screenSize);
 		this.reDraw();
 	}
+	
 	
 	@Override
 	public boolean dispatchKeyEvent(KeyEvent event) {
@@ -164,7 +176,6 @@ public class CustomizingActivity extends Activity {
 				LinearLayout.LayoutParams lparam = (LinearLayout.LayoutParams) dragItem.getLayoutParams();
 				lparam.leftMargin = (int)e.getX() - dragItem.getWidth()/2;
 				lparam.topMargin = (int)e.getY() - dragItem.getHeight()/2;
-				
 				dragItem.setLayoutParams(lparam);
 			 }
 			 else
@@ -180,22 +191,29 @@ public class CustomizingActivity extends Activity {
 				 if(tempP.x<999 && tempP.y<999)
 				 {
 					 if(selectedItem.itemType!=PaliItem.TYPE_WIDGET)
-						 screen.putItem(selectedItem.funcNum, selectedItem.itemNum, tempP.x, tempP.y);
+					 {
+						 if(screen.isPuttable(selectedItem.funcNum, selectedItem.itemNum, tempP.x, tempP.y))
+						 {
+							 screen.putItem(selectedItem.funcNum, selectedItem.itemNum, tempP.x, tempP.y);
+						 }
+					 }
 					 else
 					 {
-						 if((selectedItem.funcNum==0 && selectedItem.itemNum == 2) || (selectedItem.funcNum==3 && selectedItem.itemNum == 1))
+						 if((selectedItem.funcNum==0 && selectedItem.itemNum == 2) || (selectedItem.funcNum==3 && selectedItem.itemNum == 0))
 						 {
-							 screen.putItem(selectedItem.funcNum, selectedItem.itemNum, 0, 0);
+							 if(screen.isPuttable(selectedItem.funcNum, selectedItem.itemNum, 0, 0))
+								 screen.putItem(selectedItem.funcNum, selectedItem.itemNum, 0, 0);							 
 						 }
-						 else
+						 else if(selectedItem.funcNum==3 && selectedItem.itemNum == 1)
 						 {
-						 
+							 if(screen.isPuttable(selectedItem.funcNum, selectedItem.itemNum, tempP.x, 0))
+								 screen.putItem(selectedItem.funcNum, selectedItem.itemNum, tempP.x, 0);
 						 }
 						 //WIDGET별 조건문
 						 
 					 }
 					 
-					 this.screen.setSize(900, 900);
+					 this.screen.setSize(screenSize, screenSize);
 					 this.screen.invalidate();
 				 }
 				 selectedItem=null;

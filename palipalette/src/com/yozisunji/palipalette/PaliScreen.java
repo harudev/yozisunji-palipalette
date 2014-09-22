@@ -58,7 +58,7 @@ public class PaliScreen extends GridLayout{
 		this.setRowCount(3);
 		this.setColumnCount(3);
 		touchable = false;
-		this.setBackgroundColor( Color.rgb(255,255,255));
+		this.setBackgroundResource(R.drawable.screen_background);
 		mLongPressTimeout = ViewConfiguration.getLongPressTimeout();
 		initialize();
 	}
@@ -72,7 +72,7 @@ public class PaliScreen extends GridLayout{
 		itemNumbers.add(new ArrayList<Integer>());
 		itemNumbers.add(new ArrayList<Integer>());
 		itemNumbers.add(new ArrayList<Integer>());
-		this.setBackgroundColor( Color.rgb(255,255,255));
+		this.setBackgroundResource(R.drawable.screen_background);
 		this.setRowCount(3);
 		this.setColumnCount(3);
 		touchable = false;
@@ -108,6 +108,7 @@ public class PaliScreen extends GridLayout{
 			
 		}
 
+		/*
 		if(temp.iteminfo.height>1)
 		{
 			for(int i=y ; i<temp.iteminfo.height ; i++)
@@ -124,25 +125,52 @@ public class PaliScreen extends GridLayout{
 			{
 				this.itemNumbers.get(y).set(j, y*3+x);
 			}
-		}
+		}*/
 	}
 	
+	public boolean isPuttable(int func, int item, int posX, int posY)
+	{
+		PaliItem tempI = new PaliItem();
+		tempI = CustomizingMainActivity.GearUIList.get(func).items.get(item);
+		if(this.items.get(0).iteminfo.funcNum==3 && this.items.get(0).iteminfo.itemNum==0)
+			return false;
+		if(this.items.get(0).iteminfo.funcNum==0 && this.items.get(0).iteminfo.itemNum==2)
+			return false;
+		if(this.items.get(posX).iteminfo.funcNum==3 && this.items.get(posX).iteminfo.itemNum==1)
+			return false;
+		if(tempI.height>1)
+		{
+			for(int i=posY; i<tempI.height+posY ; i++)
+			{
+				for(int j=posX; j<tempI.width+posX; j++)
+				{
+					if(this.items.get(i*3+j).iteminfo.funcNum!=CustomizingMainActivity.Common)
+						return false;
+				}
+			}
+		}
+		else
+		{
+			for(int j=posX; j<tempI.width+posX; j++)
+			{
+				if(this.items.get(posY*3+j).iteminfo.funcNum!=CustomizingMainActivity.Common)
+					return false;
+			}
+		}
+		
+		return true;
+	}
 	public void putItem(int func, int item, int posX, int posY)
 	{
-		PaliItemView temp = this.items.get(posY*3+posX);
+		PaliItemView temp =this.items.get(posY*3+posX);
 		
-		temp.iteminfo = CustomizingMainActivity.GearUIList.get(func).items.get(item);
-		temp.setImageResource(temp.iteminfo.imageid);
-		
-		temp.gl = (GridLayout.LayoutParams)temp.getLayoutParams();
-		temp.gl.rowSpec = GridLayout.spec(posY,temp.iteminfo.height);
-		temp.gl.columnSpec = GridLayout.spec(posX,temp.iteminfo.width);
 		if(temp.iteminfo.height>1)
 		{
 			for(int i=posY+1; i<temp.iteminfo.height+posY ; i++)
 			{
 				for(int j=posX+1; j<temp.iteminfo.width+posX; j++)
 				{
+					this.items.get(i*3+j).iteminfo = CustomizingMainActivity.GearUIList.get(CustomizingMainActivity.Common).items.get(0);
 					this.items.get(i*3+j).setVisibility(View.INVISIBLE);
 				}
 			}
@@ -154,6 +182,14 @@ public class PaliScreen extends GridLayout{
 				this.items.get(posY*3+j).setVisibility(View.INVISIBLE);
 			}
 		}
+		
+		temp.iteminfo = CustomizingMainActivity.GearUIList.get(func).items.get(item);
+		temp.setImageResource(temp.iteminfo.imageid);
+		
+		temp.gl = (GridLayout.LayoutParams)temp.getLayoutParams();
+		temp.gl.rowSpec = GridLayout.spec(posY,temp.iteminfo.height);
+		temp.gl.columnSpec = GridLayout.spec(posX,temp.iteminfo.width);
+		
 		temp.setLayoutParams(temp.gl);
 		
 		this.items.set(posY*3+posX, temp);
@@ -411,9 +447,9 @@ public class PaliScreen extends GridLayout{
 			
 			if(temp.iteminfo.height>1)
 			{
-				for(int i=temp.y+1; i<temp.iteminfo.height+temp.y ; i++)
+				for(int i=temp.x+1; i<temp.iteminfo.height+temp.y ; i++)
 				{
-					for(int j=temp.x+1; j<temp.iteminfo.width+temp.x; j++)
+					for(int j=temp.y+1; j<temp.iteminfo.width+temp.x; j++)
 					{
 						items.get(i*3+j).setVisibility(View.VISIBLE);
 					}

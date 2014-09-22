@@ -16,7 +16,6 @@ import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import android.view.HapticFeedbackConstants;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -24,7 +23,6 @@ import android.view.ViewConfiguration;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.GridLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -50,7 +48,7 @@ public class CustomizingMainActivity extends Activity {
 	int homeX, homeY;
 	float preX, preY;
 	
-	Point activitySize = new Point();
+	public static Point activitySize = new Point();
 	Point marginSize = new Point();
 	public static int screenSize;
 	
@@ -92,7 +90,6 @@ public class CustomizingMainActivity extends Activity {
 		int tempX, tempY;
 		tempY = (this.activitySize.y -100 - 80) / 2;
 		tempX = (this.activitySize.x - 160 )/ 4;
-		Log.w("LonPress",Integer.toString(this.activitySize.x)+" : "+ Integer.toString(this.activitySize.y));
 		this.screenSize = (tempY<tempX)?tempY:tempX;
 		if(screenSize==tempY)
 		{
@@ -145,8 +142,7 @@ public class CustomizingMainActivity extends Activity {
 		if(screens.size()<8)
 		{
 			addScreen = new PaliScreen(this);
-			addScreen.setBackgroundColor(Color.argb(90, 3, 74, 132));
-			//addScreen.setAlpha(Color.alpha(70));
+			addScreen.setBackgroundResource(R.drawable.screen_background);
 			addScreen.putItem(Common, 0, 0, 0);
 			addScreen.putItem(Common, 1, 1, 1);
 			addX = screens.size()%4;
@@ -160,8 +156,11 @@ public class CustomizingMainActivity extends Activity {
 	        gridLayoutParam.topMargin=this.marginSize.y;
 	        gridLayoutParam.bottomMargin=this.marginSize.y;
 			grid.addView(addScreen,gridLayoutParam);
+			addScreen.setSize(screenSize,screenSize);
 			addScreen.sWidth=screenSize;
 			addScreen.sHeight=screenSize;
+			Log.w("screensizetest",String.valueOf(100));
+			Log.w("screensize",String.valueOf(screenSize));
 		}
 		
 		LinearLayout.LayoutParams gridParm = (LinearLayout.LayoutParams) grid.getLayoutParams();
@@ -193,6 +192,7 @@ public class CustomizingMainActivity extends Activity {
 		        gridLayoutParam.topMargin=marginSize.y;
 		        gridLayoutParam.bottomMargin=marginSize.y;
 				grid.addView(screens.get(i),gridLayoutParam);
+				screens.get(i).setSize(screenSize,screenSize);
 				screens.get(i).sWidth=screenSize;
 				screens.get(i).sHeight=screenSize;
 			}
@@ -231,10 +231,8 @@ public class CustomizingMainActivity extends Activity {
 		GearUIList.get(Select).putItem(Select, 0, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_pickobject_icon, "Pick Object");
 		// Layer Icon
 		GearUIList.get(Select).putItem(Select, 1, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_layer_icon,"Layer");
-		// Layer Widget
-		GearUIList.get(Select).putItem(Select, 2, PaliItem.TYPE_WIDGET, 3, 3, R.drawable.tool_layer_3x3_widget,"Layer");
 		// Color Picker
-		GearUIList.get(Select).putItem(Select, 3, PaliItem.TYPE_ICON, 1, 1, R.drawable.tool_colorpick_icon,"Color Picker");
+		GearUIList.get(Select).putItem(Select, 2, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_colorpick_icon,"Color Picker");
 				
 		// Pencil Icon
 		GearUIList.get(Drawing).putItem(Drawing, 0, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_pencil_icon,"Pencil");
@@ -254,15 +252,11 @@ public class CustomizingMainActivity extends Activity {
 		// Shape Widget
 		GearUIList.get(Shape).putItem(Shape, 4, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_star_icon,"Shape");
 				
-		
-		// Color Icon
-		GearUIList.get(Style).putItem(Style, 0, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_color_icon,"Color");
+	
 		// Color Widget
-		GearUIList.get(Style).putItem(Style, 1, PaliItem.TYPE_WIDGET, 3, 3, R.drawable.tool_color_3x3_widget, "Color");
-		// Stroke Icon
-		GearUIList.get(Style).putItem(Style, 2, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_stroke_icon,"Stroke");
+		GearUIList.get(Style).putItem(Style, 0, PaliItem.TYPE_WIDGET, 3, 3, R.drawable.tool_color_3x3_widget, "Color");
 		// Stroke Widget
-		GearUIList.get(Style).putItem(Style, 3, PaliItem.TYPE_WIDGET, 1, 3, R.drawable.tool_stroke_1x3_widget, "Stroke Width");
+		GearUIList.get(Style).putItem(Style, 1, PaliItem.TYPE_WIDGET, 1, 3, R.drawable.tool_stroke_1x3_widget, "Stroke Width");
 		
 		
 		// New File Icon
@@ -286,10 +280,8 @@ public class CustomizingMainActivity extends Activity {
 		GearUIList.get(Config).putItem(Config, 0, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_allmenu_icon, "All Menu");
 		// Customize Icon
 		GearUIList.get(Config).putItem(Config, 1, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_customize_icon, "Customizing");
-		// Configure Icon
-		GearUIList.get(Config).putItem(Config, 2, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_config_icon, "Configure");
 		// Help Icon
-		GearUIList.get(Config).putItem(Config, 3, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_help_icon, "Help");
+		GearUIList.get(Config).putItem(Config, 2, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_help_icon, "Help");
 		
 		// Null Icon
 		GearUIList.get(Common).putItem(Common, 0, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.null_item);
@@ -309,16 +301,13 @@ public class CustomizingMainActivity extends Activity {
 		GearUIViewList.add(new PaliItemList("History"));
 		GearUIViewList.add(new PaliItemList("File"));
 		GearUIViewList.add(new PaliItemList("Config"));
-		GearUIViewList.add(new PaliItemList("Common"));
 		
 		// Pick Object Icon
 		GearUIViewList.get(Select).putItem(Select, 0, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_pickobject_icon, "Pick Object");
 		// Layer Icon
 		GearUIViewList.get(Select).putItem(Select, 1, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_layer_icon,"Layer");
-		// Layer Widget
-		GearUIViewList.get(Select).putItem(Select, 2, PaliItem.TYPE_WIDGET, 3, 3, R.drawable.tool_layer_3x3_widget,"Layer");
 		// Color Picker
-		GearUIViewList.get(Select).putItem(Select, 3, PaliItem.TYPE_ICON, 1, 1, R.drawable.tool_colorpick_icon,"Color Picker");
+		GearUIViewList.get(Select).putItem(Select, 2, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_colorpick_icon,"Color Picker");
 				
 		// Pencil Icon
 		GearUIViewList.get(Drawing).putItem(Drawing, 0, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_pencil_icon,"Pencil");
@@ -339,14 +328,10 @@ public class CustomizingMainActivity extends Activity {
 		GearUIViewList.get(Shape).putItem(Shape, 4, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_star_icon,"Shape");
 				
 		
-		// Color Icon
-		GearUIViewList.get(Style).putItem(Style, 0, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_color_icon,"Color");
-		// Color Widget
-		GearUIViewList.get(Style).putItem(Style, 1, PaliItem.TYPE_WIDGET, 3, 3, R.drawable.tool_color_3x3_widget, "Color");
-		// Stroke Icon
-		GearUIViewList.get(Style).putItem(Style, 2, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_stroke_icon,"Stroke");
+				// Color Widget
+		GearUIViewList.get(Style).putItem(Style, 0, PaliItem.TYPE_WIDGET, 3, 3, R.drawable.tool_color_3x3_widget, "Color");
 		// Stroke Widget
-		GearUIViewList.get(Style).putItem(Style, 3, PaliItem.TYPE_WIDGET, 1, 3, R.drawable.tool_stroke_1x3_widget, "Stroke Width");
+		GearUIViewList.get(Style).putItem(Style, 1, PaliItem.TYPE_WIDGET, 1, 3, R.drawable.tool_stroke_1x3_widget, "Stroke Width");
 		
 		
 		// New File Icon
@@ -369,15 +354,8 @@ public class CustomizingMainActivity extends Activity {
 		GearUIViewList.get(Config).putItem(Config, 0, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_allmenu_icon, "All Menu");
 		// Customize Icon
 		GearUIViewList.get(Config).putItem(Config, 1, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_customize_icon, "Customizing");
-		// Configure Icon
-		GearUIViewList.get(Config).putItem(Config, 2, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_config_icon, "Configure");
 		// Help Icon
-		GearUIViewList.get(Config).putItem(Config, 3, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_help_icon, "Help");
-		
-		// Null Icon
-		GearUIViewList.get(Common).putItem(Common, 0, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.null_item);
-		// Screen Add Icon
-		GearUIViewList.get(Common).putItem(Common, 1, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.custom_screen_add);
+		GearUIViewList.get(Config).putItem(Config, 2, PaliItem.TYPE_ICON, ICON_WIDTH, ICON_HEIGHT, R.drawable.tool_help_icon, "Help");
 	}
 	
 	private void addScreen()
@@ -397,7 +375,8 @@ public class CustomizingMainActivity extends Activity {
 			grid.addView(screens.get(screenN),gridLayoutParam);
 			screens.get(screenN).sWidth=screenSize;
 			screens.get(screenN).sHeight=screenSize;
-			screens.get(screenN).setBackgroundColor(BackgroundColor);
+			screens.get(screenN).setSize(screenSize, screenSize);
+			screens.get(screenN).setBackgroundResource(R.drawable.screen_background);
 			
 			if(addX<3)
 				addX++;
@@ -434,7 +413,8 @@ public class CustomizingMainActivity extends Activity {
 			grid.addView(screens.get(screenN),gridLayoutParam);
 			screens.get(screenN).sWidth=screenSize;
 			screens.get(screenN).sHeight=screenSize;
-			screens.get(screenN).setBackgroundColor(BackgroundColor);
+			screens.get(screenN).setSize(screenSize, screenSize);
+			screens.get(screenN).setBackgroundResource(R.drawable.screen_background);
 			
 			addScreen.setVisibility(View.GONE);
 			
@@ -483,7 +463,7 @@ public class CustomizingMainActivity extends Activity {
 				{
 					
 					selected=i;
-					screens.get(selected).setBackgroundColor(Color.argb(60, 3, 74, 132));
+					screens.get(selected).setBackgroundResource(R.drawable.screen_background_pressed);
 					mPressed=true;
 					startTimeout();
 					break;
@@ -589,7 +569,7 @@ public class CustomizingMainActivity extends Activity {
 				 {
 					 stopTimeout();
 					 mPressed=false;
-					 screens.get(selected).setBackgroundColor(BackgroundColor);
+					 screens.get(selected).setBackgroundResource(R.drawable.screen_background);
 					 
 					 if(Math.abs(preX-e.getX())<5 && Math.abs(preY-e.getY())<5){
 						 indexX = 4 * (int)e.getX() / this.activitySize.x;
