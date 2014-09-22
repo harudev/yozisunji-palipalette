@@ -169,8 +169,8 @@ public class MainActivity extends Activity {
 				android.os.Process.killProcess(android.os.Process.myPid());
 				return true;
 			case KeyEvent.KEYCODE_MENU:
-				popUpHelpMenu();
-				//popUpOpenMenu();
+				//popUpHelpMenu();
+				popUpOpenMenu();
 				/*
 				 * PaliCanvas.selectedTool++; if(PaliCanvas.selectedTool >=
 				 * PaliCanvas.TOOL_COMMON) { PaliCanvas.selectedTool = 0; }

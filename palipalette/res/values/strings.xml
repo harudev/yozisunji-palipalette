@@ -6,7 +6,7 @@
     <string name="hello_world">Hello world!</string>
     <string name="ConnectionEstablishedMsg">HelloAccessory Connection established with RemotePeer</string>
     <string name="title_activity_main">PaliPalette</string>
-    <color name="background">#17375E</color>
-    <color name="pali">#FD6203</color>
+    <color name="background">#16BDE9</color>
+    <color name="pali">#FFFFFF</color>
 
 </resources>
