@@ -11,7 +11,8 @@
         android:onClick="OnClick"
         android:padding="0sp"
         android:scaleType="centerCrop"
-        android:src="@drawable/icon_copy" />
+        android:src="@drawable/icon_copy"
+        android:background="@android:color/transparent"/>
 
     <ImageButton
         android:id="@+id/pasteBtn"
@@ -20,7 +21,8 @@
         android:onClick="OnClick"
         android:padding="0sp"
         android:scaleType="centerCrop"
-        android:src="@drawable/icon_paste" />
+        android:src="@drawable/icon_paste"
+        android:background="@android:color/transparent"/>
 
     <ImageButton
         android:id="@+id/deletBtn"
@@ -29,6 +31,7 @@
         android:onClick="OnClick"
         android:padding="0sp"
         android:scaleType="centerCrop"
-        android:src="@drawable/icon_delete" />
+        android:src="@drawable/icon_delete"
+        android:background="@android:color/transparent"/>
 
 </LinearLayout>
