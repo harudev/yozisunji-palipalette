@@ -98,9 +98,9 @@ public class PaliExpandableAdapter extends BaseExpandableListAdapter {
             view = convertView;
         }
         
+        ImageView imgview = (ImageView)view.findViewById(R.id.itemImageView);
         TextView text1 = (TextView)view.findViewById(R.id.functionNameView);
         TextView text2 = (TextView)view.findViewById(R.id.itemTypeView);
-        ImageView imgview = (ImageView)view.findViewById(R.id.itemImageView);
         
         if(list.get(groupPosition).items.get(childPosition).getVisible())
         {

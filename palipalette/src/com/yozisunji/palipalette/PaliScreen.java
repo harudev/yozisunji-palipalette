@@ -447,11 +447,12 @@ public class PaliScreen extends GridLayout{
 			
 			if(temp.iteminfo.height>1)
 			{
-				for(int i=temp.x+1; i<temp.iteminfo.height+temp.y ; i++)
+				for(int i=temp.y; i<temp.iteminfo.height+temp.y ; i++)
 				{
-					for(int j=temp.y+1; j<temp.iteminfo.width+temp.x; j++)
+					for(int j=temp.x; j<temp.iteminfo.width+temp.x; j++)
 					{
-						items.get(i*3+j).setVisibility(View.VISIBLE);
+						if(!(i==temp.y && j==temp.x))
+							items.get(i*3+j).setVisibility(View.VISIBLE);
 					}
 				}
 			}
@@ -475,7 +476,13 @@ public class PaliScreen extends GridLayout{
 			items.get(selected).setBackgroundColor(Color.argb(0, 255, 255, 255));
 			
 			
-			
+			for(int i=0;i<3;i++)
+			{
+				for(int j=0;j<3;j++)
+				{
+					items.get(i*3+j).setVisibility(View.VISIBLE);
+				}
+			}
 			invalidate();
 			if(parent!=null)
 				parent.reDraw();
