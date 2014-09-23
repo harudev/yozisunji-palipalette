@@ -22,6 +22,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.util.DisplayMetrics;
@@ -86,6 +87,8 @@ public class MainActivity extends Activity {
 	
 	Paint pickSpaint;
 	Paint pickFpaint;
+	
+	Handler handler = new Handler();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -128,7 +131,6 @@ public class MainActivity extends Activity {
 		// test //
 		//connectSuccess();
 		// ////////
-
 	}
 
 	@Override
@@ -169,6 +171,7 @@ public class MainActivity extends Activity {
 				android.os.Process.killProcess(android.os.Process.myPid());
 				return true;
 			case KeyEvent.KEYCODE_MENU:
+				//popUpSaveMenu();
 				popUpHelpMenu();
 				//popUpOpenMenu();
 				/*
@@ -314,14 +317,30 @@ public class MainActivity extends Activity {
 
 		subDialog.show();
 	}
-
+	
+	
 	public void popUpSaveMenu() {
-		saveDialog.show();
-	}
+		handler.post(saveThread);
+	}	
+	Runnable saveThread = new Runnable() {
+
+		@Override
+		public void run() {
+			saveDialog.show();
+		}
+	};
+		
 
 	public void popUpExportMenu() {
-		exportDialog.show();
+		handler.post(exportThread);
 	}
+	Runnable exportThread = new Runnable() {
+
+		@Override
+		public void run() {
+			exportDialog.show();
+		}
+	};
 
 	public void popUpOpenMenu() {
 		ArrayList<String> openFileName = new ArrayList<String>();
@@ -338,7 +357,7 @@ public class MainActivity extends Activity {
 		}
 		files = null;
 		open_list.setAdapter(fileList);
-		openDialog.show();
+		handler.post(openThread);
 
 		open_list.setOnItemClickListener(new OnItemClickListener() {
 			@Override
@@ -351,10 +370,24 @@ public class MainActivity extends Activity {
 			}
 		});
 	}
+	
+	Runnable openThread = new Runnable() {
+		@Override
+		public void run() {
+			openDialog.show();
+		}
+	};
 
 	public void popUpHelpMenu() {		
-		helpDialog.show();		
+		handler.post(helpThread);		
 	}
+	Runnable helpThread = new Runnable() {
+		@Override
+		public void run() {
+			helpDialog.show();	
+		}
+	};
+	
 
 	public void popUpHelpImg(final int listNum) {
 		helpImgDialog.show();
@@ -469,13 +502,13 @@ public class MainActivity extends Activity {
 	}
 
 	public void saveSVG(final String name) {
-		final ProgressDialog saveDialog = ProgressDialog.show(
+		final ProgressDialog saveProgressDialog = ProgressDialog.show(
 				MainActivity.this, "Save", "saving...", true);
 
 		final Handler mHandler = new Handler() {
 			public void handleMessage(Message msg) {
 				super.handleMessage(msg);
-				saveDialog.dismiss();
+				saveProgressDialog.dismiss();
 
 				if (msg.what == 0) {
 					Toast.makeText(ctx, "save success", Toast.LENGTH_SHORT)
@@ -503,7 +536,7 @@ public class MainActivity extends Activity {
 				}
 				SVGTag += "</svg>";
 
-				String path = "/mnt/sdcard/PaliPalette/";
+				String path = Environment.getExternalStorageDirectory()+"/PaliPalette/";
 				String fileName = name + ".svg";
 
 				File file_path = new File(path);
@@ -529,13 +562,13 @@ public class MainActivity extends Activity {
 	}
 
 	public void openSVG(final String name) {
-		final ProgressDialog openDialog = ProgressDialog.show(
+		final ProgressDialog openProgressDialog = ProgressDialog.show(
 				MainActivity.this, "Open", "opening...", true);
 
 		final Handler mHandler = new Handler() {
 			public void handleMessage(Message msg) {
 				super.handleMessage(msg);
-				openDialog.dismiss();
+				openProgressDialog.dismiss();
 
 				if (msg.what == 0) {
 					Toast.makeText(ctx, "open success", Toast.LENGTH_SHORT)
@@ -552,7 +585,7 @@ public class MainActivity extends Activity {
 				super.run();
 				newActivity();
 
-				String path = "/mnt/sdcard/PaliPalette/";
+				String path = Environment.getExternalStorageDirectory()+"/PaliPalette/";
 				String fileName = name;
 
 				File file = new File(path + fileName);
@@ -575,13 +608,13 @@ public class MainActivity extends Activity {
 	}
 
 	public void exportPNG(final String name) {
-		final ProgressDialog exportDialog = ProgressDialog.show(
+		final ProgressDialog exportProgressDialog = ProgressDialog.show(
 				MainActivity.this, "Export", "exporting...", true);
 
 		final Handler mHandler = new Handler() {
 			public void handleMessage(Message msg) {
 				super.handleMessage(msg);
-				exportDialog.dismiss();
+				exportProgressDialog.dismiss();
 
 				if (msg.what == 0) {
 					Toast.makeText(ctx, "export success", Toast.LENGTH_SHORT)
@@ -611,7 +644,7 @@ public class MainActivity extends Activity {
 					}
 				}
 
-				String path = "/mnt/sdcard/PaliPalette/";
+				String path = Environment.getExternalStorageDirectory()+"/PaliPalette/";
 				String fileName = name + ".png";
 
 				OutputStream outStream = null;

@@ -385,6 +385,10 @@ public class PaliConnector extends SAAgent {
 	            else if(jObject.has("currentIcon")) {
 	            	PaliCanvas.selectedTool = Integer.parseInt(jObject.getString("currentIcon"));	     	      	      
 	            }
+	            else if(jObject.has("helpPage"))
+	            {
+	            	mActivity.popUpHelpMenu();
+	            }
 	        } catch (JSONException e1) {
 	        	// TODO Auto-generated catch block
 	        	e1.printStackTrace();
