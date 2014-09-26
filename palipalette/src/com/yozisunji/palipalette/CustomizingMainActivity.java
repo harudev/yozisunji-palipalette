@@ -427,7 +427,6 @@ public class CustomizingMainActivity extends Activity {
 			Intent intent;
 			switch (event.getKeyCode()) {
 			case KeyEvent.KEYCODE_BACK:
-				PaliConnector.customing = false;
 				intent = new Intent(this, MainActivity.class);
 				try {
 					intent.putExtra("json_screen", this.PackJSON().toString());

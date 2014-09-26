@@ -72,8 +72,6 @@ public class PaliConnector extends SAAgent {
 	private static PaliCanvas canvas;
 	private static MainActivity activity;
 	
-	public static boolean customing = false;
-	
 	public class LocalBinder extends Binder {
 		public PaliConnector getService() {
 			return PaliConnector.this;
@@ -240,164 +238,161 @@ public class PaliConnector extends SAAgent {
 		@Override
 		public void onReceive(int channelId, byte[] data)
 		{			
-			if(!customing) {
-				
-				Log.d(TAG, "onReceive");		
-				
-				String sData = new String(data, 0, data.length);
-		        JSONObject jObject;
-		        
-		        Log.i("debug", ""+sData);
-		        try {
-		        	jObject = new JSONObject(sData);
-		        	JSONObject obj;
-		            if(jObject.has("sColor"))
-		            {
-		            	obj = new JSONObject(jObject.getString("sColor"));
-		            	String R = obj.getString("r");	
-		            	String G = obj.getString("g");	
-		            	String B = obj.getString("b");
-		            	String A = obj.getString("a");
-		            	
-		            	PaliCanvas.strokeColor = Color.rgb(Integer.parseInt(R), Integer.parseInt(G), Integer.parseInt(B));
-		            	PaliCanvas.alpha = Integer.parseInt(A);	  
-		            	mActivity.changeStyle(MainActivity.STYLE_STROKECOLOR);
-		            }
-		            else if(jObject.has("fColor"))
-		            {
-		            	obj = new JSONObject(jObject.getString("fColor"));
-		            	String R = obj.getString("r");	
-		            	String G = obj.getString("g");	
-		            	String B = obj.getString("b");
-		            	String A = obj.getString("a");
-		            	
-		            	PaliCanvas.fillColor = Color.rgb(Integer.parseInt(R), Integer.parseInt(G), Integer.parseInt(B));
-		            	PaliCanvas.alpha = Integer.parseInt(A);
-		            	mActivity.changeStyle(MainActivity.STYLE_FILLCOLOR);	            	
-		            }
-		            else if(jObject.has("layer"))
-		            {
-		            	obj = new JSONObject(jObject.getString("layer"));
-		            	if(obj.has("currentLayer"))
-		            	{
-		            		PaliCanvas.currentLayer = Integer.parseInt(obj.getString("currentLayer"));
-		            	}
-		            	else if(obj.has("checkedLayer"))
-		            	{
-		            		int selectLayerNum = Integer.parseInt(obj.getString("checkedLayer"));
-		            		
-		            		if(SVGParser.Layers.get(selectLayerNum).getVisible())
-		            			SVGParser.Layers.get(selectLayerNum).setVisible(false);
-		            		else
-		            			SVGParser.Layers.get(selectLayerNum).setVisible(true);
-		            	}
-		            	else if(obj.has("insertLayer")) 
-		            	{	            		
-		            		if(deleteLayerCnt == 0) {
-		            			SVGParser.Layers.add(new PaliLayer());
-		            		}
-		            		else {
-		            			deleteLayerCnt --;
-		            		}
-		            	}
-		            	else if(obj.has("deletedLayer"))
-		            	{
-		            		int index = Integer.parseInt(obj.getString("deletedLayer"));            			            		
-		            		SVGParser.Layers.get(index).objs.clear();
-		            		
-		            		deleteLayerCnt++;
-		            	}
-		            	canvas.DrawScreen();
-		            }
-		            else if(jObject.has("stroke"))
-		            {
-		            	String stroke = jObject.getString("stroke");
-		            	PaliCanvas.strokeWidth = Integer.parseInt(stroke);
-		            	mActivity.changeStyle(MainActivity.STYLE_STROKEWIDTH);
-		            }
-		            else if(jObject.has("pen"))
-		            {
-		            	PaliCanvas.selectedTool = PaliCanvas.TOOL_PEN;
-		            	mActivity.changeTool();
-		            }
-		            else if(jObject.has("pencil"))
-		            {
-		            	PaliCanvas.selectedTool = PaliCanvas.TOOL_PENCIL;
-		            	mActivity.changeTool();
-		            }
-		            else if(jObject.has("brush"))
-		            {
-		            	PaliCanvas.selectedTool = PaliCanvas.TOOL_BRUSH;
-		            	mActivity.changeTool();
-		            }
-		            else if(jObject.has("shape"))
-		            {
-		            	obj = new JSONObject(jObject.getString("shape"));
-		            	if(obj.getString("rectangle").equals("1")) {
-	                        PaliCanvas.selectedTool = PaliCanvas.TOOL_RECTANGLE;
-		                }
-		                else if(obj.getString("circle").equals("1")) {
-		                    PaliCanvas.selectedTool = PaliCanvas.TOOL_CIRCLE;
-		                }
-		                else if(obj.getString("ellipse").equals("1")) {
-		                    PaliCanvas.selectedTool = PaliCanvas.TOOL_ELLIPSE;
-		                }
-		                else if(obj.getString("star").equals("1")) {
-		                	PaliCanvas.selectedTool = PaliCanvas.TOOL_STAR;
-		                }
-		            	mActivity.changeTool();
-		            }
-		            else if(jObject.has("objectPicker")) {
-		            	PaliCanvas.selectedTool = PaliCanvas.TOOL_PICKOBJECT;
-		            }
-		            else if(jObject.has("colorPicker")) {
-		            	PaliCanvas.selectedTool = PaliCanvas.TOOL_COLORPICKER;
-		            }
-		            else if(jObject.has("newCanvas")) {
-		            	mActivity.newActivity();
-		            }
-		            else if(jObject.has("saveCanvas")) {
-		            	mActivity.popUpSaveMenu();
-		            }
-		            else if(jObject.has("openCanvas")) {
-		            	mActivity.popUpOpenMenu();
-		            }
-		            else if(jObject.has("exportCanvas")) {
-		            	mActivity.popUpExportMenu();
-		            }
-		            else if(jObject.has("customize"))
-		            {
-		            	mActivity.launchCustomizing(jObject);
-		            	customing = true;
-		            }
-		            else if(jObject.has("undo"))
-		            {
-		            	if(PaliCanvas.history.isUnDoable())
-		            	{	    
-		            		SVGParser.Layers = PaliCanvas.history.UnDo();
-		            		mActivity.customview.DrawScreen();
-		            	}
-		            }
-		            else if(jObject.has("redo"))
-		            {
-		            	if(PaliCanvas.history.isReDoable())
-		            	{
-		            		SVGParser.Layers = PaliCanvas.history.ReDo();
-		            		mActivity.customview.DrawScreen();
-		            	}
-		            }
-		            else if(jObject.has("currentIcon")) {
-		            	PaliCanvas.selectedTool = Integer.parseInt(jObject.getString("currentIcon"));	     	      	      
-		            }
-		            else if(jObject.has("helpPage"))
-		            {
-		            	mActivity.popUpHelpMenu();
-		            }
-		        } catch (JSONException e1) {
-		        	// TODO Auto-generated catch block
-		        	e1.printStackTrace();
-		        }	
-			}
+			
+			Log.d(TAG, "onReceive");		
+			
+			String sData = new String(data, 0, data.length);
+	        JSONObject jObject;
+	        
+	        Log.i("debug", ""+sData);
+	        try {
+	        	jObject = new JSONObject(sData);
+	        	JSONObject obj;
+	            if(jObject.has("sColor"))
+	            {
+	            	obj = new JSONObject(jObject.getString("sColor"));
+	            	String R = obj.getString("r");	
+	            	String G = obj.getString("g");	
+	            	String B = obj.getString("b");
+	            	String A = obj.getString("a");
+	            	
+	            	PaliCanvas.strokeColor = Color.rgb(Integer.parseInt(R), Integer.parseInt(G), Integer.parseInt(B));
+	            	PaliCanvas.alpha = Integer.parseInt(A);	  
+	            	mActivity.changeStyle(MainActivity.STYLE_STROKECOLOR);
+	            }
+	            else if(jObject.has("fColor"))
+	            {
+	            	obj = new JSONObject(jObject.getString("fColor"));
+	            	String R = obj.getString("r");	
+	            	String G = obj.getString("g");	
+	            	String B = obj.getString("b");
+	            	String A = obj.getString("a");
+	            	
+	            	PaliCanvas.fillColor = Color.rgb(Integer.parseInt(R), Integer.parseInt(G), Integer.parseInt(B));
+	            	PaliCanvas.alpha = Integer.parseInt(A);
+	            	mActivity.changeStyle(MainActivity.STYLE_FILLCOLOR);	            	
+	            }
+	            else if(jObject.has("layer"))
+	            {
+	            	obj = new JSONObject(jObject.getString("layer"));
+	            	if(obj.has("currentLayer"))
+	            	{
+	            		PaliCanvas.currentLayer = Integer.parseInt(obj.getString("currentLayer"));
+	            	}
+	            	else if(obj.has("checkedLayer"))
+	            	{
+	            		int selectLayerNum = Integer.parseInt(obj.getString("checkedLayer"));
+	            		
+	            		if(SVGParser.Layers.get(selectLayerNum).getVisible())
+	            			SVGParser.Layers.get(selectLayerNum).setVisible(false);
+	            		else
+	            			SVGParser.Layers.get(selectLayerNum).setVisible(true);
+	            	}
+	            	else if(obj.has("insertLayer")) 
+	            	{	            		
+	            		if(deleteLayerCnt == 0) {
+	            			SVGParser.Layers.add(new PaliLayer());
+	            		}
+	            		else {
+	            			deleteLayerCnt --;
+	            		}
+	            	}
+	            	else if(obj.has("deletedLayer"))
+	            	{
+	            		int index = Integer.parseInt(obj.getString("deletedLayer"));            			            		
+	            		SVGParser.Layers.get(index).objs.clear();
+	            		
+	            		deleteLayerCnt++;
+	            	}
+	            	canvas.DrawScreen();
+	            }
+	            else if(jObject.has("stroke"))
+	            {
+	            	String stroke = jObject.getString("stroke");
+	            	PaliCanvas.strokeWidth = Integer.parseInt(stroke);
+	            	mActivity.changeStyle(MainActivity.STYLE_STROKEWIDTH);
+	            }
+	            else if(jObject.has("pen"))
+	            {
+	            	PaliCanvas.selectedTool = PaliCanvas.TOOL_PEN;
+	            	mActivity.changeTool();
+	            }
+	            else if(jObject.has("pencil"))
+	            {
+	            	PaliCanvas.selectedTool = PaliCanvas.TOOL_PENCIL;
+	            	mActivity.changeTool();
+	            }
+	            else if(jObject.has("brush"))
+	            {
+	            	PaliCanvas.selectedTool = PaliCanvas.TOOL_BRUSH;
+	            	mActivity.changeTool();
+	            }
+	            else if(jObject.has("shape"))
+	            {
+	            	obj = new JSONObject(jObject.getString("shape"));
+	            	if(obj.getString("rectangle").equals("1")) {
+                        PaliCanvas.selectedTool = PaliCanvas.TOOL_RECTANGLE;
+	                }
+	                else if(obj.getString("circle").equals("1")) {
+	                    PaliCanvas.selectedTool = PaliCanvas.TOOL_CIRCLE;
+	                }
+	                else if(obj.getString("ellipse").equals("1")) {
+	                    PaliCanvas.selectedTool = PaliCanvas.TOOL_ELLIPSE;
+	                }
+	                else if(obj.getString("star").equals("1")) {
+	                	PaliCanvas.selectedTool = PaliCanvas.TOOL_STAR;
+	                }
+	            	mActivity.changeTool();
+	            }
+	            else if(jObject.has("objectPicker")) {
+	            	PaliCanvas.selectedTool = PaliCanvas.TOOL_PICKOBJECT;
+	            }
+	            else if(jObject.has("colorPicker")) {
+	            	PaliCanvas.selectedTool = PaliCanvas.TOOL_COLORPICKER;
+	            }
+	            else if(jObject.has("newCanvas")) {
+	            	mActivity.newActivity();
+	            }
+	            else if(jObject.has("saveCanvas")) {
+	            	mActivity.popUpSaveMenu();
+	            }
+	            else if(jObject.has("openCanvas")) {
+	            	mActivity.popUpOpenMenu();
+	            }
+	            else if(jObject.has("exportCanvas")) {
+	            	mActivity.popUpExportMenu();
+	            }
+	            else if(jObject.has("customize"))
+	            {
+	            	mActivity.launchCustomizing(jObject);
+	            }
+	            else if(jObject.has("undo"))
+	            {
+	            	if(PaliCanvas.history.isUnDoable())
+	            	{	    
+	            		SVGParser.Layers = PaliCanvas.history.UnDo();
+	            		mActivity.customview.DrawScreen();
+	            	}
+	            }
+	            else if(jObject.has("redo"))
+	            {
+	            	if(PaliCanvas.history.isReDoable())
+	            	{
+	            		SVGParser.Layers = PaliCanvas.history.ReDo();
+	            		mActivity.customview.DrawScreen();
+	            	}
+	            }
+	            else if(jObject.has("currentIcon")) {
+	            	PaliCanvas.selectedTool = Integer.parseInt(jObject.getString("currentIcon"));	     	      	      
+	            }
+	            else if(jObject.has("helpPage"))
+	            {
+	            	mActivity.popUpHelpMenu();
+	            }
+	        } catch (JSONException e1) {
+	        	// TODO Auto-generated catch block
+	        	e1.printStackTrace();
+	        }		
 		}
 		
 		@Override
