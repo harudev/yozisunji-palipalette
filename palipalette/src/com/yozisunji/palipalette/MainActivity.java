@@ -530,6 +530,7 @@ public class MainActivity extends Activity {
 					if (SVGParser.Layers.get(i).visibility == true) {
 						for (int j = 0; j < SVGParser.Layers.get(i).objs.size(); j++) {
 							temp = SVGParser.Layers.get(i).objs.get(j);
+							temp.tagSet();
 							SVGTag += temp.svgtag;
 						}
 					}
